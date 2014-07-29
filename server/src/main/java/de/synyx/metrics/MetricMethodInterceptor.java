@@ -1,5 +1,8 @@
 package de.synyx.metrics;
 
+import com.codahale.metrics.MetricRegistry;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import de.synyx.metrics.annotation.Counter;
 import de.synyx.metrics.annotation.Histogram;
 import de.synyx.metrics.annotation.Meter;
@@ -10,9 +13,6 @@ import de.synyx.metrics.hook.MetricHookHistogram;
 import de.synyx.metrics.hook.MetricHookMeter;
 import de.synyx.metrics.hook.MetricHookSupport;
 import de.synyx.metrics.hook.MetricHookTimer;
-import com.codahale.metrics.MetricRegistry;
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.glassfish.hk2.api.ServiceLocator;
