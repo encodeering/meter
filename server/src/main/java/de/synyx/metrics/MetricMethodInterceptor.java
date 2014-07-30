@@ -36,12 +36,14 @@ final class MetricMethodInterceptor implements MethodInterceptor {
     private final ServiceLocator locator;
 
     private final MetricRegistry   registry;
+    private final MetricNaming     naming;
     private final MetricInvocation invoker;
 
-    MetricMethodInterceptor (ServiceLocator locator, MetricRegistry registry, MetricInvocation invoker) {
+    MetricMethodInterceptor (ServiceLocator locator, MetricRegistry registry, MetricNaming naming, MetricInvocation invoker) {
         this.locator  = locator;
         this.registry = registry;
         this.invoker  = invoker;
+        this.naming   = naming;
     }
 
     @Override
@@ -156,9 +158,9 @@ final class MetricMethodInterceptor implements MethodInterceptor {
     }
 
     final Optional<String> name (Method method, String value) {
-        if (value.startsWith ("#")) return Optional.fromNullable (MetricRegistry.name (method.getDeclaringClass (), method.getName (), value.substring (1)));
+        if (value.startsWith ("#")) return Optional.fromNullable (MetricRegistry.name (method.getDeclaringClass (), method.getName (), naming.name (value.substring (1))));
         else
-            return Optional.of (value);
+            return Optional.of (naming.name (value));
     }
 
 }
