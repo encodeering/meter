@@ -2,6 +2,7 @@ package de.synyx.metrics;
 
 import com.codahale.metrics.MetricRegistry;
 import de.synyx.metrics.annotation.Metric;
+import de.synyx.metrics.internal.DefaultMetricInvocation;
 import org.aopalliance.intercept.ConstructorInterceptor;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.glassfish.hk2.api.Filter;
@@ -25,7 +26,7 @@ public class MetricInterceptorService implements InterceptionService {
 
     @Inject
     public MetricInterceptorService (ServiceLocator locator, MetricRegistry registry) {
-        interceptors = Collections.<MethodInterceptor>singletonList (new MetricMethodInterceptor (locator, registry, new MetricHookCommand ()));
+        interceptors = Collections.<MethodInterceptor>singletonList (new MetricMethodInterceptor (locator, registry, locator.createAndInitialize (DefaultMetricInvocation.class)));
     }
 
     @Override

@@ -1,5 +1,7 @@
-package de.synyx.metrics;
+package de.synyx.metrics.internal;
 
+import de.synyx.metrics.MetricHook;
+import de.synyx.metrics.MetricInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,14 +10,15 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
- * Date: 16.07.2014
- * Time: 10:59
+ * Date: 30.07.2014
+ * Time: 08:48
  */
-public final class MetricHookCommand {
+public final class DefaultMetricInvocation implements MetricInvocation {
 
     private final Logger logger = LoggerFactory.getLogger (getClass ());
 
-    final Object invoke (Callable<Object> invocable, List<MetricHook> hooks) throws Throwable {
+    @Override
+    public final Object invoke (Callable<Object> invocable, List<MetricHook> hooks) throws Throwable {
         Object response = null;
         Throwable throwable = null;
 

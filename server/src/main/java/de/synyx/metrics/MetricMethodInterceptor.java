@@ -35,13 +35,13 @@ final class MetricMethodInterceptor implements MethodInterceptor {
 
     private final ServiceLocator locator;
 
-    private final MetricRegistry    registry;
-    private final MetricHookCommand interceptor;
+    private final MetricRegistry   registry;
+    private final MetricInvocation invoker;
 
-    MetricMethodInterceptor (ServiceLocator locator, MetricRegistry registry, MetricHookCommand interceptor) {
-        this.locator     = locator;
-        this.registry    = registry;
-        this.interceptor = interceptor;
+    MetricMethodInterceptor (ServiceLocator locator, MetricRegistry registry, MetricInvocation invoker) {
+        this.locator  = locator;
+        this.registry = registry;
+        this.invoker  = invoker;
     }
 
     @Override
@@ -59,7 +59,7 @@ final class MetricMethodInterceptor implements MethodInterceptor {
         addAll (hooks, collect (metric.meters (),     meter     (method)));
         addAll (hooks, collect (metric.timers (),     timer     (method)));
 
-        return interceptor.invoke (wrap (invocation), hooks);
+        return invoker.invoke (wrap (invocation), hooks);
     }
 
     final Callable<Object> wrap (final MethodInvocation invocation) {
