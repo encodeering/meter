@@ -17,11 +17,11 @@ public @interface Counter {
 
     public abstract String value () default "#";
 
-    public abstract Operation operation () default Operation.Increment;
-
     public abstract Kind kind () default Kind.Both;
 
     public abstract Class<? extends Metriculate> metriculate () default Metriculate.class;
+
+    public abstract Operation operation () default Operation.Increment;
 
     public abstract long number () default 1;
 

@@ -17,10 +17,10 @@ public @interface Histogram {
 
     public abstract String value () default "#";
 
-    public abstract long number () default 1;
-
     public abstract Kind kind () default Kind.Both;
 
     public abstract Class<? extends Metriculate> metriculate () default Metriculate.class;
+
+    public abstract long number () default 1;
 
 }
