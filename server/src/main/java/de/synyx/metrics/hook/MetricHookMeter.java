@@ -23,7 +23,7 @@ public final class MetricHookMeter extends MetricHookSupport {
     @Override
     public final void after (Object response, Throwable throwable) {
         switch (annotation.kind ()) {
-            case Success:  if (throwable == null) call (response, throwable); break;
+            case Success:  if (throwable == null) call (response, null); break;
             case Error:    if (throwable != null) call (response, throwable); break;
             case Both:                            call (response, throwable); break;
         }
