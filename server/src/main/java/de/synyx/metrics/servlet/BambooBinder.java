@@ -24,8 +24,6 @@ class BambooBinder extends AbstractBinder {
     protected final void configure() {
         bind (BambooApplicationService.class).to(new TypeLiteral<BambooService<String>> () {});
 
-        // bind (BambooHistogramHook.class).to (Metriculate.class).in (Singleton.class);
-
         MetricRegistry registry = new MetricRegistry ();
 
         ConsoleReporter reporter = ConsoleReporter.forRegistry (registry)
