@@ -23,7 +23,7 @@ public @interface Counter {
 
     public abstract Class<? extends Metriculate> metriculate () default Metriculate.class;
 
-    public abstract int number () default 1;
+    public abstract long number () default 1;
 
     public enum Operation {
 
