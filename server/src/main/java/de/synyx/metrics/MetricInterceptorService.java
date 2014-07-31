@@ -2,6 +2,7 @@ package de.synyx.metrics;
 
 import com.codahale.metrics.MetricRegistry;
 import de.synyx.metrics.annotation.Metric;
+import de.synyx.metrics.internal.DefaultJerseySubstitution;
 import de.synyx.metrics.internal.DefaultMetricInvocation;
 import de.synyx.metrics.internal.DefaultMetricNaming;
 import org.aopalliance.intercept.ConstructorInterceptor;
@@ -10,6 +11,7 @@ import org.glassfish.hk2.api.Filter;
 import org.glassfish.hk2.api.InterceptionService;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
+import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -27,6 +29,8 @@ public class MetricInterceptorService implements InterceptionService {
 
     @Inject
     public MetricInterceptorService (ServiceLocator locator, MetricRegistry registry) {
+        ServiceLocatorUtilities.addOneConstant (locator, locator.createAndInitialize (DefaultJerseySubstitution.class), "substitution", Substitution.class);
+
         interceptors = Collections.<MethodInterceptor>singletonList (new MetricMethodInterceptor (locator, registry, locator.createAndInitialize (DefaultMetricNaming.class),
                                                                                                                      locator.createAndInitialize (DefaultMetricInvocation.class)
         ));
