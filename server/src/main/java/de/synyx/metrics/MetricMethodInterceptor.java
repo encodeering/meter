@@ -64,28 +64,7 @@ final class MetricMethodInterceptor implements MethodInterceptor {
         return invoker.invoke (wrap (invocation), hooks);
     }
 
-    final Callable<Object> wrap (final MethodInvocation invocation) {
-        return new Callable<Object> () {
-
-            @Override
-            public final Object call () throws Exception {
-                try {
-                    return invocation.proceed ();
-                } catch (Exception e) {
-                    throw e;
-                } catch (Throwable e) {
-                    throw new Exception (e.getMessage (), e.getCause ());
-                }
-            }
-
-        };
-    }
-
     /* following hooks could be extracted to a product factory */
-
-    final <T extends Annotation> Iterable<MetricHook> collect (final T[] annotation, Function<T, MetricHook> fn) {
-        return transform (asList (annotation), fn);
-    }
 
     final Function<Counter, MetricHook> counter (final Method method) {
         return new Function<Counter, MetricHook> () {
@@ -161,6 +140,29 @@ final class MetricMethodInterceptor implements MethodInterceptor {
         if (value.startsWith ("#")) return Optional.fromNullable (MetricRegistry.name (method.getDeclaringClass (), method.getName (), naming.name (value.substring (1))));
         else
             return Optional.of (naming.name (value));
+    }
+
+    /* */
+
+    private Callable<Object> wrap (final MethodInvocation invocation) {
+        return new Callable<Object> () {
+
+            @Override
+            public final Object call () throws Exception {
+                try {
+                    return invocation.proceed ();
+                } catch (Exception e) {
+                    throw e;
+                } catch (Throwable e) {
+                    throw new Exception (e.getMessage (), e.getCause ());
+                }
+            }
+
+        };
+    }
+
+    private <T extends Annotation> Iterable<MetricHook> collect (final T[] annotation, Function<T, MetricHook> fn) {
+        return transform (asList (annotation), fn);
     }
 
 }
