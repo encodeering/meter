@@ -21,11 +21,6 @@ public final class MetricHookHistogram extends MetricHookSupport {
     }
 
     @Override
-    public final void before () {
-        histogram.update (annotation.number ());
-    }
-
-        @Override
     public final void after (Object response, Throwable throwable) {
         switch (annotation.kind ()) {
             case Success:  if (throwable == null) call (response, null); break;
