@@ -48,10 +48,13 @@ final class MetricMethodInterceptor implements MethodInterceptor {
 
     @Override
     public final Object invoke (final MethodInvocation invocation) throws Throwable {
+        Metric metric;
+
         Method method;
 
-                        method = invocation.getMethod ();
-        Metric metric = method.getAnnotation (Metric.class);
+                     method = invocation.getMethod ();
+            metric = method.getAnnotation (Metric.class);
+        if (metric == null) throw new IllegalStateException ("Method [" + method.getName () + "] not annotated");
 
         List<MetricHook> hooks;
 
