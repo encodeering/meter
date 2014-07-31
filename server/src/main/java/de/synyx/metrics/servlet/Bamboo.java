@@ -1,11 +1,11 @@
 package de.synyx.metrics.servlet;
 
-import de.synyx.metrics.annotation.Histogram;
-import de.synyx.metrics.annotation.Metric;
-import de.synyx.metrics.annotation.Timer;
+import de.synyx.metrics.service.BambooService;
 
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
 /**
@@ -15,13 +15,17 @@ import javax.ws.rs.QueryParam;
 @Path ("bamboo")
 public class Bamboo {
 
+    @Inject
+    private BambooService<String> service;
+
     @GET
-    @Metric (
-            timers     = @Timer,
-            histograms = @Histogram (value = "#size", metriculate = BambooHistogramHook.class)
-    )
-    public String echo (@QueryParam ("foo") String foo) {
-        return foo;
+    //    @Metric (
+    //            timers     = @Timer,
+    //            histograms = @Histogram (value = "#size", metriculate = BambooHistogramHook.class)
+    //    )
+    @Path ("{larry}")
+    public final String echo (@QueryParam ("foo") String foo, @PathParam ("larry") String larry) {
+        return service.call (foo + "#" + larry);
     }
 
 }
