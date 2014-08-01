@@ -27,6 +27,7 @@ public final class MetricReportHandlerGraphite extends MetricReportHandler {
         Graphite graphite = new Graphite (new InetSocketAddress (uri.getHost (), uri.getPort ()));
 
         GraphiteReporter reporter = GraphiteReporter.forRegistry (registry)
+                                            .prefixedWith       (             (parameters.get ("prefix")        ))
                                             .convertRatesTo     (timeunit (or (parameters.get ("rate"),    "ms")))
                                             .convertDurationsTo (timeunit (or (parameters.get ("duration"), "s")))
                                                 .filter (MetricFilter.ALL)
