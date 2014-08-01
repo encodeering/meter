@@ -22,7 +22,7 @@
 
     <context-param>
         <param-name>metrics-reporter</param-name>
-        <param-value>graphite://localhost:2003?duration=s&amp;rates=ms</param-value>
+        <param-value>java:comp/env/metrics-reporter</param-value>
     </context-param>
 
 </web-app>
