@@ -164,6 +164,12 @@ final class DefaultMetricMethodInterceptor implements MethodInterceptor {
                 }
             }
 
+            @Override
+            public final String toString () {
+                Method method = invocation.getMethod ();
+                return method.getDeclaringClass ().getSimpleName () + " " + method.getName ();
+            }
+
         };
     }
 
