@@ -21,7 +21,7 @@ public final class MetricReportHandlerGraphite extends MetricReportHandler {
     }
 
     @Override
-    protected final ScheduledReporter reporter (MetricRegistry registry, URI uri) {
+    protected final ScheduledReporter reporter (MetricReportMediator mediator, MetricRegistry registry, URI uri) {
         Map<String, String> parameters = parameters (uri.getQuery ());
 
         Graphite graphite = new Graphite (new InetSocketAddress (uri.getHost (), uri.getPort ()));

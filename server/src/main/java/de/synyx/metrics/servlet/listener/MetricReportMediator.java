@@ -34,7 +34,7 @@ final class MetricReportMediator {
             for (MetricReportHandler handler : handlers) {
                 Optional<ScheduledReporter> reporter;
 
-                    reporter = handler.select (registry, location);
+                    reporter = handler.select (this, registry, location);
                 if (reporter.isPresent ()) return reporter.get ();
             }
         } catch (RuntimeException e) {

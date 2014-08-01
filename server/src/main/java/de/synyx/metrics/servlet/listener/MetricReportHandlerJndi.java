@@ -24,12 +24,13 @@ public final class MetricReportHandlerJndi extends MetricReportHandler {
     }
 
     @Override
-    protected final ScheduledReporter reporter (MetricRegistry registry, URI location) {
+    protected final ScheduledReporter reporter (MetricReportMediator mediator, MetricRegistry registry, URI location) {
         try {
             Object lookup;
 
                 lookup = context.lookup (location.toString ());
-            if (lookup instanceof ScheduledReporter) return (ScheduledReporter) lookup;
+            if (lookup instanceof String) return mediator.reporter ((String) lookup);
+            if (lookup instanceof URI)    return mediator.reporter (lookup.toString ());
         } catch (NamingException e) {
             logger.error (e.getMessage ());
         }
