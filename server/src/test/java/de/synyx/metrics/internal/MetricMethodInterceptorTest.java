@@ -44,7 +44,7 @@ public class MetricMethodInterceptorTest {
 
     private final MetricInvocation invoker = mock (MetricInvocation.class);
 
-    private final MetricMethodInterceptor interceptor = new MetricMethodInterceptor (mock (ServiceLocator.class), registry, naming, invoker);
+    private final DefaultMetricMethodInterceptor interceptor = new DefaultMetricMethodInterceptor (mock (ServiceLocator.class), registry, naming, invoker);
 
     {
         when (naming.name (anyString ())).thenAnswer (new Answer<Object> () {

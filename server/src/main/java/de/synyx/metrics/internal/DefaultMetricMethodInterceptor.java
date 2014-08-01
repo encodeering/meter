@@ -34,7 +34,7 @@ import static java.util.Arrays.asList;
 * Date: 16.07.2014
 * Time: 11:05
 */
-final class MetricMethodInterceptor implements MethodInterceptor {
+final class DefaultMetricMethodInterceptor implements MethodInterceptor {
 
     private final ServiceLocator locator;
 
@@ -42,7 +42,7 @@ final class MetricMethodInterceptor implements MethodInterceptor {
     private final MetricNaming     naming;
     private final MetricInvocation invoker;
 
-    MetricMethodInterceptor (ServiceLocator locator, MetricRegistry registry, MetricNaming naming, MetricInvocation invoker) {
+    DefaultMetricMethodInterceptor (ServiceLocator locator, MetricRegistry registry, MetricNaming naming, MetricInvocation invoker) {
         this.locator  = locator;
         this.registry = registry;
         this.invoker  = invoker;

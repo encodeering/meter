@@ -1,7 +1,7 @@
 package de.synyx.metrics.servlet;
 
 import com.codahale.metrics.MetricRegistry;
-import de.synyx.metrics.internal.MetricInterceptorService;
+import de.synyx.metrics.internal.DefaultMetricInterceptorService;
 import de.synyx.metrics.service.BambooApplicationService;
 import de.synyx.metrics.service.BambooService;
 import org.glassfish.hk2.api.Factory;
@@ -26,7 +26,7 @@ class BambooBinder extends AbstractBinder {
     protected final void configure() {
         bind (BambooApplicationService.class).to(new TypeLiteral<BambooService<String>> () {});
 
-        bind (MetricInterceptorService.class).to(InterceptionService.class).in (Singleton.class);
+        bind (DefaultMetricInterceptorService.class).to(InterceptionService.class).in (Singleton.class);
 
         bindFactory (MetricRegistryFactory.class).to (MetricRegistry.class).in (Singleton.class);
     }

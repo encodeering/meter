@@ -21,16 +21,16 @@ import javax.inject.Inject;
  * Date: 15.07.2014
  * Time: 15:46
  */
-public class MetricInterceptorService implements InterceptionService {
+public class DefaultMetricInterceptorService implements InterceptionService {
 
     private final List<MethodInterceptor> interceptors;
 
     @Inject
-    public MetricInterceptorService (ServiceLocator locator, MetricRegistry registry) {
+    public DefaultMetricInterceptorService (ServiceLocator locator, MetricRegistry registry) {
         ServiceLocatorUtilities.addOneConstant (locator, locator.createAndInitialize (DefaultJerseySubstitution.class), "substitution", Substitution.class);
 
-        interceptors = Collections.<MethodInterceptor>singletonList (new MetricMethodInterceptor (locator, registry, locator.createAndInitialize (DefaultMetricNaming.class),
-                                                                                                     locator.createAndInitialize (DefaultMetricInvocation.class)
+        interceptors = Collections.<MethodInterceptor>singletonList (new DefaultMetricMethodInterceptor (locator, registry, locator.createAndInitialize (DefaultMetricNaming.class),
+                                                                                                            locator.createAndInitialize (DefaultMetricInvocation.class)
         ));
     }
 
