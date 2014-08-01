@@ -17,12 +17,12 @@ import javax.servlet.ServletContextListener;
  */
 public final class MetricListener implements ServletContextListener {
 
-    private final static Logger logger = LoggerFactory.getLogger (MetricListener.class);
-
     public final static String AttrReporterWeb = "com.codahale.metrics.reporter";
     public final static String AttrRegistryWeb = "com.codahale.metrics.servlet.InstrumentedFilter.registry";
 
     public final static String AttrRegistryJndi = "java:comp/env/metrics/registry";
+
+    private final static Logger logger = LoggerFactory.getLogger (MetricListener.class);
 
     private MetricRegistry registry;
 
