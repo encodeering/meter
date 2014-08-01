@@ -35,8 +35,8 @@ public abstract class MetricReportHandler {
     public final Optional<ScheduledReporter> select (MetricRegistry registry, URI location) {
         String scheme;
 
-              scheme = scheme ();
-        if (! scheme.equals (location.getScheme ())) return Optional.absent ();
+                              scheme = scheme ();
+        if (! Objects.equals (scheme, location.getScheme ())) return Optional.absent ();
 
         logger.info ("{} reporter detected: {} ", scheme, location);
 
