@@ -5,7 +5,6 @@ import com.codahale.metrics.ScheduledReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
@@ -77,26 +76,12 @@ public final class MetricListener implements ServletContextListener {
     }
 
     final MetricReportHandler jndi (InitialContext jndi) {
-        return jndi == null ? new NoopMetricReportHandler () :
+        return jndi == null ? new MetricReportHandlerNoop () :
                               new MetricReportHandlerJndi (jndi);
     }
 
     final MetricReportHandler graphite () {
         return new MetricReportHandlerGraphite ();
-    }
-
-    final static class NoopMetricReportHandler extends MetricReportHandler {
-
-        @Override
-        protected final String scheme () {
-            return null;
-        }
-
-        @Override
-        protected final ScheduledReporter reporter (MetricReportMediator mediator, MetricRegistry registry, URI location) {
-            return null;
-        }
-
     }
 
 }
