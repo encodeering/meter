@@ -20,39 +20,68 @@ public final class MetricListener implements ServletContextListener {
 
     private final static Logger logger = LoggerFactory.getLogger (MetricListener.class);
 
-    private final static String AttrRegistry = "com.codahale.metrics.servlet.InstrumentedFilter.registry";
-    private final static String AttrReporter = "metrics-reporter";
+    private final static String AttrReporterWeb = "com.codahale.metrics.reporter";
+    private final static String AttrRegistryWeb = "com.codahale.metrics.servlet.InstrumentedFilter.registry";
 
-    private final MetricRegistry       registry = new MetricRegistry ();
-    private final MetricReportMediator mediator = new MetricReportMediator (registry, jndi (), graphite ());
+    private final static String AttrRegistryJndi = "java:comp/env/metrics/registry";
+
+    private MetricRegistry registry;
 
     private ScheduledReporter reporter;
 
     @Override
     public final void contextInitialized (ServletContextEvent event) {
-        ServletContext context = event.getServletContext ();
-                       context.setAttribute (AttrRegistry, registry);
+        InitialContext jndi = null;
 
-        reporter = mediator.reporter (context.getInitParameter (AttrReporter));
+        try {
+            jndi = new InitialContext ();
+        } catch (NamingException e) {
+            logger.error (e.getMessage ());
+        }
+
+        registry = define (jndi, event.getServletContext ());
+
+        ServletContext context = event.getServletContext ();
+                       context.setAttribute (AttrRegistryWeb, registry);
+
+        MetricReportMediator mediator;
+
+                   mediator = new MetricReportMediator (registry, jndi (jndi), graphite ());
+        reporter = mediator.reporter (context.getInitParameter (AttrReporterWeb));
     }
 
     @Override
     public final void contextDestroyed (ServletContextEvent sce) {
         if (reporter != null)
             reporter.stop ();
+
+        registry = null;
+        reporter = null;
     }
 
-    final static MetricReportHandler jndi () {
-        try {
-            return new MetricReportHandlerJndi (new InitialContext ());
-        } catch (NamingException e) {
-            logger.error (e.getMessage (), e);
-        }
+    final MetricRegistry define (InitialContext jndi, ServletContext context) {
+        Object registry;
 
-        return new NoopMetricReportHandler ();
+            registry = context.getAttribute (AttrRegistryWeb);
+        if (registry instanceof MetricRegistry) return (MetricRegistry) registry;
+
+        if (jndi != null)
+            try {
+                    registry = jndi.lookup (AttrRegistryJndi);
+                if (registry instanceof MetricRegistry) return (MetricRegistry) registry;
+            } catch (NamingException e) {
+                logger.error (e.getMessage ());
+            }
+
+        return new MetricRegistry ();
     }
 
-    final static MetricReportHandler graphite () {
+    final MetricReportHandler jndi (InitialContext jndi) {
+        return jndi == null ? new NoopMetricReportHandler () :
+                              new MetricReportHandlerJndi (jndi);
+    }
+
+    final MetricReportHandler graphite () {
         return new MetricReportHandlerGraphite ();
     }
 
