@@ -45,9 +45,9 @@ public abstract class MetricReportHandler {
     protected final ScheduledReporter start (ScheduledReporter reporter, String refresh) {
         Matcher matcher;
 
-        matcher = rpattern.matcher (or (refresh, ""));
+            matcher = rpattern.matcher (or (refresh, ""));
         if (matcher.matches ()) {
-            reporter.start (parseLong (matcher.group (1)), timeunit (matcher.group (2)));
+                   reporter.start (parseLong (matcher.group (1)), timeunit (matcher.group (2)));
             return reporter;
         }
 
