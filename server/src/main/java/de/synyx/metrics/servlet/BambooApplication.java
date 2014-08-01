@@ -1,5 +1,7 @@
 package de.synyx.metrics.servlet;
 
+import de.synyx.metrics.MetricFeature;
+
 import java.util.HashSet;
 import java.util.Set;
 import javax.ws.rs.core.Application;
@@ -17,6 +19,7 @@ public class BambooApplication extends Application {
     @Override
     public Set<Class<?>> getClasses () {
         Set<Class<?>> classes = new HashSet<> ();
+                      classes.add (MetricFeature.class);
                       classes.add (Bamboo.class);
 
         return classes;
