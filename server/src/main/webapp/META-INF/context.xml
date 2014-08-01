@@ -3,6 +3,6 @@
 
     <Resource name="metrics/registry" auth="Container" type="com.codahale.metrics.MetricRegistry" factory="com.bmw.ctre.server.servlet.listener.MetricObjectFactory" />
 
-    <Environment name="metrics-reporter" value="graphite://localhost:2003?duration=s&amp;rates=ms" type="java.lang.String" />
+    <Environment name="metrics/reporter" value="graphite://localhost:2003?duration=s&amp;rates=ms" type="java.lang.String" />
 
 </Context>

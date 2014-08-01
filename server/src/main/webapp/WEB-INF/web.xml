@@ -21,8 +21,8 @@
     </listener>
 
     <context-param>
-        <param-name>metrics-reporter</param-name>
-        <param-value>java:comp/env/metrics-reporter</param-value>
+        <param-name>com.codahale.metrics.reporter</param-name>
+        <param-value>java:comp/env/metrics/reporter</param-value>
     </context-param>
 
 </web-app>
