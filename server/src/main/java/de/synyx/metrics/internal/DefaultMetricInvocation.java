@@ -19,7 +19,7 @@ public final class DefaultMetricInvocation implements MetricInvocation {
 
     @Override
     public final Object invoke (Callable<Object> invocable, List<MetricHook> hooks) throws Throwable {
-        logger.debug ("create metrics for invocable: {}", invocable);
+        logger.trace ("create metrics for invocable: {}", invocable);
 
         Object response = null;
         Throwable throwable = null;
