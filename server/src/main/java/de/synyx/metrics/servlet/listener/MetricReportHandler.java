@@ -52,7 +52,7 @@ public abstract class MetricReportHandler {
             return reporter;
         }
 
-        logger.warn ("graphite refresh rate {} invalid, using {} instead", refresh, rdefault);
+        logger.warn ("{} refresh rate '{}' not usable, initializing with {} instead", scheme (), refresh, rdefault);
 
         return start (reporter, rdefault);
     }
