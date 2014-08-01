@@ -5,7 +5,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.ScheduledReporter;
 import com.codahale.metrics.graphite.Graphite;
 import com.codahale.metrics.graphite.GraphiteReporter;
-import com.google.common.base.Optional;
 
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -17,12 +16,12 @@ import java.util.Map;
  */
 public final class MetricReportHandlerGraphite extends MetricReportHandler {
 
+    protected final String scheme () {
+        return "graphite";
+    }
+
     @Override
-    protected final Optional<ScheduledReporter> reporter (MetricRegistry registry, URI uri) {
-        if (!        "graphite".equals (uri.getScheme ())) return Optional.absent ();
-
-        logger.info ("graphite reporter detected: " + uri);
-
+    protected final ScheduledReporter reporter (MetricRegistry registry, URI uri) {
         Map<String, String> parameters = parameters (uri.getQuery ());
 
         Graphite graphite = new Graphite (new InetSocketAddress (uri.getHost (), uri.getPort ()));
@@ -33,7 +32,7 @@ public final class MetricReportHandlerGraphite extends MetricReportHandler {
                                                 .filter (MetricFilter.ALL)
                                                     .build (graphite);
 
-        return Optional.of (start (reporter, parameters.get ("refresh")));
+        return start (reporter, parameters.get ("refresh"));
     }
 
 }

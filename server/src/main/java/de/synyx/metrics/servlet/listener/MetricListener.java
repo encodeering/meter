@@ -44,7 +44,7 @@ public final class MetricListener implements ServletContextListener {
 
     final ScheduledReporter reporter (String reporturl) {
         try {
-            return new MetricReportHandlerGraphite ().reporter (registry, URI.create (reporturl)).orNull ();
+            return new MetricReportHandlerGraphite ().select (registry, URI.create (reporturl)).orNull ();
         } catch (RuntimeException e) {
             logger.error (e.getMessage ());
         }

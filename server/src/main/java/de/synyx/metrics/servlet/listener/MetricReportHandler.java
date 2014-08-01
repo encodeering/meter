@@ -27,7 +27,20 @@ public abstract class MetricReportHandler {
 
     protected final Logger logger = LoggerFactory.getLogger (getClass ());
 
-    protected abstract Optional<ScheduledReporter> reporter (MetricRegistry registry, URI location);
+    protected abstract String scheme ();
+
+    protected abstract ScheduledReporter reporter (MetricRegistry registry, URI location);
+
+    public final Optional<ScheduledReporter> select (MetricRegistry registry, URI location) {
+        String scheme;
+
+              scheme = scheme ();
+        if (! scheme.equals (location.getScheme ())) return Optional.absent ();
+
+        logger.info ("{} reporter detected: {} ", scheme, location);
+
+        return Optional.fromNullable (reporter (registry, location));
+    }
 
     protected final ScheduledReporter start (ScheduledReporter reporter, String refresh) {
         Matcher matcher;
