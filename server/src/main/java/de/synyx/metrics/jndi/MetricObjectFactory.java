@@ -1,4 +1,4 @@
-package de.synyx.metrics.servlet.listener;
+package de.synyx.metrics.jndi;
 
 import com.codahale.metrics.MetricRegistry;
 
