@@ -22,10 +22,11 @@ import static java.lang.Long.parseLong;
  */
 public abstract class MetricReportHandler {
 
-              final String  rdefault = "20s";
-              final Pattern rpattern = Pattern.compile ("^(\\d+)\\s*([a-z]{1,2})$");
+    final String  rdefault = "20s";
+    final Pattern rpattern = Pattern.compile ("^(\\d+)\\s*([a-z]{1,2})$");
 
-    protected final Logger logger = LoggerFactory.getLogger (getClass ());
+    final Logger logger = LoggerFactory.getLogger (getClass ());
+
 
     protected abstract String scheme ();
 
@@ -75,7 +76,7 @@ public abstract class MetricReportHandler {
             case "ns" : return TimeUnit.NANOSECONDS;
         }
 
-        throw new UnsupportedOperationException ("Timeunit [" + timeunit + "] unsupported");
+        throw new UnsupportedOperationException ("time-unit [" + timeunit + "] unsupported");
     }
 
 }
