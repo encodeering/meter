@@ -1,6 +1,9 @@
-package de.synyx.metrics;
+package de.synyx.metrics.internal;
 
 import com.codahale.metrics.MetricRegistry;
+import de.synyx.metrics.MetricHook;
+import de.synyx.metrics.MetricInvocation;
+import de.synyx.metrics.MetricNaming;
 import de.synyx.metrics.annotation.Counter;
 import de.synyx.metrics.annotation.Histogram;
 import de.synyx.metrics.annotation.Meter;
@@ -198,8 +201,8 @@ public class MetricMethodInterceptorTest {
     public void testName () throws Exception {
         String val = UUID.randomUUID ().toString ();
 
-        assertThat (interceptor.name (nothing (),       val).get (), equalTo (                                                                   val));
-        assertThat (interceptor.name (nothing (), "#" + val).get (), equalTo ("de.synyx.metrics.MetricMethodInterceptorTest$TestType.nothing." + val));
+        assertThat (interceptor.name (nothing (),       val).get (), equalTo (                                                                            val));
+        assertThat (interceptor.name (nothing (), "#" + val).get (), equalTo ("de.synyx.metrics.internal.MetricMethodInterceptorTest$TestType.nothing." + val));
     }
 
     private Method nothing () throws NoSuchMethodException {

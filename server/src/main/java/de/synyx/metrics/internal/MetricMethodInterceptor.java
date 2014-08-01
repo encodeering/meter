@@ -1,8 +1,11 @@
-package de.synyx.metrics;
+package de.synyx.metrics.internal;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import de.synyx.metrics.MetricHook;
+import de.synyx.metrics.MetricInvocation;
+import de.synyx.metrics.MetricNaming;
 import de.synyx.metrics.annotation.Counter;
 import de.synyx.metrics.annotation.Histogram;
 import de.synyx.metrics.annotation.Meter;

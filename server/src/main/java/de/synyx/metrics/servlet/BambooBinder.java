@@ -1,7 +1,7 @@
 package de.synyx.metrics.servlet;
 
 import com.codahale.metrics.MetricRegistry;
-import de.synyx.metrics.MetricInterceptorService;
+import de.synyx.metrics.internal.MetricInterceptorService;
 import de.synyx.metrics.service.BambooApplicationService;
 import de.synyx.metrics.service.BambooService;
 import org.glassfish.hk2.api.Factory;
