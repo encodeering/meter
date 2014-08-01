@@ -5,7 +5,6 @@ import com.codahale.metrics.ScheduledReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -21,19 +20,17 @@ public final class MetricListener implements ServletContextListener {
     private final static String AttrRegistry = "com.codahale.metrics.servlet.InstrumentedFilter.registry";
     private final static String AttrReporter = "metrics-reporter";
 
-    private final MetricRegistry registry = new MetricRegistry ();
+    private final MetricRegistry       registry = new MetricRegistry ();
+    private final MetricReportMediator mediator = new MetricReportMediator (registry);
 
     private ScheduledReporter reporter;
 
     @Override
     public final void contextInitialized (ServletContextEvent event) {
         ServletContext context = event.getServletContext ();
+                       context.setAttribute (AttrRegistry, registry);
 
-        try {
-                                 context.setAttribute (AttrRegistry, registry);
-        } finally {
-            reporter = reporter (context.getInitParameter (AttrReporter));
-        }
+        reporter = mediator.reporter (context.getInitParameter (AttrReporter));
     }
 
     @Override
@@ -42,14 +39,6 @@ public final class MetricListener implements ServletContextListener {
             reporter.stop ();
     }
 
-    final ScheduledReporter reporter (String reporturl) {
-        try {
-            return new MetricReportHandlerGraphite ().select (registry, URI.create (reporturl)).orNull ();
-        } catch (RuntimeException e) {
-            logger.error (e.getMessage ());
-        }
 
-        return null;
-    }
 
 }
