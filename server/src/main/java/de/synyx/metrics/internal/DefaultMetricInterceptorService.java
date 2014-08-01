@@ -21,7 +21,7 @@ import javax.inject.Inject;
  * Date: 15.07.2014
  * Time: 15:46
  */
-public class DefaultMetricInterceptorService implements InterceptionService {
+public final class DefaultMetricInterceptorService implements InterceptionService {
 
     private final List<MethodInterceptor> interceptors;
 
@@ -35,17 +35,17 @@ public class DefaultMetricInterceptorService implements InterceptionService {
     }
 
     @Override
-    public Filter getDescriptorFilter () {
+    public final Filter getDescriptorFilter () {
         return BuilderHelper.allFilter ();
     }
 
     @Override
-    public List<MethodInterceptor> getMethodInterceptors (Method method) {
+    public final List<MethodInterceptor> getMethodInterceptors (Method method) {
         return method.isAnnotationPresent (Metric.class) ? interceptors : null;
     }
 
     @Override
-    public List<ConstructorInterceptor> getConstructorInterceptors (Constructor<?> constructor) {
+    public final List<ConstructorInterceptor> getConstructorInterceptors (Constructor<?> constructor) {
         return null;
     }
 
