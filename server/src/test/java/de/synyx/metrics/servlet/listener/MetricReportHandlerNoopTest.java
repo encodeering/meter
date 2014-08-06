@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
 
-public class MetricReportHandlerNoopTest {
+public class MetricReportHandlerNoopTest extends MetricReportTestSupport {
 
     @Test
     public void testScheme () throws Exception {

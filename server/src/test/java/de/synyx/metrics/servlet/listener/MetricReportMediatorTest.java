@@ -1,14 +1,9 @@
 package de.synyx.metrics.servlet.listener;
 
-import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.ScheduledReporter;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
 
-import java.net.URI;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,16 +17,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith (MockitoJUnitRunner.class)
-public class MetricReportMediatorTest {
-
-    @Mock
-    private MetricRegistry registry;
-
-    @Mock
-    private ScheduledReporter reporter;
-
-    private final URI anyurl = anyuri (UUID.randomUUID ());
+public class MetricReportMediatorTest extends MetricReportTestSupport {
 
     @Test
     public void testReportHandlerSchemeKnown () {
@@ -109,32 +95,6 @@ public class MetricReportMediatorTest {
         assertThat (mediator.reporter (anyurl.toString ()), nullValue ());
 
         verify (handler).reporter (mediator, registry, anyurl);
-    }
-
-    private MetricReportHandler handler (final String scheme, final ScheduledReporter reporter) {
-        class TestReportHandler extends MetricReportHandler {
-
-            @Override
-            protected String scheme () {
-                return scheme;
-            }
-
-            @Override
-            protected ScheduledReporter reporter (MetricReportMediator mediator, MetricRegistry registry, URI location) {
-                return reporter;
-            }
-        }
-
-        return new TestReportHandler ();
-    }
-
-    private URI anyuri (UUID uuid) {
-        /* prefix with a letter as uri schemes aren't allowed to start with a numerical value */
-        return URI.create ("A" + anytext (uuid) + "://" + anytext (UUID.randomUUID ()));
-    }
-
-    private String anytext (UUID uuid) {
-        return uuid.toString ().replace ("-", "");
     }
 
 }
