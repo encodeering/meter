@@ -4,7 +4,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.ScheduledReporter;
 
 import java.net.URI;
-import javax.naming.InitialContext;
+import javax.naming.Context;
 import javax.naming.NamingException;
 
 /**
@@ -13,9 +13,9 @@ import javax.naming.NamingException;
  */
 public final class MetricReportHandlerJndi extends MetricReportHandler {
 
-    private final InitialContext context;
+    private final Context context;
 
-    public MetricReportHandlerJndi (InitialContext context) {
+    public MetricReportHandlerJndi (Context context) {
         this.context = context;
     }
 
