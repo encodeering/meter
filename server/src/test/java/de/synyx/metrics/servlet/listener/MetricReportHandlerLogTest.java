@@ -17,8 +17,6 @@ import static org.hamcrest.Matchers.nullValue;
 
 public class MetricReportHandlerLogTest extends MetricReportTestSupport {
 
-    private MetricReportMediator empty = new MetricReportMediator (registry);
-
     @Test
     public void testScheme () throws Exception {
         assertThat (new MetricReportHandlerLog ().scheme (), equalTo ("log"));
@@ -28,7 +26,7 @@ public class MetricReportHandlerLogTest extends MetricReportTestSupport {
     public void testReporter () throws Exception {
         Optional<ScheduledReporter> reporter;
 
-                    reporter = new MetricReportHandlerLog ().select (empty, registry, URI.create ("log://sample.logger?marker=sample.marker"));
+                    reporter = new MetricReportHandlerLog ().select (mediator (), registry, URI.create ("log://sample.logger?marker=sample.marker"));
         assertThat (reporter.get (), instanceOf (Slf4jReporter.class));
 
         assertReporter (reporter.get (), registry, "millisecond", "seconds");
@@ -43,7 +41,7 @@ public class MetricReportHandlerLogTest extends MetricReportTestSupport {
     public void testReporterQuery () throws Exception {
         Optional<ScheduledReporter> reporter;
 
-                    reporter = new MetricReportHandlerLog ().select (empty, registry, URI.create ("log://logger?rate=m&duration=h"));
+                    reporter = new MetricReportHandlerLog ().select (mediator (), registry, URI.create ("log://logger?rate=m&duration=h"));
         assertThat (reporter.get (), instanceOf (Slf4jReporter.class));
 
         assertReporter (reporter.get (), registry, "minute", "hours");
@@ -58,7 +56,7 @@ public class MetricReportHandlerLogTest extends MetricReportTestSupport {
     public void testReporterNoAuthority () throws NoSuchFieldException, IllegalAccessException, URISyntaxException {
         Optional<ScheduledReporter> reporter;
 
-                    reporter = new MetricReportHandlerLog ().select (empty, registry, URI.create ("log://?rate=m&duration=h"));
+                    reporter = new MetricReportHandlerLog ().select (mediator (), registry, URI.create ("log://?rate=m&duration=h"));
         assertThat (reporter.get (), instanceOf (Slf4jReporter.class));
 
         assertReporter (reporter.get (), registry, "minute", "hours");
@@ -72,6 +70,10 @@ public class MetricReportHandlerLogTest extends MetricReportTestSupport {
     @Test
     public void main () {
         System.out.println (URI.create ("log:?bam").getScheme ());
+    }
+
+    private MetricReportMediator mediator () {
+        return new MetricReportMediator (registry);
     }
 
 }
