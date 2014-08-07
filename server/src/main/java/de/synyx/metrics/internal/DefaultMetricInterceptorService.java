@@ -37,7 +37,8 @@ public final class DefaultMetricInterceptorService implements InterceptionServic
 
     @Override
     public final List<MethodInterceptor> getMethodInterceptors (Method method) {
-        return method.isAnnotationPresent (Metric.class) ? interceptors : null;
+        return method != null &&
+               method.isAnnotationPresent (Metric.class) ? interceptors : null;
     }
 
     @Override
