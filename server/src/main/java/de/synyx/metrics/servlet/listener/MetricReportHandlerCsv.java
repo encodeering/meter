@@ -37,10 +37,23 @@ public final class MetricReportHandlerCsv extends MetricReportHandler {
     }
 
     private URI refine (URI location) {
-        String prefix = "///";
-        String ssp    = location.getSchemeSpecificPart ();
+        String ssp= location.getSchemeSpecificPart ();
 
-        return URI.create ("file:" + Strings.repeat ("/", prefix.length () - Strings.commonPrefix (ssp, prefix).length ()) + ssp);
+        return URI.create ("file:" + align (ssp) + file (ssp));
+    }
+
+    private String align (String ssp) {
+        String prefix;
+
+                                    prefix = "///";
+        return Strings.repeat ("/", prefix.length () - Strings.commonPrefix (ssp, prefix).length ());
+    }
+
+    private String file (String ssp) {
+        int idx = ssp.indexOf ('?');
+        if (idx < 0) return ssp;
+        else
+            return ssp.substring (0, idx);
     }
 
 }
