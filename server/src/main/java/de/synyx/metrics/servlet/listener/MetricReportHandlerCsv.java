@@ -28,7 +28,7 @@ public final class MetricReportHandlerCsv extends MetricReportHandler {
         File csv = new File (refine (location));
 
         CsvReporter reporter = CsvReporter.forRegistry (registry)
-                                          .convertRatesTo (timeunit (or (parameters.get ("rate"), "ms")))
+                                          .convertRatesTo     (timeunit (or (parameters.get ("rate"),    "ms")))
                                           .convertDurationsTo (timeunit (or (parameters.get ("duration"), "s")))
                                               .filter (MetricFilter.ALL)
                                                   .build (csv);
