@@ -55,9 +55,13 @@ public final class MetricListener implements ServletContextListener {
             ServletContext context = event.getServletContext ();
                            context.setAttribute (AttrRegistryWeb, registry);
 
-            MetricReportMediator mediator;
+            MetricReportMediator mediator = new MetricReportMediator (registry, csv      (),
+                                                                                console  (),
+                                                                                logging  (),
+                                                                                jndi     (jndi),
+                                                                                ganglia  (),
+                                                                                graphite ());
 
-                       mediator = new MetricReportMediator (registry, jndi (jndi), graphite ());
             reporter = mediator.reporter (context.getInitParameter (AttrReporterWeb));
         } finally {
             invoked.set (true);
@@ -94,6 +98,18 @@ public final class MetricListener implements ServletContextListener {
         return new MetricRegistry ();
     }
 
+    final MetricReportHandler csv () {
+        return new MetricReportHandlerCsv ();
+    }
+
+    final MetricReportHandler console () {
+        return new MetricReportHandlerConsole ();
+    }
+
+    final MetricReportHandler logging () {
+        return new MetricReportHandlerLog ();
+    }
+
     final MetricReportHandler jndi (Context jndi) {
         return jndi == null ? new MetricReportHandlerNoop () :
                               new MetricReportHandlerJndi (jndi);
@@ -101,6 +117,10 @@ public final class MetricListener implements ServletContextListener {
 
     final MetricReportHandler graphite () {
         return new MetricReportHandlerGraphite ();
+    }
+
+    final MetricReportHandler ganglia () {
+        return new MetricReportHandlerGanglia ();
     }
 
 }
