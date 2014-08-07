@@ -36,7 +36,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class MetricMethodInterceptorTest {
+public class DefaultMetricMethodInterceptorTest {
 
     private final MetricNaming naming = mock (MetricNaming.class);
 
@@ -201,8 +201,8 @@ public class MetricMethodInterceptorTest {
     public void testName () throws Exception {
         String val = UUID.randomUUID ().toString ();
 
-        assertThat (interceptor.name (nothing (),       val).get (), equalTo (                                                                            val));
-        assertThat (interceptor.name (nothing (), "#" + val).get (), equalTo ("de.synyx.metrics.internal.MetricMethodInterceptorTest$TestType.nothing." + val));
+        assertThat (interceptor.name (nothing (),       val).get (), equalTo (                                                                                   val));
+        assertThat (interceptor.name (nothing (), "#" + val).get (), equalTo ("de.synyx.metrics.internal.DefaultMetricMethodInterceptorTest$TestType.nothing." + val));
     }
 
     private Method nothing () throws NoSuchMethodException {
