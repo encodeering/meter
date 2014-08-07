@@ -34,11 +34,11 @@ public class MetricReportTestSupport {
         assertThat (field (ScheduledReporter.class, "durationUnit", String.class,         reporter), equalTo (duration));
     }
 
-    final <T> T field (Class<? extends ScheduledReporter> container, String name, Class<T> type, ScheduledReporter reporter) throws NoSuchFieldException, IllegalAccessException {
+    final <T, S> T field (Class<? extends S> container, String name, Class<T> type, S parent) throws NoSuchFieldException, IllegalAccessException {
         Field field = container.getDeclaredField (name);
                 field.setAccessible (true);
 
-        return type.cast (field.get (reporter));
+        return type.cast (field.get (parent));
     }
 
     final MetricReportMediator mediator () {
