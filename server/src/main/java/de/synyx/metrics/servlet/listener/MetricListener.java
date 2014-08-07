@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
@@ -41,7 +42,7 @@ public final class MetricListener implements ServletContextListener {
     @Override
     public final void contextInitialized (ServletContextEvent event) {
         try {
-            InitialContext jndi = null;
+            Context jndi = null;
 
             try {
                 jndi = new InitialContext ();
@@ -76,7 +77,7 @@ public final class MetricListener implements ServletContextListener {
         }
     }
 
-    final MetricRegistry define (InitialContext jndi, ServletContext context) {
+    final MetricRegistry define (Context jndi, ServletContext context) {
         Object registry;
 
             registry = context.getAttribute (AttrRegistryWeb);
@@ -93,7 +94,7 @@ public final class MetricListener implements ServletContextListener {
         return new MetricRegistry ();
     }
 
-    final MetricReportHandler jndi (InitialContext jndi) {
+    final MetricReportHandler jndi (Context jndi) {
         return jndi == null ? new MetricReportHandlerNoop () :
                               new MetricReportHandlerJndi (jndi);
     }
