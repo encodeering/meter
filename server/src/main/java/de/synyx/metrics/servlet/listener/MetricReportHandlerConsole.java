@@ -47,6 +47,8 @@ public final class MetricReportHandlerConsole extends MetricReportHandler {
                 case "stderr": return System.err;
             }
 
+        logger.warn ("authority {} not supported, using /dev/null instead", authority);
+
         return new PrintStream (ByteStreams.nullOutputStream ());
     }
 
