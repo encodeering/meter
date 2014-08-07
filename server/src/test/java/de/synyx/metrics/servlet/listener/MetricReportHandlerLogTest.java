@@ -26,50 +26,51 @@ public class MetricReportHandlerLogTest extends MetricReportTestSupport {
     public void testReporter () throws Exception {
         Optional<ScheduledReporter> reporter;
 
-                    reporter = new MetricReportHandlerLog ().select (mediator (), registry, URI.create ("log://sample.logger?marker=sample.marker"));
-        assertThat (reporter.get (), instanceOf (Slf4jReporter.class));
-
+                        reporter = new MetricReportHandlerLog ().select (mediator (), registry, URI.create ("log://sample.logger?marker=sample.marker"));
+        assertThat     (reporter.get (), instanceOf (Slf4jReporter.class));
         assertReporter (reporter.get (), registry, "millisecond", "seconds");
 
         Slf4jReporter slf4j = (Slf4jReporter) reporter.get ();
 
-        assertThat (field (Slf4jReporter.class, "logger", Logger.class, slf4j).getName (), equalTo ("sample.logger"));
-        assertThat (field (Slf4jReporter.class, "marker", Marker.class, slf4j).getName (), equalTo ("sample.marker"));
+        assertOption (slf4j, "sample.logger", "sample.marker");
     }
 
     @Test
     public void testReporterQuery () throws Exception {
         Optional<ScheduledReporter> reporter;
 
-                    reporter = new MetricReportHandlerLog ().select (mediator (), registry, URI.create ("log://logger?rate=m&duration=h"));
-        assertThat (reporter.get (), instanceOf (Slf4jReporter.class));
-
+                        reporter = new MetricReportHandlerLog ().select (mediator (), registry, URI.create ("log://sample.logger?rate=m&duration=h"));
+        assertThat     (reporter.get (), instanceOf (Slf4jReporter.class));
         assertReporter (reporter.get (), registry, "minute", "hours");
 
         Slf4jReporter slf4j = (Slf4jReporter) reporter.get ();
 
-        assertThat (field (Slf4jReporter.class, "logger", Logger.class, slf4j).getName (), equalTo ("logger"));
-        assertThat (field (Slf4jReporter.class, "marker", Marker.class, slf4j), nullValue ());
+        assertOption (slf4j, "sample.logger", null);
     }
 
     @Test
     public void testReporterNoAuthority () throws NoSuchFieldException, IllegalAccessException, URISyntaxException {
         Optional<ScheduledReporter> reporter;
 
-                    reporter = new MetricReportHandlerLog ().select (mediator (), registry, URI.create ("log://?rate=m&duration=h"));
-        assertThat (reporter.get (), instanceOf (Slf4jReporter.class));
-
+                        reporter = new MetricReportHandlerLog ().select (mediator (), registry, URI.create ("log://?rate=m&duration=h"));
+        assertThat     (reporter.get (), instanceOf (Slf4jReporter.class));
         assertReporter (reporter.get (), registry, "minute", "hours");
 
         Slf4jReporter slf4j = (Slf4jReporter) reporter.get ();
 
-        assertThat (field (Slf4jReporter.class, "logger", Logger.class, slf4j).getName (), equalTo ("com.codahale.metrics.application.logger"));
-        assertThat (field (Slf4jReporter.class, "marker", Marker.class, slf4j), nullValue ());
+        assertOption (slf4j, "com.codahale.metrics.application.logger", null);
     }
 
-    @Test
-    public void main () {
-        System.out.println (URI.create ("log:?bam").getScheme ());
+    private void assertOption (Slf4jReporter slf4j, String logname, String markername) throws NoSuchFieldException, IllegalAccessException {
+        assertThat (field (Slf4jReporter.class, "logger", Logger.class, slf4j).getName (), equalTo (logname));
+
+        Marker marker;
+
+            marker = field (Slf4jReporter.class, "marker", Marker.class, slf4j);
+        if (marker == null)
+            assertThat (markername, nullValue ());
+        else
+            assertThat (marker.getName (), equalTo (markername));
     }
 
 }
