@@ -2,6 +2,7 @@ package de.synyx.metrics.servlet.listener;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.ScheduledReporter;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 /**
  * Date: 06.08.2014
@@ -25,6 +27,12 @@ public class MetricReportTestSupport {
 
     @Mock
     protected ScheduledReporter reporter;
+
+    @Test
+    public void testMock () {
+        assertThat (registry, notNullValue ());
+        assertThat (reporter, notNullValue ());
+    }
 
     final URI anyurl = anyuri (UUID.randomUUID ());
 
