@@ -6,8 +6,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.UUID;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 /**
  * Date: 06.08.2014
@@ -23,6 +27,19 @@ public class MetricReportTestSupport {
     protected ScheduledReporter reporter;
 
     final URI anyurl = anyuri (UUID.randomUUID ());
+
+    final void assertReporter (ScheduledReporter reporter, MetricRegistry registry, String rate, String duration) throws NoSuchFieldException, IllegalAccessException {
+        assertThat (field (ScheduledReporter.class, "registry",     MetricRegistry.class, reporter), equalTo (registry));
+        assertThat (field (ScheduledReporter.class, "rateUnit",     String.class,         reporter), equalTo (rate));
+        assertThat (field (ScheduledReporter.class, "durationUnit", String.class,         reporter), equalTo (duration));
+    }
+
+    final <T> T field (Class<? extends ScheduledReporter> container, String name, Class<T> type, ScheduledReporter reporter) throws NoSuchFieldException, IllegalAccessException {
+        Field field = container.getDeclaredField (name);
+                field.setAccessible (true);
+
+        return type.cast (field.get (reporter));
+    }
 
     final MetricReportHandler handler (final String scheme, final ScheduledReporter reporter) {
         class TestReportHandler extends MetricReportHandler {
