@@ -25,7 +25,7 @@ public final class MetricReportHandlerLog extends MetricReportHandler {
 
     @Override
     protected final ScheduledReporter reporter (MetricReportMediator mediator, MetricRegistry registry, URI location) {
-        Map<String, String> parameters = parameters (location.getQuery ());
+        Map<String, String> parameters = parameters (location);
 
         Logger logger = logger (location);
 

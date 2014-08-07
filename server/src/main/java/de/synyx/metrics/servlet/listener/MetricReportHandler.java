@@ -58,8 +58,8 @@ public abstract class MetricReportHandler {
         return start (reporter, rdefault);
     }
 
-    protected final Map<String, String> parameters (String query) {
-        return Splitter.on ("&").omitEmptyStrings ().withKeyValueSeparator ("=").split (query);
+    protected final Map<String, String> parameters (URI uri) {
+        return Splitter.on ("&").omitEmptyStrings ().withKeyValueSeparator ("=").split (Objects.toString (uri.getQuery (), ""));
     }
 
     protected final String or (String val, String or) {
