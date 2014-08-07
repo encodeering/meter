@@ -3,6 +3,7 @@ package de.synyx.metrics;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import de.synyx.metrics.internal.DefaultJerseySubstitution;
 import de.synyx.metrics.internal.DefaultMetricInterceptorService;
 import de.synyx.metrics.servlet.listener.MetricListener;
 import org.glassfish.hk2.api.Factory;
@@ -37,6 +38,7 @@ public final class MetricFeature implements Feature {
         protected final void configure () {
             bindFactory (MetricFeature.MetricRegistryFactory.class).to (MetricRegistry.class).in (Singleton.class);
             bind (DefaultMetricInterceptorService.class).to(InterceptionService.class).in (Singleton.class);
+            bind (DefaultJerseySubstitution.class).to (Substitution.class).in (Singleton.class);
         }
 
     }
