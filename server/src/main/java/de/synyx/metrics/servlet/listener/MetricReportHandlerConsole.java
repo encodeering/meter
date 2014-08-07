@@ -28,7 +28,7 @@ public final class MetricReportHandlerConsole extends MetricReportHandler {
         PrintStream out = choose (location);
 
         ConsoleReporter reporter = ConsoleReporter.forRegistry (registry)
-                                          .outputTo (null)
+                                          .outputTo (out)
                                           .convertRatesTo     (timeunit (or (parameters.get ("rate"),     "ms")))
                                           .convertDurationsTo (timeunit (or (parameters.get ("duration"),  "s")))
                                               .filter (MetricFilter.ALL)
