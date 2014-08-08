@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import java.net.URI;
 import java.util.UUID;
 import javax.naming.Context;
+import javax.naming.NamingException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -78,6 +79,17 @@ public class MetricReportHandlerJndiTest extends MetricReportTestSupport {
         }
 
         verify (handler, never ()).reporter (any (MetricReportMediator.class), eq (registry), eq (anyurl));
+    }
+
+    @Test
+    public void testReporterLookupFail () throws NamingException {
+        when (jndicontext.lookup (endpoint)).thenThrow (new NamingException ());
+
+        assertThat (new MetricReportHandlerJndi (jndicontext).select (mediator (handler (anyurl.getScheme (), reporter)), registry, URI.create (endpoint)).isPresent (),
+
+            is (false)
+
+        );
     }
 
 
