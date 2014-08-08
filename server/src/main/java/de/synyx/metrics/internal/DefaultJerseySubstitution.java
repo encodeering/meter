@@ -56,8 +56,8 @@ public final class DefaultJerseySubstitution implements Substitution {
     private String substitute (Parameter parameter) {
         MultivaluedParameterExtractor<?> extractor;
 
-                               extractor = extractors.get (parameter);
-        String defaultstring = extractor.getDefaultValueString ();
+                                                 extractor = extractors.get (parameter);
+        String defaultstring = Objects.toString (extractor.getDefaultValueString (), "");
 
              if (parameter.isAnnotationPresent (PathParam.class))   return Objects.toString (extractor.extract (segments (parameter.isEncoded ())), defaultstring);
         else if (parameter.isAnnotationPresent (QueryParam.class))  return Objects.toString (extractor.extract (queries  (parameter.isEncoded ())), defaultstring);
