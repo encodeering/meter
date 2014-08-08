@@ -22,6 +22,8 @@ public class MetricReportHandlerJndiTest extends MetricReportTestSupport {
     @Mock
     private Context jndicontext;
 
+    private String endpoint = "java:comp/env/reporter/" + anytext (UUID.randomUUID ());
+
     @Test
     public void testScheme () throws Exception {
         assertThat (new MetricReportHandlerJndi (jndicontext).scheme (), equalTo ("java"));
@@ -32,9 +34,6 @@ public class MetricReportHandlerJndiTest extends MetricReportTestSupport {
         MetricReportHandler handler = spy (handler (anyurl.getScheme (), reporter));
 
         {
-            String endpoint;
-
-                                      endpoint = "java:comp/env/reporter/" + anytext (UUID.randomUUID ());
             when (jndicontext.lookup (endpoint)).thenReturn (anyurl);
 
             assertThat (new MetricReportHandlerJndi (jndicontext).select (mediator (handler), registry, URI.create (endpoint)).get (),
@@ -52,9 +51,6 @@ public class MetricReportHandlerJndiTest extends MetricReportTestSupport {
         MetricReportHandler handler = spy (handler (anyurl.getScheme (), reporter));
 
         {
-            String endpoint;
-
-                                      endpoint = "java:comp/env/reporter/" + anytext (UUID.randomUUID ());
             when (jndicontext.lookup (endpoint)).thenReturn (anyurl.toString ());
 
             assertThat (new MetricReportHandlerJndi (jndicontext).select (mediator (handler), registry, URI.create (endpoint)).get (),
@@ -72,8 +68,6 @@ public class MetricReportHandlerJndiTest extends MetricReportTestSupport {
         MetricReportHandler handler = spy (handler (anyurl.getScheme (), reporter));
 
         {
-            String endpoint = "java:comp/env/reporter/" + anytext (UUID.randomUUID ());
-
             when (jndicontext.lookup (endpoint)).thenReturn (null);
 
             assertThat (new MetricReportHandlerJndi (jndicontext).select (mediator (handler), registry, URI.create (endpoint)).isPresent (),
