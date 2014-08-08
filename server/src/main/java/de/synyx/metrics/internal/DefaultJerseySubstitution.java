@@ -1,14 +1,19 @@
 package de.synyx.metrics.internal;
 
-import de.synyx.metrics.Substitution;
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
+import de.synyx.metrics.Substitution;
 import org.glassfish.jersey.server.ExtendedUriInfo;
 import org.glassfish.jersey.server.internal.inject.MultivaluedParameterExtractor;
 import org.glassfish.jersey.server.internal.inject.MultivaluedParameterExtractorProvider;
 import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.server.model.ResourceMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import javax.inject.Inject;
 import javax.ws.rs.CookieParam;
@@ -19,6 +24,9 @@ import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+
+import static com.google.common.collect.Iterables.concat;
+import static java.util.Collections.singleton;
 
 /**
  * Date: 30.07.2014
@@ -91,7 +99,23 @@ public final class DefaultJerseySubstitution implements Substitution {
     }
 
     private Iterable<Parameter> parameters () {
-        return uri.getMatchedResourceMethod ().getInvocable ().getParameters ();
+        return concat (FluentIterable.from (
+                               concat (singleton (uri.getMatchedResourceMethod   ()),
+                                                  uri.getMatchedResourceLocators ())
+                       ).transform (extract ())
+        );
+    }
+
+    final Function<ResourceMethod, List<Parameter>> extract () {
+        return new Function<ResourceMethod, List<Parameter>> () {
+
+            @Override
+            public final List<Parameter> apply (ResourceMethod resource) {
+                return resource != null ?
+                       resource.getInvocable ().getParameters () : Collections.<Parameter>emptyList ();
+            }
+
+        };
     }
 
 
