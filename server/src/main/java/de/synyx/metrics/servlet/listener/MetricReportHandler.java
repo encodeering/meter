@@ -68,13 +68,13 @@ public abstract class MetricReportHandler {
 
     protected final TimeUnit timeunit (String timeunit) {
         switch (timeunit) {
-            case  "d" : return TimeUnit.DAYS;
-            case  "h" : return TimeUnit.HOURS;
-            case  "m" : return TimeUnit.MINUTES;
-            case  "s" : return TimeUnit.SECONDS;
-            case "ms" : return TimeUnit.MILLISECONDS;
-            case "µs" : return TimeUnit.MICROSECONDS;
             case "ns" : return TimeUnit.NANOSECONDS;
+            case "µs" : return TimeUnit.MICROSECONDS;
+            case "ms" : return TimeUnit.MILLISECONDS;
+            case  "s" : return TimeUnit.SECONDS;
+            case  "m" : return TimeUnit.MINUTES;
+            case  "h" : return TimeUnit.HOURS;
+            case  "d" : return TimeUnit.DAYS;
         }
 
         throw new UnsupportedOperationException ("time-unit [" + timeunit + "] unsupported");
