@@ -41,7 +41,7 @@ public final class DefaultMetricNaming implements MetricNaming {
                 try {
                     return input.call ();
                 } catch (Exception e) {
-                    logger.warn ("Partial defect occurred during name resolution: {} {}", e.getMessage (), e.getCause ().getClass ());
+                    logger.warn ("Partial defect occurred during name resolution: {} {}", e.getMessage (), e.getClass ());
                     return "";
                 }
             }
