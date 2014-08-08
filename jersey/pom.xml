@@ -4,10 +4,16 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.synyx</groupId>
-    <artifactId>metrics</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <artifactId>metrics.jersey</artifactId>
+    <packaging>jar</packaging>
+
+    <name>${project.groupId}.${project.artifactId} [${project.version}]</name>
+
+    <parent>
+        <groupId>de.synyx</groupId>
+        <artifactId>metrics</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
