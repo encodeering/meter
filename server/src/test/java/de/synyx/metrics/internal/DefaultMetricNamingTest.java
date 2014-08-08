@@ -48,7 +48,16 @@ public class DefaultMetricNamingTest {
 
     @Test
     public void testNameException () {
+        String varname = UUID.randomUUID ().toString ();
 
+        Substitution substitution;
+
+              substitution = mock (Substitution.class);
+        when (substitution.substitute (varname)).thenThrow (new RuntimeException ());
+
+        MetricNaming naming = new DefaultMetricNaming (substitution);
+
+        assertThat (naming.name ("{" + varname + "}"), equalTo ("$"));
     }
 
 }
