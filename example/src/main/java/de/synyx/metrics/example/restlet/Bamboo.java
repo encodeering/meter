@@ -24,7 +24,7 @@ public class Bamboo {
     //            histograms = @Histogram (value = "#size", metriculate = BambooHistogramHook.class)
     //    )
     @Path ("{larry}")
-    public final String echo (@QueryParam ("foo") String foo, @PathParam ("larry") String larry) {
+    public String echo (@QueryParam ("foo") String foo, @PathParam ("larry") String larry) {
         return service.call (foo + "#" + larry);
     }
 
