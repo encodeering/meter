@@ -36,8 +36,8 @@ public final class MetricFeature implements Feature {
         protected final void configure () {
             bindFactory (MetricFeature.MetricRegistryFactory.class).to (MetricRegistry.class).in (Singleton.class);
             bind (DefaultJerseyInjector.class).to (Injector.class).in (Singleton.class);
-            bind (DefaultMetricInterceptorService.class).to (InterceptionService.class).in (Singleton.class);
             bind (DefaultJerseySubstitution.class).to (Substitution.class).in (Singleton.class);
+            bind (DefaultMetricInterceptorService.class).to (InterceptionService.class).in (Singleton.class);
         }
 
     }
