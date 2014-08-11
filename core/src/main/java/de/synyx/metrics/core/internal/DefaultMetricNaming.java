@@ -69,8 +69,8 @@ public final class DefaultMetricNaming implements MetricNaming {
             idx = matcher.end ();
         }
 
-        if (idx == 0)                 matches.add (text (proposal));
-        if (idx < proposal.length ()) matches.add (text (proposal.substring (idx)));
+             if (idx == 0)                 matches.add (text (proposal));
+        else if (idx < proposal.length ()) matches.add (text (proposal.substring (idx)));
 
         return matches;
     }
