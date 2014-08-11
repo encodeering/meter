@@ -9,7 +9,7 @@ import de.synyx.metrics.core.annotation.Timer;
  */
 public class BambooApplicationService implements BambooService<String> {
 
-    @Metric (timers = @Timer ("#{foo}-{larry}"))
+    @Metric (timers = @Timer ("{name}-{locale}"))
     @Override
     public String call (String application) {
         return "[" + application + "]";
