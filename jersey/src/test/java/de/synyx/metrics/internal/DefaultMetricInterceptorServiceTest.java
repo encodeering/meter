@@ -1,10 +1,13 @@
 package de.synyx.metrics.internal;
 
 import com.codahale.metrics.MetricRegistry;
-import de.synyx.metrics.Substitution;
-import de.synyx.metrics.annotation.Metric;
+import de.synyx.metrics.core.Injector;
+import de.synyx.metrics.core.Substitution;
+import de.synyx.metrics.core.annotation.Metric;
+import de.synyx.metrics.core.internal.DefaultMetricInvocation;
+import de.synyx.metrics.core.internal.DefaultMetricMethodInterceptor;
+import de.synyx.metrics.core.internal.DefaultMetricNaming;
 import org.glassfish.hk2.api.InterceptionService;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +25,7 @@ import static org.mockito.Mockito.when;
 public class DefaultMetricInterceptorServiceTest {
 
     @Mock
-    private ServiceLocator locator;
+    private Injector injector;
 
     @Mock
     private MetricRegistry registry;
@@ -32,15 +35,15 @@ public class DefaultMetricInterceptorServiceTest {
 
     @Before
     public void before () {
-        when (locator.createAndInitialize (DefaultMetricNaming.class)).thenReturn     (new DefaultMetricNaming     (substitution));
-        when (locator.createAndInitialize (DefaultMetricInvocation.class)).thenReturn (new DefaultMetricInvocation ());
+        when (injector.create (DefaultMetricNaming.class)).thenReturn (new DefaultMetricNaming (substitution));
+        when (injector.create (DefaultMetricInvocation.class)).thenReturn (new DefaultMetricInvocation ());
     }
 
     @Test
     public void testFilterAll () throws Exception {
         InterceptionService service;
 
-                    service = new DefaultMetricInterceptorService (locator, registry);
+                    service = new DefaultMetricInterceptorService (injector, registry);
         assertThat (service.getDescriptorFilter (), equalTo (BuilderHelper.allFilter ()));
     }
 
@@ -48,9 +51,9 @@ public class DefaultMetricInterceptorServiceTest {
     public void testMethodAOP () throws Exception {
         InterceptionService service;
 
-                    service = new DefaultMetricInterceptorService (locator, registry);
-        assertThat (service.getMethodInterceptors (null),                                      nullValue ());
-        assertThat (service.getMethodInterceptors (TestClass.class.getMethod ("no")),          nullValue ());
+                    service = new DefaultMetricInterceptorService (injector, registry);
+        assertThat (service.getMethodInterceptors (null), nullValue ());
+        assertThat (service.getMethodInterceptors (TestClass.class.getMethod ("no")), nullValue ());
         assertThat (service.getMethodInterceptors (TestClass.class.getMethod ("yes")).get (0), instanceOf (DefaultMetricMethodInterceptor.class));
     }
 
@@ -58,7 +61,7 @@ public class DefaultMetricInterceptorServiceTest {
     public void testConstructorAOPUnsupported () throws Exception {
         InterceptionService service;
 
-                    service = new DefaultMetricInterceptorService (locator, registry);
+                    service = new DefaultMetricInterceptorService (injector, registry);
         assertThat (service.getConstructorInterceptors (null),                              nullValue ());
         assertThat (service.getConstructorInterceptors (TestClass.class.getConstructor ()), nullValue ());
     }

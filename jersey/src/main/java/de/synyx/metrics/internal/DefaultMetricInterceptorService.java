@@ -1,12 +1,15 @@
 package de.synyx.metrics.internal;
 
 import com.codahale.metrics.MetricRegistry;
-import de.synyx.metrics.annotation.Metric;
+import de.synyx.metrics.core.Injector;
+import de.synyx.metrics.core.annotation.Metric;
+import de.synyx.metrics.core.internal.DefaultMetricInvocation;
+import de.synyx.metrics.core.internal.DefaultMetricMethodInterceptor;
+import de.synyx.metrics.core.internal.DefaultMetricNaming;
 import org.aopalliance.intercept.ConstructorInterceptor;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.glassfish.hk2.api.Filter;
 import org.glassfish.hk2.api.InterceptionService;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
 
 import java.lang.reflect.Constructor;
@@ -24,9 +27,9 @@ public final class DefaultMetricInterceptorService implements InterceptionServic
     private final List<MethodInterceptor> interceptors;
 
     @Inject
-    public DefaultMetricInterceptorService (ServiceLocator locator, MetricRegistry registry) {
-        interceptors = Collections.<MethodInterceptor>singletonList (new DefaultMetricMethodInterceptor (locator, registry, locator.createAndInitialize (DefaultMetricNaming.class),
-                                                                                                            locator.createAndInitialize (DefaultMetricInvocation.class)
+    public DefaultMetricInterceptorService (Injector injector, MetricRegistry registry) {
+        interceptors = Collections.<MethodInterceptor>singletonList (new DefaultMetricMethodInterceptor (injector, registry, injector.create (DefaultMetricNaming.class),
+                                                                                                                             injector.create (DefaultMetricInvocation.class)
         ));
     }
 

@@ -1,6 +1,6 @@
 package de.synyx.metrics.internal;
 
-import de.synyx.metrics.Substitution;
+import de.synyx.metrics.core.Substitution;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ResourceConfig;
