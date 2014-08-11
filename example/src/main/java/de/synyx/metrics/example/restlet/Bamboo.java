@@ -1,5 +1,8 @@
 package de.synyx.metrics.example.restlet;
 
+import de.synyx.metrics.core.annotation.Histogram;
+import de.synyx.metrics.core.annotation.Metric;
+import de.synyx.metrics.core.annotation.Timer;
 import de.synyx.metrics.example.service.BambooService;
 
 import javax.inject.Inject;
@@ -19,10 +22,10 @@ public class Bamboo {
     private BambooService<String> service;
 
     @GET
-    //    @Metric (
-    //            timers     = @Timer,
-    //            histograms = @Histogram (value = "#size", metriculate = BambooHistogramHook.class)
-    //    )
+    @Metric (
+        timers     = @Timer,
+        histograms = @Histogram (value = "#size", metriculate = BambooHistogramHook.class)
+    )
     @Path ("{larry}")
     public String echo (@QueryParam ("foo") String foo, @PathParam ("larry") String larry) {
         return service.call (foo + "#" + larry);
