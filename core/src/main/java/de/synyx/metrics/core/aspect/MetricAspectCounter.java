@@ -1,4 +1,4 @@
-package de.synyx.metrics.core.hook;
+package de.synyx.metrics.core.aspect;
 
 import de.synyx.metrics.core.Injector;
 import de.synyx.metrics.core.Metriculate;
@@ -8,12 +8,12 @@ import de.synyx.metrics.core.annotation.Counter;
 * Date: 16.07.2014
 * Time: 11:03
 */
-public final class MetricHookCounter extends MetricHookSupport {
+public final class MetricAspectCounter extends MetricAspectSupport {
 
     private final com.codahale.metrics.Counter counter;
     private final Counter annotation;
 
-    public MetricHookCounter (Injector injector, com.codahale.metrics.Counter counter, Counter annotation) {
+    public MetricAspectCounter (Injector injector, com.codahale.metrics.Counter counter, Counter annotation) {
         super (injector);
 
         this.counter    = counter;

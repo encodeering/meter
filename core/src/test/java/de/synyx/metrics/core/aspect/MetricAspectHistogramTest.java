@@ -1,6 +1,6 @@
-package de.synyx.metrics.core.hook;
+package de.synyx.metrics.core.aspect;
 
-import de.synyx.metrics.core.MetricHook;
+import de.synyx.metrics.core.MetricAspect;
 import de.synyx.metrics.core.annotation.Kind;
 import com.codahale.metrics.Histogram;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-public class MetricHookHistogramTest extends MetricHookTest {
+public class MetricAspectHistogramTest extends MetricAspectTest {
 
     protected final Histogram metric = mock (Histogram.class);
 
@@ -27,9 +27,9 @@ public class MetricHookHistogramTest extends MetricHookTest {
     public void testBoth () {
         de.synyx.metrics.core.annotation.Histogram annotation = annotation (Kind.Both, number);
 
-        MetricHook histogram;
+        MetricAspect histogram;
 
-        histogram = new MetricHookHistogram (injector, metric, annotation);
+        histogram = new MetricAspectHistogram (injector, metric, annotation);
         histogram.before ();
 
         verifyZeroInteractions (metric, annotation);
@@ -50,9 +50,9 @@ public class MetricHookHistogramTest extends MetricHookTest {
     public void testError () {
         de.synyx.metrics.core.annotation.Histogram annotation = annotation (Kind.Error, number);
 
-        MetricHook histogram;
+        MetricAspect histogram;
 
-        histogram = new MetricHookHistogram (injector, metric, annotation);
+        histogram = new MetricAspectHistogram (injector, metric, annotation);
         histogram.before ();
 
         verifyZeroInteractions (metric, annotation);
@@ -73,9 +73,9 @@ public class MetricHookHistogramTest extends MetricHookTest {
     public void testSuccess () {
         de.synyx.metrics.core.annotation.Histogram annotation = annotation (Kind.Success, number);
 
-        MetricHook histogram;
+        MetricAspect histogram;
 
-        histogram = new MetricHookHistogram (injector, metric, annotation);
+        histogram = new MetricAspectHistogram (injector, metric, annotation);
         histogram.before ();
 
         verifyZeroInteractions (metric, annotation);
@@ -104,9 +104,9 @@ public class MetricHookHistogramTest extends MetricHookTest {
                   annotation = annotation (Kind.Both, number);
             when (annotation.metriculate ()).thenReturn ((Class) TestMetriculate.class);
 
-            MetricHook histogram;
+            MetricAspect histogram;
 
-            histogram = new MetricHookHistogram (injector, metric, annotation);
+            histogram = new MetricAspectHistogram (injector, metric, annotation);
             histogram.before ();
 
             verifyZeroInteractions (metric, annotation);

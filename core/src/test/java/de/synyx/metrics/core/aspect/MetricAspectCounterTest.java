@@ -1,7 +1,7 @@
-package de.synyx.metrics.core.hook;
+package de.synyx.metrics.core.aspect;
 
 import com.codahale.metrics.Counter;
-import de.synyx.metrics.core.MetricHook;
+import de.synyx.metrics.core.MetricAspect;
 import de.synyx.metrics.core.annotation.Kind;
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-public class MetricHookCounterTest extends MetricHookTest {
+public class MetricAspectCounterTest extends MetricAspectTest {
 
     private final Counter metric = mock (Counter.class);
 
@@ -28,9 +28,9 @@ public class MetricHookCounterTest extends MetricHookTest {
         for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
             de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Both, operation, number);
 
-            MetricHook counter;
+            MetricAspect counter;
 
-            counter = new MetricHookCounter (injector, metric, annotation);
+            counter = new MetricAspectCounter (injector, metric, annotation);
             counter.before ();
 
             verifyZeroInteractions (metric, annotation);
@@ -65,9 +65,9 @@ public class MetricHookCounterTest extends MetricHookTest {
         for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
             de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Error, operation, number);
 
-            MetricHook counter;
+            MetricAspect counter;
 
-            counter = new MetricHookCounter (injector, metric, annotation);
+            counter = new MetricAspectCounter (injector, metric, annotation);
             counter.before ();
 
             verifyZeroInteractions (metric, annotation);
@@ -102,9 +102,9 @@ public class MetricHookCounterTest extends MetricHookTest {
         for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
             de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Success, operation, number);
 
-            MetricHook counter;
+            MetricAspect counter;
 
-            counter = new MetricHookCounter (injector, metric, annotation);
+            counter = new MetricAspectCounter (injector, metric, annotation);
             counter.before ();
 
             verifyZeroInteractions (metric, annotation);
@@ -146,9 +146,9 @@ public class MetricHookCounterTest extends MetricHookTest {
                   annotation = annotation (Kind.Both, operation, number);
             when (annotation.metriculate ()).thenReturn ((Class) TestMetriculate.class);
 
-            MetricHook counter;
+            MetricAspect counter;
 
-            counter = new MetricHookCounter (injector, metric, annotation);
+            counter = new MetricAspectCounter (injector, metric, annotation);
             counter.before ();
 
             verifyZeroInteractions (metric, annotation);

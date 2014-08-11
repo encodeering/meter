@@ -1,4 +1,4 @@
-package de.synyx.metrics.core.hook;
+package de.synyx.metrics.core.aspect;
 
 import de.synyx.metrics.core.Metriculate;
 

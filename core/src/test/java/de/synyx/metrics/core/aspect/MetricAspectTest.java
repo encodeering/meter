@@ -1,4 +1,4 @@
-package de.synyx.metrics.core.hook;
+package de.synyx.metrics.core.aspect;
 
 import de.synyx.metrics.core.Injector;
 import de.synyx.metrics.core.Metriculate;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
  * Date: 30.07.2014
  * Time: 13:55
  */
-public abstract class MetricHookTest {
+public abstract class MetricAspectTest {
 
     protected final Random Random = new Random ();
 

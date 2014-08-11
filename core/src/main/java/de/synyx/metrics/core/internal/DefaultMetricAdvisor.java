@@ -1,7 +1,7 @@
 package de.synyx.metrics.core.internal;
 
-import de.synyx.metrics.core.MetricHook;
-import de.synyx.metrics.core.MetricInvocation;
+import de.synyx.metrics.core.MetricAspect;
+import de.synyx.metrics.core.MetricAdvisor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,28 +13,28 @@ import java.util.concurrent.Callable;
  * Date: 30.07.2014
  * Time: 08:48
  */
-public final class DefaultMetricInvocation implements MetricInvocation {
+public final class DefaultMetricAdvisor implements MetricAdvisor {
 
     private final Logger logger = LoggerFactory.getLogger (getClass ());
 
     @Override
-    public final Object invoke (Callable<Object> invocable, List<MetricHook> hooks) throws Throwable {
+    public final Object around (Callable<Object> invocable, List<MetricAspect> aspects) throws Throwable {
         logger.trace ("create metrics for invocable: {}", invocable);
 
         Object response = null;
         Throwable throwable = null;
 
-        List<MetricHook> metrics = new ArrayList<> (hooks);
-        List<MetricHook> called  = new ArrayList<> ();
+        List<MetricAspect> auxiliary = new ArrayList<> (aspects);
+        List<MetricAspect> called    = new ArrayList<> ();
 
         try {
-            for (MetricHook metric : metrics) {
+            for (MetricAspect aspect : auxiliary) {
                 try {
-                            metric.before ();
+                              aspect.before ();
                 } catch (RuntimeException e) {
                     logger.warn (e.getMessage ());
                 } finally {
-                    called.add (metric);
+                    called.add (aspect);
                 }
             }
 
@@ -43,9 +43,9 @@ public final class DefaultMetricInvocation implements MetricInvocation {
                   throwable = e;
             throw throwable;
         } finally {
-            for (MetricHook metric : called) {
+            for (MetricAspect aspect : called) {
                 try {
-                            metric.after (response, throwable);
+                              aspect.after (response, throwable);
                 } catch (RuntimeException e) {
                     logger.warn (e.getMessage ());
                 }

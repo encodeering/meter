@@ -1,7 +1,7 @@
-package de.synyx.metrics.core.hook;
+package de.synyx.metrics.core.aspect;
 
 import com.codahale.metrics.Timer;
-import de.synyx.metrics.core.MetricHook;
+import de.synyx.metrics.core.MetricAspect;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class MetricHookTimerTest extends MetricHookTest {
+public class MetricAspectTimerTest extends MetricAspectTest {
 
     protected final Timer metric = mock (Timer.class);
 
@@ -28,9 +28,9 @@ public class MetricHookTimerTest extends MetricHookTest {
     public void test () throws InterruptedException {
         de.synyx.metrics.core.annotation.Timer annotation = annotation (TimeUnit.NANOSECONDS);
 
-        MetricHook timer;
+        MetricAspect timer;
 
-        timer = new MetricHookTimer (injector, metric, annotation);
+        timer = new MetricAspectTimer (injector, metric, annotation);
         timer.before ();
 
         Thread.sleep (Random.nextInt (1000));
@@ -48,9 +48,9 @@ public class MetricHookTimerTest extends MetricHookTest {
     public void testTimeunit () throws InterruptedException {
         de.synyx.metrics.core.annotation.Timer annotation = annotation (TimeUnit.MILLISECONDS);
 
-        MetricHook timer;
+        MetricAspect timer;
 
-        timer = new MetricHookTimer (injector, metric, annotation);
+        timer = new MetricAspectTimer (injector, metric, annotation);
         timer.before ();
 
         Thread.sleep (Random.nextInt (1000));

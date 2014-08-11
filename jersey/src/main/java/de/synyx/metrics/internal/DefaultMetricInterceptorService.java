@@ -3,7 +3,7 @@ package de.synyx.metrics.internal;
 import com.codahale.metrics.MetricRegistry;
 import de.synyx.metrics.core.Injector;
 import de.synyx.metrics.core.annotation.Metric;
-import de.synyx.metrics.core.internal.DefaultMetricInvocation;
+import de.synyx.metrics.core.internal.DefaultMetricAdvisor;
 import de.synyx.metrics.core.internal.DefaultMetricMethodInterceptor;
 import de.synyx.metrics.core.internal.DefaultMetricNaming;
 import org.aopalliance.intercept.ConstructorInterceptor;
@@ -29,7 +29,7 @@ public final class DefaultMetricInterceptorService implements InterceptionServic
     @Inject
     public DefaultMetricInterceptorService (Injector injector, MetricRegistry registry) {
         interceptors = Collections.<MethodInterceptor>singletonList (new DefaultMetricMethodInterceptor (injector, registry, injector.create (DefaultMetricNaming.class),
-                                                                                                                             injector.create (DefaultMetricInvocation.class)
+                                                                                                                             injector.create (DefaultMetricAdvisor.class)
         ));
     }
 

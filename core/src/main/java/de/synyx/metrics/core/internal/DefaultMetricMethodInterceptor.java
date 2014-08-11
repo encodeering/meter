@@ -5,19 +5,19 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import de.synyx.metrics.core.Injector;
-import de.synyx.metrics.core.MetricHook;
-import de.synyx.metrics.core.MetricInvocation;
+import de.synyx.metrics.core.MetricAspect;
+import de.synyx.metrics.core.MetricAdvisor;
 import de.synyx.metrics.core.MetricNaming;
+import de.synyx.metrics.core.aspect.MetricAspectMeter;
+import de.synyx.metrics.core.aspect.MetricAspectSupport;
+import de.synyx.metrics.core.aspect.MetricAspectTimer;
+import de.synyx.metrics.core.aspect.MetricAspectHistogram;
+import de.synyx.metrics.core.aspect.MetricAspectCounter;
 import de.synyx.metrics.core.annotation.Counter;
 import de.synyx.metrics.core.annotation.Histogram;
 import de.synyx.metrics.core.annotation.Meter;
 import de.synyx.metrics.core.annotation.Metric;
 import de.synyx.metrics.core.annotation.Timer;
-import de.synyx.metrics.core.hook.MetricHookCounter;
-import de.synyx.metrics.core.hook.MetricHookHistogram;
-import de.synyx.metrics.core.hook.MetricHookMeter;
-import de.synyx.metrics.core.hook.MetricHookSupport;
-import de.synyx.metrics.core.hook.MetricHookTimer;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
@@ -38,14 +38,14 @@ public final class DefaultMetricMethodInterceptor implements MethodInterceptor {
 
     private final Injector injector;
 
-    private final MetricRegistry   registry;
-    private final MetricNaming     naming;
-    private final MetricInvocation invoker;
+    private final MetricRegistry registry;
+    private final MetricNaming   naming;
+    private final MetricAdvisor  advisor;
 
-    public DefaultMetricMethodInterceptor (Injector injector, MetricRegistry registry, MetricNaming naming, MetricInvocation invoker) {
+    public DefaultMetricMethodInterceptor (Injector injector, MetricRegistry registry, MetricNaming naming, MetricAdvisor advisor) {
         this.injector = injector;
         this.registry = registry;
-        this.invoker  = invoker;
+        this.advisor  = advisor;
         this.naming   = naming;
     }
 
@@ -59,84 +59,84 @@ public final class DefaultMetricMethodInterceptor implements MethodInterceptor {
             metric = method.getAnnotation (Metric.class);
         if (metric == null) throw new IllegalStateException ("Method [" + method.getName () + "] not annotated");
 
-        List<MetricHook> hooks;
+        List<MetricAspect> aspects;
 
-                hooks = new ArrayList<> ();
-        addAll (hooks, collect (metric.counters (),   counter   (method)));
-        addAll (hooks, collect (metric.histograms (), histogram (method)));
-        addAll (hooks, collect (metric.meters (),     meter     (method)));
-        addAll (hooks, collect (metric.timers (),     timer     (method)));
+                aspects = new ArrayList<> ();
+        addAll (aspects, collect (metric.counters (),   counter   (method)));
+        addAll (aspects, collect (metric.histograms (), histogram (method)));
+        addAll (aspects, collect (metric.meters (),     meter     (method)));
+        addAll (aspects, collect (metric.timers (),     timer     (method)));
 
-        return invoker.invoke (wrap (invocation), hooks);
+        return advisor.around (wrap (invocation), aspects);
     }
 
     /* following hooks could be extracted to a product factory */
 
-    final Function<Counter, MetricHook> counter (final Method method) {
-        return new Function<Counter, MetricHook> () {
+    final Function<Counter, MetricAspect> counter (final Method method) {
+        return new Function<Counter, MetricAspect> () {
 
             @Override
-            public final MetricHook apply (final Counter counter) {
-                return name (method, counter.value ()).transform (new Function<String, MetricHook> () {
+            public final MetricAspect apply (final Counter counter) {
+                return name (method, counter.value ()).transform (new Function<String, MetricAspect> () {
 
                     @Override
-                    public final MetricHook apply (String name) {
-                        return new MetricHookCounter (injector, registry.counter (name), counter);
+                    public final MetricAspect apply (String name) {
+                        return new MetricAspectCounter (injector, registry.counter (name), counter);
                     }
 
-                }).or (MetricHookSupport.Noop);
+                }).or (MetricAspectSupport.Noop);
             }
         };
     }
 
-    final Function<Histogram, MetricHook> histogram (final Method method) {
-        return new Function<Histogram, MetricHook> () {
+    final Function<Histogram, MetricAspect> histogram (final Method method) {
+        return new Function<Histogram, MetricAspect> () {
 
             @Override
-            public final MetricHook apply (final Histogram histogram) {
-                return name (method, histogram.value ()).transform (new Function<String, MetricHook> () {
+            public final MetricAspect apply (final Histogram histogram) {
+                return name (method, histogram.value ()).transform (new Function<String, MetricAspect> () {
 
                     @Override
-                    public final MetricHook apply (String name) {
-                        return new MetricHookHistogram (injector, registry.histogram (name), histogram);
+                    public final MetricAspect apply (String name) {
+                        return new MetricAspectHistogram (injector, registry.histogram (name), histogram);
                     }
 
-                }).or (MetricHookSupport.Noop);
+                }).or (MetricAspectSupport.Noop);
             }
 
         };
     }
 
-    final Function<Meter, MetricHook> meter (final Method method) {
-        return new Function<Meter, MetricHook> () {
+    final Function<Meter, MetricAspect> meter (final Method method) {
+        return new Function<Meter, MetricAspect> () {
 
             @Override
-            public final MetricHook apply (final Meter meter) {
-                return name (method, meter.value ()).transform (new Function<String, MetricHook> () {
+            public final MetricAspect apply (final Meter meter) {
+                return name (method, meter.value ()).transform (new Function<String, MetricAspect> () {
 
                     @Override
-                    public final MetricHook apply (String name) {
-                        return new MetricHookMeter (injector, registry.meter (name), meter);
+                    public final MetricAspect apply (String name) {
+                        return new MetricAspectMeter (injector, registry.meter (name), meter);
                     }
 
-                }).or (MetricHookSupport.Noop);
+                }).or (MetricAspectSupport.Noop);
             }
         };
     }
 
-    final Function<Timer, MetricHook> timer (final Method method) {
-        return new Function<Timer, MetricHook> () {
+    final Function<Timer, MetricAspect> timer (final Method method) {
+        return new Function<Timer, MetricAspect> () {
 
             @Override
-            public final MetricHook apply (final Timer timer) {
-                return name (method, timer.value ()).transform (new Function<String, MetricHook> () {
+            public final MetricAspect apply (final Timer timer) {
+                return name (method, timer.value ()).transform (new Function<String, MetricAspect> () {
 
                     @Override
-                    public final MetricHook apply (String name) {
-                        return new MetricHookTimer (injector, registry.timer (name), timer);
+                    public final MetricAspect apply (String name) {
+                        return new MetricAspectTimer (injector, registry.timer (name), timer);
                     }
 
-                }).or (MetricHookSupport.Noop);
+                }).or (MetricAspectSupport.Noop);
             }
 
         };
@@ -173,7 +173,7 @@ public final class DefaultMetricMethodInterceptor implements MethodInterceptor {
         };
     }
 
-    private <T extends Annotation> Iterable<MetricHook> collect (final T[] annotation, Function<T, MetricHook> fn) {
+    private <T extends Annotation> Iterable<MetricAspect> collect (final T[] annotation, Function<T, MetricAspect> fn) {
         return Iterables.transform (asList (annotation), fn);
     }
 

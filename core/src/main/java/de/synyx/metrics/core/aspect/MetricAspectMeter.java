@@ -1,22 +1,22 @@
-package de.synyx.metrics.core.hook;
+package de.synyx.metrics.core.aspect;
 
 import de.synyx.metrics.core.Injector;
 import de.synyx.metrics.core.Metriculate;
-import de.synyx.metrics.core.annotation.Histogram;
+import de.synyx.metrics.core.annotation.Meter;
 
 /**
  * Date: 16.07.2014
- * Time: 11:25
+ * Time: 11:22
  */
-public final class MetricHookHistogram extends MetricHookSupport {
+public final class MetricAspectMeter extends MetricAspectSupport {
 
-    private final com.codahale.metrics.Histogram histogram;
-    private final Histogram annotation;
+    private final com.codahale.metrics.Meter meter;
+    private final Meter annotation;
 
-    public MetricHookHistogram (Injector injector, com.codahale.metrics.Histogram histogram, Histogram annotation) {
+    public MetricAspectMeter (Injector injector, com.codahale.metrics.Meter meter, Meter annotation) {
         super (injector);
 
-        this.histogram  = histogram;
+        this.meter      = meter;
         this.annotation = annotation;
     }
 
@@ -30,16 +30,15 @@ public final class MetricHookHistogram extends MetricHookSupport {
     }
 
     private void call (Object response, Throwable throwable) {
-        histogram.update (determine (custom (annotation.metriculate ()).or (new HistogramMetriculate ()), response, throwable));
+        meter.mark (determine (custom (annotation.metriculate ()).or (new MeterMetriculate ()), response, throwable));
     }
 
-    final class HistogramMetriculate implements Metriculate {
+    final class MeterMetriculate implements Metriculate {
 
         @Override
         public final long determine (Object response, Throwable throwable) {
             return annotation.number ();
         }
-
     }
 
 }

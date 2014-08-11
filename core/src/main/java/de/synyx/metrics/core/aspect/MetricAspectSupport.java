@@ -1,21 +1,21 @@
-package de.synyx.metrics.core.hook;
+package de.synyx.metrics.core.aspect;
 
 import com.google.common.base.Optional;
 import de.synyx.metrics.core.Injector;
-import de.synyx.metrics.core.MetricHook;
+import de.synyx.metrics.core.MetricAspect;
 import de.synyx.metrics.core.Metriculate;
 
 /**
 * Date: 16.07.2014
 * Time: 11:03
 */
-public abstract class MetricHookSupport implements MetricHook {
+public abstract class MetricAspectSupport implements MetricAspect {
 
-    public final static MetricHook Noop = new MetricHookSupport (null) {};
+    public final static MetricAspect Noop = new MetricAspectSupport (null) {};
 
     private final Injector injector;
 
-    protected MetricHookSupport (Injector locator) {
+    protected MetricAspectSupport (Injector locator) {
         this.injector = locator;
     }
 

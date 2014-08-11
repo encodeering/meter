@@ -1,6 +1,6 @@
-package de.synyx.metrics.core.hook;
+package de.synyx.metrics.core.aspect;
 
-import de.synyx.metrics.core.MetricHook;
+import de.synyx.metrics.core.MetricAspect;
 import de.synyx.metrics.core.annotation.Kind;
 import com.codahale.metrics.Meter;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-public class MetricHookMeterTest extends MetricHookTest {
+public class MetricAspectMeterTest extends MetricAspectTest {
 
     protected final Meter metric = mock (Meter.class);
 
@@ -27,9 +27,9 @@ public class MetricHookMeterTest extends MetricHookTest {
     public void testBoth () {
         de.synyx.metrics.core.annotation.Meter annotation = annotation (Kind.Both, number);
 
-        MetricHook meter;
+        MetricAspect meter;
 
-        meter = new MetricHookMeter (injector, metric, annotation);
+        meter = new MetricAspectMeter (injector, metric, annotation);
         meter.before ();
 
         verifyZeroInteractions (metric, annotation);
@@ -50,9 +50,9 @@ public class MetricHookMeterTest extends MetricHookTest {
     public void testError () {
         de.synyx.metrics.core.annotation.Meter annotation = annotation (Kind.Error, number);
 
-        MetricHook meter;
+        MetricAspect meter;
 
-        meter = new MetricHookMeter (injector, metric, annotation);
+        meter = new MetricAspectMeter (injector, metric, annotation);
         meter.before ();
 
         verifyZeroInteractions (metric, annotation);
@@ -73,9 +73,9 @@ public class MetricHookMeterTest extends MetricHookTest {
     public void testSuccess () {
         de.synyx.metrics.core.annotation.Meter annotation = annotation (Kind.Success, number);
 
-        MetricHook meter;
+        MetricAspect meter;
 
-        meter = new MetricHookMeter (injector, metric, annotation);
+        meter = new MetricAspectMeter (injector, metric, annotation);
         meter.before ();
 
         verifyZeroInteractions (metric, annotation);
@@ -104,9 +104,9 @@ public class MetricHookMeterTest extends MetricHookTest {
                   annotation = annotation (Kind.Both, number);
             when (annotation.metriculate ()).thenReturn ((Class) TestMetriculate.class);
 
-            MetricHook meter;
+            MetricAspect meter;
 
-            meter = new MetricHookMeter (injector, metric, annotation);
+            meter = new MetricAspectMeter (injector, metric, annotation);
             meter.before ();
 
             verifyZeroInteractions (metric, annotation);

@@ -2,18 +2,18 @@ package de.synyx.metrics.core.internal;
 
 import com.codahale.metrics.MetricRegistry;
 import de.synyx.metrics.core.Injector;
-import de.synyx.metrics.core.MetricHook;
-import de.synyx.metrics.core.MetricInvocation;
+import de.synyx.metrics.core.MetricAspect;
+import de.synyx.metrics.core.MetricAdvisor;
 import de.synyx.metrics.core.MetricNaming;
+import de.synyx.metrics.core.aspect.MetricAspectMeter;
+import de.synyx.metrics.core.aspect.MetricAspectTimer;
+import de.synyx.metrics.core.aspect.MetricAspectHistogram;
+import de.synyx.metrics.core.aspect.MetricAspectCounter;
 import de.synyx.metrics.core.annotation.Counter;
 import de.synyx.metrics.core.annotation.Histogram;
 import de.synyx.metrics.core.annotation.Meter;
 import de.synyx.metrics.core.annotation.Metric;
 import de.synyx.metrics.core.annotation.Timer;
-import de.synyx.metrics.core.hook.MetricHookCounter;
-import de.synyx.metrics.core.hook.MetricHookHistogram;
-import de.synyx.metrics.core.hook.MetricHookMeter;
-import de.synyx.metrics.core.hook.MetricHookTimer;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -42,7 +42,7 @@ public class DefaultMetricMethodInterceptorTest {
 
     private final MetricRegistry registry = new MetricRegistry ();
 
-    private final MetricInvocation invoker = mock (MetricInvocation.class);
+    private final MetricAdvisor invoker = mock (MetricAdvisor.class);
 
     private final DefaultMetricMethodInterceptor interceptor = new DefaultMetricMethodInterceptor (mock (Injector.class), registry, naming, invoker);
 
@@ -58,7 +58,7 @@ public class DefaultMetricMethodInterceptorTest {
 
         try {
             //noinspection unchecked
-            when (invoker.invoke (any (Callable.class), any (List.class))).thenAnswer (new Answer<Object> () {
+            when (invoker.around (any (Callable.class), any (List.class))).thenAnswer (new Answer<Object> () {
 
                 @SuppressWarnings ("unchecked")
                 @Override
@@ -76,21 +76,21 @@ public class DefaultMetricMethodInterceptorTest {
     @SuppressWarnings ("unchecked")
     @Test
     public void testInvokeAll () throws Throwable {
-        List<MetricHook> hooks = invoke (all ());
+        List<MetricAspect> hooks = invoke (all ());
 
         assertThat (hooks.size (), equalTo (4));
-        assertThat (hooks.get (0), instanceOf (MetricHookCounter.class));
-        assertThat (hooks.get (1), instanceOf (MetricHookHistogram.class));
-        assertThat (hooks.get (2), instanceOf (MetricHookMeter.class));
-        assertThat (hooks.get (3), instanceOf (MetricHookTimer.class));
+        assertThat (hooks.get (0), instanceOf (MetricAspectCounter.class));
+        assertThat (hooks.get (1), instanceOf (MetricAspectHistogram.class));
+        assertThat (hooks.get (2), instanceOf (MetricAspectMeter.class));
+        assertThat (hooks.get (3), instanceOf (MetricAspectTimer.class));
     }
 
     @Test
     public void testInvokeOne () throws Throwable {
-        List<MetricHook> hooks = invoke (one ());
+        List<MetricAspect> hooks = invoke (one ());
 
         assertThat (hooks.size (), equalTo (1));
-        assertThat (hooks.get (0), instanceOf (MetricHookCounter.class));
+        assertThat (hooks.get (0), instanceOf (MetricAspectCounter.class));
     }
 
     @Test (expected = IllegalStateException.class)
@@ -126,7 +126,7 @@ public class DefaultMetricMethodInterceptorTest {
     }
 
     @SuppressWarnings ("unchecked")
-    private List<MetricHook> invoke (Method method) throws Throwable {
+    private List<MetricAspect> invoke (Method method) throws Throwable {
         MethodInvocation invocation;
 
               invocation = mock (MethodInvocation.class);
@@ -134,9 +134,9 @@ public class DefaultMetricMethodInterceptorTest {
 
         interceptor.invoke (invocation);
 
-        ArgumentCaptor<List<MetricHook>> captor = ArgumentCaptor.forClass ((Class) List.class);
+        ArgumentCaptor<List<MetricAspect>> captor = ArgumentCaptor.forClass ((Class) List.class);
 
-        verify (invoker).invoke (Mockito.any (Callable.class), captor.capture ());
+        verify (invoker).around (Mockito.any (Callable.class), captor.capture ());
 
         return captor.getValue ();
     }
@@ -150,7 +150,7 @@ public class DefaultMetricMethodInterceptorTest {
               counter = mock (Counter.class);
         when (counter.value ()).thenReturn (name);
 
-        assertThat (interceptor.counter (nothing ()).apply (counter), instanceOf (MetricHookCounter.class));
+        assertThat (interceptor.counter (nothing ()).apply (counter), instanceOf (MetricAspectCounter.class));
 
         assertThat (registry.counter (name), notNullValue ());
     }
@@ -164,7 +164,7 @@ public class DefaultMetricMethodInterceptorTest {
               histogram = mock (Histogram.class);
         when (histogram.value ()).thenReturn (name);
 
-        assertThat (interceptor.histogram (nothing ()).apply (histogram), instanceOf (MetricHookHistogram.class));
+        assertThat (interceptor.histogram (nothing ()).apply (histogram), instanceOf (MetricAspectHistogram.class));
 
         assertThat (registry.histogram (name), notNullValue ());
     }
@@ -178,7 +178,7 @@ public class DefaultMetricMethodInterceptorTest {
               meter = mock (Meter.class);
         when (meter.value ()).thenReturn (name);
 
-        assertThat (interceptor.meter (nothing ()).apply (meter), instanceOf (MetricHookMeter.class));
+        assertThat (interceptor.meter (nothing ()).apply (meter), instanceOf (MetricAspectMeter.class));
 
         assertThat (registry.meter (name), notNullValue ());
     }
@@ -192,7 +192,7 @@ public class DefaultMetricMethodInterceptorTest {
               timer = mock (Timer.class);
         when (timer.value ()).thenReturn (name);
 
-        assertThat (interceptor.timer (nothing ()).apply (timer), instanceOf (MetricHookTimer.class));
+        assertThat (interceptor.timer (nothing ()).apply (timer), instanceOf (MetricAspectTimer.class));
 
         assertThat (registry.timer (name), notNullValue ());
     }

@@ -4,7 +4,7 @@ package de.synyx.metrics.core;
  * Date: 16.07.2014
  * Time: 08:46
  */
-public interface MetricHook {
+public interface MetricAspect {
 
     public abstract void before ();
 

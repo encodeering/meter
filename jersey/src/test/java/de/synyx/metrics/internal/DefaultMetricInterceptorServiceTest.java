@@ -4,7 +4,7 @@ import com.codahale.metrics.MetricRegistry;
 import de.synyx.metrics.core.Injector;
 import de.synyx.metrics.core.Substitution;
 import de.synyx.metrics.core.annotation.Metric;
-import de.synyx.metrics.core.internal.DefaultMetricInvocation;
+import de.synyx.metrics.core.internal.DefaultMetricAdvisor;
 import de.synyx.metrics.core.internal.DefaultMetricMethodInterceptor;
 import de.synyx.metrics.core.internal.DefaultMetricNaming;
 import org.glassfish.hk2.api.InterceptionService;
@@ -36,7 +36,7 @@ public class DefaultMetricInterceptorServiceTest {
     @Before
     public void before () {
         when (injector.create (DefaultMetricNaming.class)).thenReturn (new DefaultMetricNaming (substitution));
-        when (injector.create (DefaultMetricInvocation.class)).thenReturn (new DefaultMetricInvocation ());
+        when (injector.create (DefaultMetricAdvisor.class)).thenReturn (new DefaultMetricAdvisor ());
     }
 
     @Test

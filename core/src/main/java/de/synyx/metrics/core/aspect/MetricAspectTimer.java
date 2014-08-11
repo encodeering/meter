@@ -1,4 +1,4 @@
-package de.synyx.metrics.core.hook;
+package de.synyx.metrics.core.aspect;
 
 import com.codahale.metrics.Clock;
 import de.synyx.metrics.core.Injector;
@@ -10,14 +10,14 @@ import java.util.concurrent.TimeUnit;
 * Date: 16.07.2014
 * Time: 11:03
 */
-public final class MetricHookTimer extends MetricHookSupport {
+public final class MetricAspectTimer extends MetricAspectSupport {
 
     private final com.codahale.metrics.Timer timer;
     private final Timer annotation;
 
     private long start;
 
-    public MetricHookTimer (Injector injector, com.codahale.metrics.Timer timer, Timer annotation) {
+    public MetricAspectTimer (Injector injector, com.codahale.metrics.Timer timer, Timer annotation) {
         super (injector);
 
         this.timer = timer;
