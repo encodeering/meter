@@ -2,7 +2,9 @@ package de.synyx.metrics;
 
 import com.codahale.metrics.MetricRegistry;
 import de.synyx.metrics.core.Injector;
+import de.synyx.metrics.core.MeterProvider;
 import de.synyx.metrics.core.Substitution;
+import de.synyx.metrics.core.internal.DefaultMetricMeterProvider;
 import de.synyx.metrics.internal.DefaultJerseyInjector;
 import de.synyx.metrics.internal.DefaultJerseySubstitution;
 import de.synyx.metrics.internal.DefaultMetricInterceptorService;
@@ -37,6 +39,7 @@ public final class MetricFeature implements Feature {
             bindFactory (MetricFeature.MetricRegistryFactory.class).to (MetricRegistry.class).in (Singleton.class);
             bind (DefaultJerseyInjector.class).to (Injector.class).in (Singleton.class);
             bind (DefaultJerseySubstitution.class).to (Substitution.class).in (Singleton.class);
+            bind (DefaultMetricMeterProvider.class).to (MeterProvider.class).in (Singleton.class);
             bind (DefaultMetricInterceptorService.class).to (InterceptionService.class).in (Singleton.class);
         }
 
