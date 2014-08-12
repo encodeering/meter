@@ -32,7 +32,7 @@ public final class DefaultMetricAdvisor implements MetricAdvisor {
                 try {
                               aspect.before ();
                 } catch (RuntimeException e) {
-                    logger.warn (e.getMessage ());
+                    logger.warn ("around before {} {}", e.getMessage (), e.getClass ());
                 } finally {
                     called.add (aspect);
                 }
@@ -47,7 +47,7 @@ public final class DefaultMetricAdvisor implements MetricAdvisor {
                 try {
                               aspect.after (response, throwable);
                 } catch (RuntimeException e) {
-                    logger.warn (e.getMessage ());
+                    logger.warn ("around after {} {}", e.getMessage (), e.getClass ());
                 }
             }
         }
