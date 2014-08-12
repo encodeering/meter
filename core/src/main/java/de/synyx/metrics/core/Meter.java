@@ -9,6 +9,6 @@ import javax.measure.quantity.Quantity;
  */
 public interface Meter<Q extends Quantity> {
 
-    public abstract Meter<Q> update (Measurable<? extends Q> point);
+    public abstract Meter<Q> update (Measurable<Q> point);
 
 }
