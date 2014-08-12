@@ -1,8 +1,10 @@
 package de.synyx.metrics.core.aspect;
 
-import de.synyx.metrics.core.MetricAspect;
-import de.synyx.metrics.core.annotation.Kind;
 import com.codahale.metrics.Meter;
+import com.google.common.base.Optional;
+import de.synyx.metrics.core.MetricAspect;
+import de.synyx.metrics.core.Metriculate;
+import de.synyx.metrics.core.annotation.Kind;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -29,7 +31,7 @@ public class MetricAspectMeterTest extends MetricAspectTest {
 
         MetricAspect meter;
 
-        meter = new MetricAspectMeter (injector, metric, annotation);
+        meter = new MetricAspectMeter (metric, annotation, Optional.<Metriculate>absent ());
         meter.before ();
 
         verifyZeroInteractions (metric, annotation);
@@ -52,7 +54,7 @@ public class MetricAspectMeterTest extends MetricAspectTest {
 
         MetricAspect meter;
 
-        meter = new MetricAspectMeter (injector, metric, annotation);
+        meter = new MetricAspectMeter (metric, annotation, Optional.<Metriculate>absent ());
         meter.before ();
 
         verifyZeroInteractions (metric, annotation);
@@ -75,7 +77,7 @@ public class MetricAspectMeterTest extends MetricAspectTest {
 
         MetricAspect meter;
 
-        meter = new MetricAspectMeter (injector, metric, annotation);
+        meter = new MetricAspectMeter (metric, annotation, Optional.<Metriculate>absent ());
         meter.before ();
 
         verifyZeroInteractions (metric, annotation);
@@ -96,8 +98,6 @@ public class MetricAspectMeterTest extends MetricAspectTest {
     public void testMetriculate () {
         TestMetriculate test = new TestMetriculate (metriculate);
 
-        when (injector.create (TestMetriculate.class)).thenReturn (test);
-
         {
             de.synyx.metrics.core.annotation.Meter annotation;
 
@@ -106,7 +106,7 @@ public class MetricAspectMeterTest extends MetricAspectTest {
 
             MetricAspect meter;
 
-            meter = new MetricAspectMeter (injector, metric, annotation);
+            meter = new MetricAspectMeter (metric, annotation, Optional.<Metriculate>of (test));
             meter.before ();
 
             verifyZeroInteractions (metric, annotation);
@@ -122,8 +122,6 @@ public class MetricAspectMeterTest extends MetricAspectTest {
 
             verify (annotation, never ()).number ();
         }
-
-        verify (injector, times (3)).inject (test);
     }
 
     private de.synyx.metrics.core.annotation.Meter annotation (Kind kind, long number) {

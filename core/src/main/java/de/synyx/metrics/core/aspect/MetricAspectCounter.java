@@ -1,6 +1,6 @@
 package de.synyx.metrics.core.aspect;
 
-import de.synyx.metrics.core.Injector;
+import com.google.common.base.Optional;
 import de.synyx.metrics.core.Metriculate;
 import de.synyx.metrics.core.annotation.Counter;
 
@@ -11,13 +11,14 @@ import de.synyx.metrics.core.annotation.Counter;
 public final class MetricAspectCounter extends MetricAspectSupport {
 
     private final com.codahale.metrics.Counter counter;
-    private final Counter annotation;
+    private final Counter                      annotation;
 
-    public MetricAspectCounter (Injector injector, com.codahale.metrics.Counter counter, Counter annotation) {
-        super (injector);
+    private final Metriculate metriculate;
 
-        this.counter    = counter;
-        this.annotation = annotation;
+    public MetricAspectCounter (com.codahale.metrics.Counter counter, Counter annotation, Optional<Metriculate> metriculate) {
+        this.counter     = counter;
+        this.annotation  = annotation;
+        this.metriculate = metriculate.or (new CounterMetriculate ());
     }
 
     @Override
@@ -30,7 +31,7 @@ public final class MetricAspectCounter extends MetricAspectSupport {
     }
 
     private void call (Object response, Throwable throwable) {
-        long value = determine (custom (annotation.metriculate ()).or (new CounterMetriculate ()), response, throwable);
+        long value = metriculate.determine (response, throwable);
 
         switch (annotation.operation ()) {
             case Increment: counter.inc (value); break;

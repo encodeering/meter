@@ -1,7 +1,9 @@
 package de.synyx.metrics.core.aspect;
 
 import com.codahale.metrics.Counter;
+import com.google.common.base.Optional;
 import de.synyx.metrics.core.MetricAspect;
+import de.synyx.metrics.core.Metriculate;
 import de.synyx.metrics.core.annotation.Kind;
 import org.junit.Test;
 
@@ -30,7 +32,7 @@ public class MetricAspectCounterTest extends MetricAspectTest {
 
             MetricAspect counter;
 
-            counter = new MetricAspectCounter (injector, metric, annotation);
+            counter = new MetricAspectCounter (metric, annotation, Optional.<Metriculate>absent ());
             counter.before ();
 
             verifyZeroInteractions (metric, annotation);
@@ -67,7 +69,7 @@ public class MetricAspectCounterTest extends MetricAspectTest {
 
             MetricAspect counter;
 
-            counter = new MetricAspectCounter (injector, metric, annotation);
+            counter = new MetricAspectCounter (metric, annotation, Optional.<Metriculate>absent ());
             counter.before ();
 
             verifyZeroInteractions (metric, annotation);
@@ -104,7 +106,7 @@ public class MetricAspectCounterTest extends MetricAspectTest {
 
             MetricAspect counter;
 
-            counter = new MetricAspectCounter (injector, metric, annotation);
+            counter = new MetricAspectCounter (metric, annotation, Optional.<Metriculate>absent ());
             counter.before ();
 
             verifyZeroInteractions (metric, annotation);
@@ -138,8 +140,6 @@ public class MetricAspectCounterTest extends MetricAspectTest {
     public void testMetriculate () {
         TestMetriculate test = new TestMetriculate (metriculate);
 
-        when (injector.create (TestMetriculate.class)).thenReturn (test);
-
         for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
             de.synyx.metrics.core.annotation.Counter annotation;
 
@@ -148,7 +148,7 @@ public class MetricAspectCounterTest extends MetricAspectTest {
 
             MetricAspect counter;
 
-            counter = new MetricAspectCounter (injector, metric, annotation);
+            counter = new MetricAspectCounter (metric, annotation, Optional.<Metriculate>of (test));
             counter.before ();
 
             verifyZeroInteractions (metric, annotation);
@@ -176,10 +176,6 @@ public class MetricAspectCounterTest extends MetricAspectTest {
 
             verify (annotation, never ()).number ();
         }
-
-                         /* operations * after (times(3)) */
-
-        verify (injector, times (2 * 3)).inject (test);
     }
 
     private de.synyx.metrics.core.annotation.Counter annotation (Kind kind, de.synyx.metrics.core.annotation.Counter.Operation operation, long number) {

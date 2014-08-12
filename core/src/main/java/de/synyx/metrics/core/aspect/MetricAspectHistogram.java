@@ -1,6 +1,6 @@
 package de.synyx.metrics.core.aspect;
 
-import de.synyx.metrics.core.Injector;
+import com.google.common.base.Optional;
 import de.synyx.metrics.core.Metriculate;
 import de.synyx.metrics.core.annotation.Histogram;
 
@@ -11,13 +11,14 @@ import de.synyx.metrics.core.annotation.Histogram;
 public final class MetricAspectHistogram extends MetricAspectSupport {
 
     private final com.codahale.metrics.Histogram histogram;
-    private final Histogram annotation;
+    private final Histogram                      annotation;
 
-    public MetricAspectHistogram (Injector injector, com.codahale.metrics.Histogram histogram, Histogram annotation) {
-        super (injector);
+    private final Metriculate metriculate;
 
-        this.histogram  = histogram;
-        this.annotation = annotation;
+    public MetricAspectHistogram (com.codahale.metrics.Histogram histogram, Histogram annotation, Optional<Metriculate> metriculate) {
+        this.histogram   = histogram;
+        this.annotation  = annotation;
+        this.metriculate = metriculate.or (new HistogramMetriculate ());
     }
 
     @Override
@@ -30,7 +31,7 @@ public final class MetricAspectHistogram extends MetricAspectSupport {
     }
 
     private void call (Object response, Throwable throwable) {
-        histogram.update (determine (custom (annotation.metriculate ()).or (new HistogramMetriculate ()), response, throwable));
+        histogram.update (metriculate.determine (response, throwable));
     }
 
     final class HistogramMetriculate implements Metriculate {

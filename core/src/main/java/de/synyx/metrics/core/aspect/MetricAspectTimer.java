@@ -1,7 +1,6 @@
 package de.synyx.metrics.core.aspect;
 
 import com.codahale.metrics.Clock;
-import de.synyx.metrics.core.Injector;
 import de.synyx.metrics.core.annotation.Timer;
 
 import java.util.concurrent.TimeUnit;
@@ -17,9 +16,7 @@ public final class MetricAspectTimer extends MetricAspectSupport {
 
     private long start;
 
-    public MetricAspectTimer (Injector injector, com.codahale.metrics.Timer timer, Timer annotation) {
-        super (injector);
-
+    public MetricAspectTimer (com.codahale.metrics.Timer timer, Timer annotation) {
         this.timer = timer;
         this.annotation = annotation;
     }

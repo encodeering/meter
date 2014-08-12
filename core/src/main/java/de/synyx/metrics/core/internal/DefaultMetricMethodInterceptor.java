@@ -8,6 +8,7 @@ import de.synyx.metrics.core.Injector;
 import de.synyx.metrics.core.MetricAspect;
 import de.synyx.metrics.core.MetricAdvisor;
 import de.synyx.metrics.core.MetricNaming;
+import de.synyx.metrics.core.Metriculate;
 import de.synyx.metrics.core.aspect.MetricAspectMeter;
 import de.synyx.metrics.core.aspect.MetricAspectSupport;
 import de.synyx.metrics.core.aspect.MetricAspectTimer;
@@ -81,7 +82,7 @@ public final class DefaultMetricMethodInterceptor implements MethodInterceptor {
 
                     @Override
                     public final MetricAspect apply (String name) {
-                        return new MetricAspectCounter (injector, registry.counter (name), counter);
+                        return new MetricAspectCounter (registry.counter (name), counter, metriculate (counter.metriculate ()));
                     }
 
                 }).or (MetricAspectSupport.Noop);
@@ -98,7 +99,7 @@ public final class DefaultMetricMethodInterceptor implements MethodInterceptor {
 
                     @Override
                     public final MetricAspect apply (String name) {
-                        return new MetricAspectHistogram (injector, registry.histogram (name), histogram);
+                        return new MetricAspectHistogram (registry.histogram (name), histogram, metriculate (histogram.metriculate ()));
                     }
 
                 }).or (MetricAspectSupport.Noop);
@@ -116,7 +117,7 @@ public final class DefaultMetricMethodInterceptor implements MethodInterceptor {
 
                     @Override
                     public final MetricAspect apply (String name) {
-                        return new MetricAspectMeter (injector, registry.meter (name), meter);
+                        return new MetricAspectMeter (registry.meter (name), meter, metriculate (meter.metriculate ()));
                     }
 
                 }).or (MetricAspectSupport.Noop);
@@ -133,7 +134,7 @@ public final class DefaultMetricMethodInterceptor implements MethodInterceptor {
 
                     @Override
                     public final MetricAspect apply (String name) {
-                        return new MetricAspectTimer (injector, registry.timer (name), timer);
+                        return new MetricAspectTimer (registry.timer (name), timer);
                     }
 
                 }).or (MetricAspectSupport.Noop);
@@ -146,6 +147,12 @@ public final class DefaultMetricMethodInterceptor implements MethodInterceptor {
         if (value.startsWith ("#")) return Optional.fromNullable (MetricRegistry.name (method.getDeclaringClass (), method.getName (), naming.name (value.substring (1))));
         else
             return Optional.of (naming.name (value));
+    }
+
+    final Optional<Metriculate> metriculate (Class<? extends Metriculate> type) {
+        if (Metriculate.class.equals (type)) return Optional.absent ();
+        else
+            return Optional.fromNullable (injector.create (type));
     }
 
     /* */

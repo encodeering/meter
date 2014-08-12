@@ -1,6 +1,6 @@
 package de.synyx.metrics.core.aspect;
 
-import de.synyx.metrics.core.Injector;
+import com.google.common.base.Optional;
 import de.synyx.metrics.core.Metriculate;
 import de.synyx.metrics.core.annotation.Meter;
 
@@ -13,11 +13,12 @@ public final class MetricAspectMeter extends MetricAspectSupport {
     private final com.codahale.metrics.Meter meter;
     private final Meter annotation;
 
-    public MetricAspectMeter (Injector injector, com.codahale.metrics.Meter meter, Meter annotation) {
-        super (injector);
+    private final Metriculate metriculate;
 
-        this.meter      = meter;
-        this.annotation = annotation;
+    public MetricAspectMeter (com.codahale.metrics.Meter meter, Meter annotation, Optional<Metriculate> metriculate) {
+        this.meter       = meter;
+        this.annotation  = annotation;
+        this.metriculate = metriculate.or (new MeterMetriculate ());
     }
 
     @Override
@@ -30,7 +31,7 @@ public final class MetricAspectMeter extends MetricAspectSupport {
     }
 
     private void call (Object response, Throwable throwable) {
-        meter.mark (determine (custom (annotation.metriculate ()).or (new MeterMetriculate ()), response, throwable));
+        meter.mark (metriculate.determine (response, throwable));
     }
 
     final class MeterMetriculate implements Metriculate {

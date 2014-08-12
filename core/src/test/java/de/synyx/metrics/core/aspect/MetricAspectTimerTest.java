@@ -30,7 +30,7 @@ public class MetricAspectTimerTest extends MetricAspectTest {
 
         MetricAspect timer;
 
-        timer = new MetricAspectTimer (injector, metric, annotation);
+        timer = new MetricAspectTimer (metric, annotation);
         timer.before ();
 
         Thread.sleep (Random.nextInt (1000));
@@ -50,7 +50,7 @@ public class MetricAspectTimerTest extends MetricAspectTest {
 
         MetricAspect timer;
 
-        timer = new MetricAspectTimer (injector, metric, annotation);
+        timer = new MetricAspectTimer (metric, annotation);
         timer.before ();
 
         Thread.sleep (Random.nextInt (1000));
