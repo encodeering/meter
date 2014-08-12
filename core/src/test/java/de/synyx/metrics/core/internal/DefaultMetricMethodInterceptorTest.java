@@ -160,7 +160,7 @@ public class DefaultMetricMethodInterceptorTest {
         when (annotation.kind ()).thenReturn (Kind.Both);
         when (annotation.operation ()).thenReturn (Counter.Operation.Increment);
 
-        MetricAspect aspect = interceptor.counters (nothing ()).apply (annotation);
+        MetricAspect aspect = interceptor.counters ("").apply (annotation);
                      aspect.before ();
                      aspect.after  (null, null);
 
@@ -183,7 +183,7 @@ public class DefaultMetricMethodInterceptorTest {
         when (annotation.value ()).thenReturn (name);
         when (annotation.kind  ()).thenReturn (Kind.Both);
 
-        MetricAspect aspect = interceptor.histograms (nothing ()).apply (annotation);
+        MetricAspect aspect = interceptor.histograms ("").apply (annotation);
                      aspect.before ();
                      aspect.after  (null, null);
 
@@ -206,7 +206,7 @@ public class DefaultMetricMethodInterceptorTest {
         when (annotation.value ()).thenReturn (name);
         when (annotation.kind ()).thenReturn (Kind.Both);
 
-        MetricAspect aspect = interceptor.meters (nothing ()).apply (annotation);
+        MetricAspect aspect = interceptor.meters ("").apply (annotation);
                      aspect.before ();
                      aspect.after  (null, null);
 
@@ -229,7 +229,7 @@ public class DefaultMetricMethodInterceptorTest {
         when (annotation.value ()).thenReturn (name);
         when (annotation.unit ()).thenReturn (TimeUnit.NANOSECONDS);
 
-        MetricAspect aspect = interceptor.timers (nothing ()).apply (annotation);
+        MetricAspect aspect = interceptor.timers ("").apply (annotation);
                      aspect.before ();
                      aspect.after (null, null);
 
@@ -243,8 +243,8 @@ public class DefaultMetricMethodInterceptorTest {
     public void testName () throws Exception {
         String val = UUID.randomUUID ().toString ();
 
-        assertThat (interceptor.dynname (nothing (),       val).get (), equalTo (                                                                                        val));
-        assertThat (interceptor.dynname (nothing (), "#" + val).get (), equalTo ("de.synyx.metrics.core.internal.DefaultMetricMethodInterceptorTest$TestType.nothing." + val));
+        assertThat (interceptor.dynname (name,       val).get (), equalTo (             val));
+        assertThat (interceptor.dynname (name, "#" + val).get (), equalTo (name + "." + val));
     }
 
     private Method nothing () throws NoSuchMethodException {
