@@ -1,12 +1,12 @@
 package de.synyx.metrics.core.internal;
 
 import de.synyx.metrics.core.MetricAspect;
+import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -26,10 +26,10 @@ public class DefaultMetricAdvisorTest {
 
         List<MetricAspect> advices = Arrays.asList (advice);
 
-        Callable<Object> invocable;
+        MethodInvocation invocable;
 
-              invocable = mock (Callable.class);
-        when (invocable.call ()).thenReturn (response);
+              invocable = mock (MethodInvocation.class);
+        when (invocable.proceed ()).thenReturn (response);
 
         assertThat (new DefaultMetricAdvisor ().around (invocable, advices), equalTo (response));
 
@@ -41,12 +41,12 @@ public class DefaultMetricAdvisorTest {
     public void testInvokeNoHooks () throws Throwable {
         List<MetricAspect> hooks = new ArrayList<> ();
 
-        Callable<Object> invocable;
+        MethodInvocation invocable;
 
-                                             invocable = mock (Callable.class);
+                                            invocable = mock (MethodInvocation.class);
         new DefaultMetricAdvisor ().around (invocable, hooks);
 
-        verify (invocable).call ();
+        verify (invocable).proceed ();
     }
 
     @Test (expected = RuntimeException.class)
@@ -58,10 +58,10 @@ public class DefaultMetricAdvisorTest {
 
         List<MetricAspect> hooks = Arrays.asList (adviceA, adviceB);
 
-        Callable<Object> invocable;
+        MethodInvocation invocable;
 
-              invocable = mock (Callable.class);
-        when (invocable.call ()).thenThrow (response);
+              invocable = mock (MethodInvocation.class);
+        when (invocable.proceed ()).thenThrow (response);
 
         try {
             new DefaultMetricAdvisor ().around (invocable, hooks);
@@ -85,10 +85,10 @@ public class DefaultMetricAdvisorTest {
 
         List<MetricAspect> advices = Arrays.asList (adviceA, adviceB);
 
-        Callable<Object> invocable;
+        MethodInvocation invocable;
 
-              invocable = mock (Callable.class);
-        when (invocable.call ()).thenReturn (response);
+              invocable = mock (MethodInvocation.class);
+        when (invocable.proceed ()).thenReturn (response);
 
         assertThat (new DefaultMetricAdvisor ().around (invocable, advices), equalTo (response));
 
@@ -110,10 +110,10 @@ public class DefaultMetricAdvisorTest {
 
         List<MetricAspect> advices = Arrays.asList (adviceA, adviceB);
 
-        Callable<Object> invocable;
+        MethodInvocation invocable;
 
-              invocable = mock (Callable.class);
-        when (invocable.call ()).thenReturn (response);
+              invocable = mock (MethodInvocation.class);
+        when (invocable.proceed ()).thenReturn (response);
 
         assertThat (new DefaultMetricAdvisor ().around (invocable, advices), equalTo (response));
 

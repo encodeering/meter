@@ -5,20 +5,20 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import de.synyx.metrics.core.Injector;
-import de.synyx.metrics.core.MetricAspect;
 import de.synyx.metrics.core.MetricAdvisor;
+import de.synyx.metrics.core.MetricAspect;
 import de.synyx.metrics.core.MetricNaming;
 import de.synyx.metrics.core.Metriculate;
-import de.synyx.metrics.core.aspect.MetricAspectMeter;
-import de.synyx.metrics.core.aspect.MetricAspectSupport;
-import de.synyx.metrics.core.aspect.MetricAspectTimer;
-import de.synyx.metrics.core.aspect.MetricAspectHistogram;
-import de.synyx.metrics.core.aspect.MetricAspectCounter;
 import de.synyx.metrics.core.annotation.Counter;
 import de.synyx.metrics.core.annotation.Histogram;
 import de.synyx.metrics.core.annotation.Meter;
 import de.synyx.metrics.core.annotation.Metric;
 import de.synyx.metrics.core.annotation.Timer;
+import de.synyx.metrics.core.aspect.MetricAspectCounter;
+import de.synyx.metrics.core.aspect.MetricAspectHistogram;
+import de.synyx.metrics.core.aspect.MetricAspectMeter;
+import de.synyx.metrics.core.aspect.MetricAspectSupport;
+import de.synyx.metrics.core.aspect.MetricAspectTimer;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
@@ -26,7 +26,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import static com.google.common.collect.Iterables.addAll;
 import static java.util.Arrays.asList;
@@ -68,7 +67,7 @@ public final class DefaultMetricMethodInterceptor implements MethodInterceptor {
         addAll (aspects, collect (metric.meters (),     meter     (method)));
         addAll (aspects, collect (metric.timers (),     timer     (method)));
 
-        return advisor.around (wrap (invocation), aspects);
+        return advisor.around (invocation, aspects);
     }
 
     /* following hooks could be extracted to a product factory */
@@ -153,31 +152,6 @@ public final class DefaultMetricMethodInterceptor implements MethodInterceptor {
         if (Metriculate.class.equals (type)) return Optional.absent ();
         else
             return Optional.fromNullable (injector.create (type));
-    }
-
-    /* */
-
-    private Callable<Object> wrap (final MethodInvocation invocation) {
-        return new Callable<Object> () {
-
-            @Override
-            public final Object call () throws Exception {
-                try {
-                    return invocation.proceed ();
-                } catch (Exception e) {
-                    throw e;
-                } catch (Throwable e) {
-                    throw new Exception (e.getMessage (), e.getCause ());
-                }
-            }
-
-            @Override
-            public final String toString () {
-                Method method = invocation.getMethod ();
-                return method.getDeclaringClass ().getSimpleName () + " " + method.getName ();
-            }
-
-        };
     }
 
     private <T extends Annotation> Iterable<MetricAspect> collect (final T[] annotation, Function<T, MetricAspect> fn) {

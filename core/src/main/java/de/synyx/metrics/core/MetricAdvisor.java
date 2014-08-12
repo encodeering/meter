@@ -1,7 +1,8 @@
 package de.synyx.metrics.core;
 
+import org.aopalliance.intercept.MethodInvocation;
+
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * Date: 16.07.2014
@@ -9,6 +10,6 @@ import java.util.concurrent.Callable;
  */
 public abstract interface MetricAdvisor {
 
-    public abstract Object around (Callable<Object> invocable, List<MetricAspect> aspects) throws Throwable;
+    public abstract Object around (MethodInvocation invocation, List<MetricAspect> aspects) throws Throwable;
 
 }

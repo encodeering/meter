@@ -1,13 +1,13 @@
 package de.synyx.metrics.core.internal;
 
-import de.synyx.metrics.core.MetricAspect;
 import de.synyx.metrics.core.MetricAdvisor;
+import de.synyx.metrics.core.MetricAspect;
+import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * Date: 30.07.2014
@@ -18,8 +18,8 @@ public final class DefaultMetricAdvisor implements MetricAdvisor {
     private final Logger logger = LoggerFactory.getLogger (getClass ());
 
     @Override
-    public final Object around (Callable<Object> invocable, List<MetricAspect> aspects) throws Throwable {
-        logger.trace ("create metrics for invocable: {}", invocable);
+    public final Object around (MethodInvocation invocation, List<MetricAspect> aspects) throws Throwable {
+        logger.trace ("create metrics for invocable: {}", invocation.getMethod ());
 
         Object response = null;
         Throwable throwable = null;
@@ -38,7 +38,7 @@ public final class DefaultMetricAdvisor implements MetricAdvisor {
                 }
             }
 
-            return response = invocable.call ();
+            return response = invocation.proceed ();
         } catch (Throwable e) {
                   throwable = e;
             throw throwable;

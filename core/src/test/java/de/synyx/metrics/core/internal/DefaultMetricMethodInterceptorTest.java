@@ -2,18 +2,18 @@ package de.synyx.metrics.core.internal;
 
 import com.codahale.metrics.MetricRegistry;
 import de.synyx.metrics.core.Injector;
-import de.synyx.metrics.core.MetricAspect;
 import de.synyx.metrics.core.MetricAdvisor;
+import de.synyx.metrics.core.MetricAspect;
 import de.synyx.metrics.core.MetricNaming;
-import de.synyx.metrics.core.aspect.MetricAspectMeter;
-import de.synyx.metrics.core.aspect.MetricAspectTimer;
-import de.synyx.metrics.core.aspect.MetricAspectHistogram;
-import de.synyx.metrics.core.aspect.MetricAspectCounter;
 import de.synyx.metrics.core.annotation.Counter;
 import de.synyx.metrics.core.annotation.Histogram;
 import de.synyx.metrics.core.annotation.Meter;
 import de.synyx.metrics.core.annotation.Metric;
 import de.synyx.metrics.core.annotation.Timer;
+import de.synyx.metrics.core.aspect.MetricAspectCounter;
+import de.synyx.metrics.core.aspect.MetricAspectHistogram;
+import de.synyx.metrics.core.aspect.MetricAspectMeter;
+import de.synyx.metrics.core.aspect.MetricAspectTimer;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -24,7 +24,6 @@ import org.mockito.stubbing.Answer;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -58,13 +57,13 @@ public class DefaultMetricMethodInterceptorTest {
 
         try {
             //noinspection unchecked
-            when (invoker.around (any (Callable.class), any (List.class))).thenAnswer (new Answer<Object> () {
+            when (invoker.around (any (MethodInvocation.class), any (List.class))).thenAnswer (new Answer<Object> () {
 
                 @SuppressWarnings ("unchecked")
                 @Override
                 public Object answer (InvocationOnMock invocation) throws Throwable {
                     /* test do not care about the hook execution -> tested by separate units */
-                    return ((Callable<Object>) invocation.getArguments ()[0]).call ();
+                    return ((MethodInvocation) invocation.getArguments ()[0]).proceed ();
                 }
 
             });
@@ -114,7 +113,7 @@ public class DefaultMetricMethodInterceptorTest {
         interceptor.invoke (invocation);
     }
 
-    @Test (expected = Exception.class)
+    @Test (expected = Throwable.class)
     public void testInvokeFailHarder () throws Throwable {
         MethodInvocation invocation;
 
@@ -136,7 +135,7 @@ public class DefaultMetricMethodInterceptorTest {
 
         ArgumentCaptor<List<MetricAspect>> captor = ArgumentCaptor.forClass ((Class) List.class);
 
-        verify (invoker).around (Mockito.any (Callable.class), captor.capture ());
+        verify (invoker).around (Mockito.any (MethodInvocation.class), captor.capture ());
 
         return captor.getValue ();
     }
