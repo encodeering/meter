@@ -144,7 +144,8 @@ public final class DefaultMetricMethodInterceptor implements MethodInterceptor {
 
             @Override
             public String get () {
-                if (value.startsWith ("#")) return String.format ("%s.%s", basename, naming.name (value.substring (1)));
+                     if (value.equals     ("#")) return                         basename;
+                else if (value.startsWith ("#")) return String.format ("%s.%s", basename, naming.name (value.substring (1)));
                 else
                     return naming.name (value);
             }

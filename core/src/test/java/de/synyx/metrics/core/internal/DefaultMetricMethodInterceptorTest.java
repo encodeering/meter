@@ -245,6 +245,7 @@ public class DefaultMetricMethodInterceptorTest {
 
         assertThat (interceptor.dynname (name,       val).get (), equalTo (             val));
         assertThat (interceptor.dynname (name, "#" + val).get (), equalTo (name + "." + val));
+        assertThat (interceptor.dynname (name, "#").get (),       equalTo (name));
     }
 
     private Method nothing () throws NoSuchMethodException {
