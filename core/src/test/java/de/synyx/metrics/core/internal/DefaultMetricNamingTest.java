@@ -39,6 +39,8 @@ public class DefaultMetricNamingTest {
 
         MetricNaming naming = new DefaultMetricNaming (substitution);
 
+        assertThat (naming.name (""),             equalTo (""));
+
         assertThat (naming.name ("abc"),          equalTo ("abc"));
 
         assertThat (naming.name ("xxx{yyy}"),     equalTo ("xxx" + any));
