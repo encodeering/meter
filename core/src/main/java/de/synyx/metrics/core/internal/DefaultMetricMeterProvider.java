@@ -6,6 +6,8 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import de.synyx.metrics.core.Meter;
 import de.synyx.metrics.core.MeterProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
@@ -21,6 +23,8 @@ import javax.measure.unit.Unit;
  */
 public final class DefaultMetricMeterProvider implements MeterProvider {
 
+    private final Logger logger = LoggerFactory.getLogger (getClass ());
+
     private final MetricRegistry registry;
 
     @Inject
@@ -30,6 +34,8 @@ public final class DefaultMetricMeterProvider implements MeterProvider {
 
     @Override
     public final Meter<Dimensionless> counter (final String name) {
+        logger.debug ("requesting the counter {}", name);
+
         return new Meter<Dimensionless> () {
 
             private final Counter counter = registry.counter (name);
@@ -45,6 +51,8 @@ public final class DefaultMetricMeterProvider implements MeterProvider {
 
     @Override
     public final Meter<Dimensionless> histogram (final String name) {
+        logger.debug ("requesting the histogram {}", name);
+
         return new Meter<Dimensionless> () {
 
             private final Histogram histogram = registry.histogram (name);
@@ -60,6 +68,8 @@ public final class DefaultMetricMeterProvider implements MeterProvider {
 
     @Override
     public final Meter<Dimensionless> meter (final String name) {
+        logger.debug ("requesting the meter {}", name);
+
         return new Meter<Dimensionless> () {
 
             private final com.codahale.metrics.Meter meter = registry.meter (name);
@@ -75,6 +85,8 @@ public final class DefaultMetricMeterProvider implements MeterProvider {
 
     @Override
     public final Meter<Duration> timer (final String name) {
+         logger.debug ("requesting the timer {}", name);
+
         return new Meter<Duration> () {
 
             private final Timer timer = registry.timer (name);
