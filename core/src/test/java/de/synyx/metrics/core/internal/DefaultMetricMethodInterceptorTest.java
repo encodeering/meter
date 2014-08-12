@@ -1,12 +1,13 @@
 package de.synyx.metrics.core.internal;
 
-import com.codahale.metrics.MetricRegistry;
 import de.synyx.metrics.core.Injector;
+import de.synyx.metrics.core.MeterProvider;
 import de.synyx.metrics.core.MetricAdvisor;
 import de.synyx.metrics.core.MetricAspect;
 import de.synyx.metrics.core.MetricNaming;
 import de.synyx.metrics.core.annotation.Counter;
 import de.synyx.metrics.core.annotation.Histogram;
+import de.synyx.metrics.core.annotation.Kind;
 import de.synyx.metrics.core.annotation.Meter;
 import de.synyx.metrics.core.annotation.Metric;
 import de.synyx.metrics.core.annotation.Timer;
@@ -24,6 +25,9 @@ import org.mockito.stubbing.Answer;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import javax.measure.Measurable;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -38,11 +42,11 @@ public class DefaultMetricMethodInterceptorTest {
 
     private final MetricNaming naming = mock (MetricNaming.class);
 
-    private final MetricRegistry registry = mock (MetricRegistry.class);
+    private final MeterProvider provider = mock (MeterProvider.class);
 
     private final MetricAdvisor invoker = mock (MetricAdvisor.class);
 
-    private final DefaultMetricMethodInterceptor interceptor = new DefaultMetricMethodInterceptor (mock (Injector.class), registry, naming, invoker);
+    private final DefaultMetricMethodInterceptor interceptor = new DefaultMetricMethodInterceptor (mock (Injector.class), provider, naming, invoker);
 
     {
         when (naming.name (anyString ())).thenAnswer (new Answer<Object> () {
@@ -142,60 +146,105 @@ public class DefaultMetricMethodInterceptorTest {
         return captor.getValue ();
     }
 
+    @SuppressWarnings ("unchecked")
     @Test
     public void testCounter () throws Exception {
-        Counter counter;
+        de.synyx.metrics.core.Meter meter = mock (de.synyx.metrics.core.Meter.class);
 
-              counter = mock (Counter.class);
-        when (counter.value ()).thenReturn (name);
+        when (provider.counter (name)).thenReturn (meter);
 
-        assertThat (interceptor.counter (nothing ()).apply (counter), instanceOf (MetricAspectCounter.class));
+        Counter annotation;
 
-        verify (registry).counter (name);
+              annotation = mock (Counter.class);
+        when (annotation.value ()).thenReturn (name);
+        when (annotation.kind ()).thenReturn (Kind.Both);
+        when (annotation.operation ()).thenReturn (Counter.Operation.Increment);
+
+        MetricAspect aspect = interceptor.counters (nothing ()).apply (annotation);
+                     aspect.before ();
+                     aspect.after  (null, null);
+
+        assertThat (aspect, instanceOf (MetricAspectCounter.class));
+
+        verify (provider).counter (name);
+        verify (meter).update (any (Measurable.class));
     }
 
+    @SuppressWarnings ("unchecked")
     @Test
     public void testHistogram () throws Exception {
-        Histogram histogram;
+        de.synyx.metrics.core.Meter meter = mock (de.synyx.metrics.core.Meter.class);
 
-              histogram = mock (Histogram.class);
-        when (histogram.value ()).thenReturn (name);
+        when (provider.histogram (name)).thenReturn (meter);
 
-        assertThat (interceptor.histogram (nothing ()).apply (histogram), instanceOf (MetricAspectHistogram.class));
+        Histogram annotation;
 
-        verify (registry).histogram (name);
+              annotation = mock (Histogram.class);
+        when (annotation.value ()).thenReturn (name);
+        when (annotation.kind  ()).thenReturn (Kind.Both);
+
+        MetricAspect aspect = interceptor.histograms (nothing ()).apply (annotation);
+                     aspect.before ();
+                     aspect.after  (null, null);
+
+        assertThat (aspect, instanceOf (MetricAspectHistogram.class));
+
+        verify (provider).histogram (name);
+        verify (meter).update (any (Measurable.class));
     }
 
+    @SuppressWarnings ("unchecked")
     @Test
     public void testMeter () throws Exception {
-        Meter meter;
+        de.synyx.metrics.core.Meter meter = mock (de.synyx.metrics.core.Meter.class);
 
-              meter = mock (Meter.class);
-        when (meter.value ()).thenReturn (name);
+        when (provider.meter (name)).thenReturn (meter);
 
-        assertThat (interceptor.meter (nothing ()).apply (meter), instanceOf (MetricAspectMeter.class));
+        Meter annotation;
 
-        verify (registry).meter (name);
+              annotation = mock (Meter.class);
+        when (annotation.value ()).thenReturn (name);
+        when (annotation.kind ()).thenReturn (Kind.Both);
+
+        MetricAspect aspect = interceptor.meters (nothing ()).apply (annotation);
+                     aspect.before ();
+                     aspect.after  (null, null);
+
+        assertThat (aspect, instanceOf (MetricAspectMeter.class));
+
+        verify (provider).meter (name);
+        verify (meter).update (any (Measurable.class));
     }
 
+    @SuppressWarnings ("unchecked")
     @Test
     public void testTimer () throws Exception {
-        Timer timer;
+        de.synyx.metrics.core.Meter meter = mock (de.synyx.metrics.core.Meter.class);
 
-              timer = mock (Timer.class);
-        when (timer.value ()).thenReturn (name);
+        when (provider.timer (name)).thenReturn (meter);
 
-        assertThat (interceptor.timer (nothing ()).apply (timer), instanceOf (MetricAspectTimer.class));
+        Timer annotation;
 
-        verify (registry).timer (name);
+              annotation = mock (Timer.class);
+        when (annotation.value ()).thenReturn (name);
+        when (annotation.unit ()).thenReturn (TimeUnit.NANOSECONDS);
+
+        MetricAspect aspect = interceptor.timers (nothing ()).apply (annotation);
+                     aspect.before ();
+                     aspect.after (null, null);
+
+        assertThat (aspect, instanceOf (MetricAspectTimer.class));
+
+        verify (provider).timer (name);
+        verify (meter).update (any (Measurable.class));
     }
 
     @Test
     public void testName () throws Exception {
         String val = UUID.randomUUID ().toString ();
 
-        assertThat (interceptor.name (nothing (),       val).get (), equalTo (                                                                                        val));
-        assertThat (interceptor.name (nothing (), "#" + val).get (), equalTo ("de.synyx.metrics.core.internal.DefaultMetricMethodInterceptorTest$TestType.nothing." + val));
+        assertThat (interceptor.dynname (nothing (),       val).get (), equalTo (                                                                                        val));
+        assertThat (interceptor.dynname (nothing (), "#" + val).get (), equalTo ("de.synyx.metrics.core.internal.DefaultMetricMethodInterceptorTest$TestType.nothing." + val));
     }
 
     private Method nothing () throws NoSuchMethodException {

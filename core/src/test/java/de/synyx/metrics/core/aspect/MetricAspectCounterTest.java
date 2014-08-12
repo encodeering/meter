@@ -1,180 +1,305 @@
 package de.synyx.metrics.core.aspect;
 
-import com.codahale.metrics.Counter;
 import com.google.common.base.Optional;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import de.synyx.metrics.core.Meter;
 import de.synyx.metrics.core.MetricAspect;
 import de.synyx.metrics.core.Metriculate;
 import de.synyx.metrics.core.annotation.Kind;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import javax.measure.Measurable;
+import javax.measure.Measure;
+import javax.measure.quantity.Dimensionless;
+import javax.measure.unit.Unit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+@RunWith (MockitoJUnitRunner.class)
 public class MetricAspectCounterTest extends MetricAspectTest {
 
-    private final Counter metric = mock (Counter.class);
+    @Mock
+    private Meter<Dimensionless> meter;
+
+    private Supplier<Meter<Dimensionless>> supplier;
+
+    @Before
+    public void before () {
+        supplier = Suppliers.ofInstance (meter);
+    }
 
     @Test
     public void testName () throws NoSuchMethodException {
         assertThat (de.synyx.metrics.core.annotation.Counter.class.getMethod ("value").getDefaultValue (), equalTo ((Object) "#"));
     }
 
+    @SuppressWarnings ("unchecked")
     @Test
-    public void testBoth () {
+    public void testBothNN () {
         for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
             de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Both, operation, number);
 
-            MetricAspect counter;
+            MetricAspect aspect;
 
-            counter = new MetricAspectCounter (metric, annotation, Optional.<Metriculate>absent ());
-            counter.before ();
-
-            verifyZeroInteractions (metric, annotation);
-
-            counter.after (null, null);
+            aspect = new MetricAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect.before ();
+            aspect.after  (null, null);
 
             switch (operation) {
-                case Increment: verify (metric, times (1)).inc (number); break;
-                case Decrement: verify (metric, times (1)).dec (number); break;
+                case Increment: verify (meter).update (Measure.valueOf (  number, Unit.ONE)); break;
+                case Decrement: verify (meter).update (Measure.valueOf (- number, Unit.ONE)); break;
             }
 
-            counter.after (response, null);
-
-            switch (operation) {
-                case Increment: verify (metric, times (2)).inc (number); break;
-                case Decrement: verify (metric, times (2)).dec (number); break;
-            }
-
-            counter.after (null, exception);
-
-            switch (operation) {
-                case Increment: verify (metric, times (3)).inc (number); break;
-                case Decrement: verify (metric, times (3)).dec (number); break;
-            }
-
-            verify (annotation, times (3)).number ();
+            Mockito.reset (meter);
         }
     }
 
+    @SuppressWarnings ("unchecked")
     @Test
-    public void testError () {
+    public void testBothRN () {
+        for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
+            de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Both, operation, number);
+
+            MetricAspect aspect;
+
+            aspect = new MetricAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect.before ();
+            aspect.after  (response, null);
+
+            switch (operation) {
+                case Increment: verify (meter).update (Measure.valueOf (  number, Unit.ONE)); break;
+                case Decrement: verify (meter).update (Measure.valueOf (- number, Unit.ONE)); break;
+            }
+
+            Mockito.reset (meter);
+        }
+    }
+
+    @SuppressWarnings ("unchecked")
+    @Test
+    public void testBothNT () {
+        for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
+            de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Both, operation, number);
+
+            MetricAspect aspect;
+
+            aspect = new MetricAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect.before ();
+            aspect.after  (null, exception);
+
+            switch (operation) {
+                case Increment: verify (meter).update (Measure.valueOf (  number, Unit.ONE)); break;
+                case Decrement: verify (meter).update (Measure.valueOf (- number, Unit.ONE)); break;
+            }
+
+            Mockito.reset (meter);
+        }
+    }
+
+    @SuppressWarnings ("unchecked")
+    @Test
+    public void testErrorNN () {
         for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
             de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Error, operation, number);
 
-            MetricAspect counter;
+            MetricAspect aspect;
 
-            counter = new MetricAspectCounter (metric, annotation, Optional.<Metriculate>absent ());
-            counter.before ();
-
-            verifyZeroInteractions (metric, annotation);
-
-            counter.after (null, null);
+            aspect = new MetricAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect.before ();
+            aspect.after  (null, null);
 
             switch (operation) {
-                case Increment: verify (metric, never ()).inc (number); break;
-                case Decrement: verify (metric, never ()).dec (number); break;
+                case Increment: verify (meter, never ()).update (any (Measurable.class)); break;
+                case Decrement: verify (meter, never ()).update (any (Measurable.class)); break;
             }
 
-            counter.after (response, null);
-
-            switch (operation) {
-                case Increment: verify (metric, never ()).inc (number); break;
-                case Decrement: verify (metric, never ()).dec (number); break;
-            }
-
-            counter.after (null, exception);
-
-            switch (operation) {
-                case Increment: verify (metric, times (1)).inc (number); break;
-                case Decrement: verify (metric, times (1)).dec (number); break;
-            }
-
-            verify (annotation).number ();
+            Mockito.reset (meter);
         }
     }
 
+    @SuppressWarnings ("unchecked")
     @Test
-    public void testSuccess () {
+    public void testErrorRN () {
+        for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
+            de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Error, operation, number);
+
+            MetricAspect aspect;
+
+            aspect = new MetricAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect.before ();
+            aspect.after  (response, null);
+
+            switch (operation) {
+                case Increment: verify (meter, never ()).update (any (Measurable.class)); break;
+                case Decrement: verify (meter, never ()).update (any (Measurable.class)); break;
+            }
+
+            Mockito.reset (meter);
+        }
+    }
+
+    @SuppressWarnings ("unchecked")
+    @Test
+    public void testErrorNT () {
+        for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
+            de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Error, operation, number);
+
+            MetricAspect aspect;
+
+            aspect = new MetricAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect.before ();
+            aspect.after  (null, exception);
+
+            switch (operation) {
+                case Increment: verify (meter).update (Measure.valueOf (  number, Unit.ONE)); break;
+                case Decrement: verify (meter).update (Measure.valueOf (- number, Unit.ONE)); break;
+            }
+
+            Mockito.reset (meter);
+        }
+    }
+
+    @SuppressWarnings ("unchecked")
+    @Test
+    public void testSuccessNN () {
         for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
             de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Success, operation, number);
 
-            MetricAspect counter;
+            MetricAspect aspect;
 
-            counter = new MetricAspectCounter (metric, annotation, Optional.<Metriculate>absent ());
-            counter.before ();
-
-            verifyZeroInteractions (metric, annotation);
-
-            counter.after (null, exception);
+            aspect = new MetricAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect.before ();
+            aspect.after  (null, null);
 
             switch (operation) {
-                case Increment: verify (metric, never ()).inc (number); break;
-                case Decrement: verify (metric, never ()).dec (number); break;
+                case Increment: verify (meter).update (Measure.valueOf (  number, Unit.ONE)); break;
+                case Decrement: verify (meter).update (Measure.valueOf (- number, Unit.ONE)); break;
             }
 
-            counter.after (null, null);
-
-            switch (operation) {
-                case Increment: verify (metric, times (1)).inc (number); break;
-                case Decrement: verify (metric, times (1)).dec (number); break;
-            }
-
-            counter.after (response, null);
-
-            switch (operation) {
-                case Increment: verify (metric, times (2)).inc (number); break;
-                case Decrement: verify (metric, times (2)).dec (number); break;
-            }
-
-            verify (annotation, times (2)).number ();
+            Mockito.reset (meter);
         }
     }
 
+    @SuppressWarnings ("unchecked")
     @Test
-    public void testMetriculate () {
+    public void testSuccessRN () {
+        for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
+            de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Success, operation, number);
+
+            MetricAspect aspect;
+
+            aspect = new MetricAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect.before ();
+            aspect.after  (response, null);
+
+            switch (operation) {
+                case Increment: verify (meter).update (Measure.valueOf (  number, Unit.ONE)); break;
+                case Decrement: verify (meter).update (Measure.valueOf (- number, Unit.ONE)); break;
+            }
+
+            Mockito.reset (meter);
+        }
+    }
+
+    @SuppressWarnings ("unchecked")
+    @Test
+    public void testSuccessNT () {
+        for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
+            de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Success, operation, number);
+
+            MetricAspect aspect;
+
+            aspect = new MetricAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect.before ();
+            aspect.after  (null, exception);
+
+            switch (operation) {
+                case Increment: verify (meter, never ()).update (any (Measurable.class)); break;
+                case Decrement: verify (meter, never ()).update (any (Measurable.class)); break;
+            }
+
+            Mockito.reset (meter);
+        }
+    }
+
+    @SuppressWarnings ("unchecked")
+    @Test
+    public void testMetriculateNN () {
         TestMetriculate test = new TestMetriculate (metriculate);
 
         for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
-            de.synyx.metrics.core.annotation.Counter annotation;
+            de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Both, operation, number);
 
-                  annotation = annotation (Kind.Both, operation, number);
-            when (annotation.metriculate ()).thenReturn ((Class) TestMetriculate.class);
+            MetricAspect aspect;
 
-            MetricAspect counter;
-
-            counter = new MetricAspectCounter (metric, annotation, Optional.<Metriculate>of (test));
-            counter.before ();
-
-            verifyZeroInteractions (metric, annotation);
-
-            counter.after (null, null);
+            aspect = new MetricAspectCounter (annotation, supplier, Optional.<Metriculate>of (test));
+            aspect.before ();
+            aspect.after  (null, null);
 
             switch (operation) {
-                case Increment: verify (metric, times (1)).inc (metriculate); break;
-                case Decrement: verify (metric, times (1)).dec (metriculate); break;
+                case Increment: verify (meter).update (Measure.valueOf (  metriculate, Unit.ONE)); break;
+                case Decrement: verify (meter).update (Measure.valueOf (- metriculate, Unit.ONE)); break;
             }
 
-            counter.after (response, null);
+            Mockito.reset (meter);
+        }
+    }
+
+    @SuppressWarnings ("unchecked")
+    @Test
+    public void testMetriculateRN () {
+        TestMetriculate test = new TestMetriculate (metriculate);
+
+        for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
+            de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Both, operation, number);
+
+            MetricAspect aspect;
+
+            aspect = new MetricAspectCounter (annotation, supplier, Optional.<Metriculate>of (test));
+            aspect.before ();
+            aspect.after  (response, null);
 
             switch (operation) {
-                case Increment: verify (metric, times (2)).inc (metriculate); break;
-                case Decrement: verify (metric, times (2)).dec (metriculate); break;
+                case Increment: verify (meter).update (Measure.valueOf (  metriculate, Unit.ONE)); break;
+                case Decrement: verify (meter).update (Measure.valueOf (- metriculate, Unit.ONE)); break;
             }
 
-            counter.after (null, exception);
+            Mockito.reset (meter);
+        }
+    }
+
+    @SuppressWarnings ("unchecked")
+    @Test
+    public void testMetriculateNT () {
+        TestMetriculate test = new TestMetriculate (metriculate);
+
+        for (de.synyx.metrics.core.annotation.Counter.Operation operation : de.synyx.metrics.core.annotation.Counter.Operation.values ()) {
+            de.synyx.metrics.core.annotation.Counter annotation = annotation (Kind.Both, operation, number);
+
+            MetricAspect aspect;
+
+            aspect = new MetricAspectCounter (annotation, supplier, Optional.<Metriculate>of (test));
+            aspect.before ();
+            aspect.after  (null, exception);
 
             switch (operation) {
-                case Increment: verify (metric, times (3)).inc (metriculate); break;
-                case Decrement: verify (metric, times (3)).dec (metriculate); break;
+                case Increment: verify (meter).update (Measure.valueOf (  metriculate, Unit.ONE)); break;
+                case Decrement: verify (meter).update (Measure.valueOf (- metriculate, Unit.ONE)); break;
             }
 
-            verify (annotation, never ()).number ();
+            Mockito.reset (meter);
         }
     }
 

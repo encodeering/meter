@@ -1,8 +1,14 @@
 package de.synyx.metrics.core.aspect;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Supplier;
+import de.synyx.metrics.core.Meter;
 import de.synyx.metrics.core.Metriculate;
 import de.synyx.metrics.core.annotation.Counter;
+
+import javax.measure.Measure;
+import javax.measure.quantity.Dimensionless;
+import javax.measure.unit.Unit;
 
 /**
 * Date: 16.07.2014
@@ -10,13 +16,14 @@ import de.synyx.metrics.core.annotation.Counter;
 */
 public final class MetricAspectCounter extends MetricAspectSupport {
 
-    private final com.codahale.metrics.Counter counter;
-    private final Counter                      annotation;
+    private final Counter annotation;
+
+    private final Supplier<Meter<Dimensionless>> meter;
 
     private final Metriculate metriculate;
 
-    public MetricAspectCounter (com.codahale.metrics.Counter counter, Counter annotation, Optional<Metriculate> metriculate) {
-        this.counter     = counter;
+    public MetricAspectCounter (Counter annotation, Supplier<Meter<Dimensionless>> meter, Optional<Metriculate> metriculate) {
+        this.meter       = meter;
         this.annotation  = annotation;
         this.metriculate = metriculate.or (new CounterMetriculate ());
     }
@@ -31,11 +38,11 @@ public final class MetricAspectCounter extends MetricAspectSupport {
     }
 
     private void call (Object response, Throwable throwable) {
-        long value = metriculate.determine (response, throwable);
+        long measurable = metriculate.determine (response, throwable);
 
         switch (annotation.operation ()) {
-            case Increment: counter.inc (value); break;
-            case Decrement: counter.dec (value); break;
+            case Increment: meter.get ().update (Measure.valueOf (  measurable, Unit.ONE)); break;
+            case Decrement: meter.get ().update (Measure.valueOf (- measurable, Unit.ONE)); break;
         }
     }
 

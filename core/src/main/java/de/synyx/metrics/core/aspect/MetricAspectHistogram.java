@@ -1,8 +1,14 @@
 package de.synyx.metrics.core.aspect;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Supplier;
+import de.synyx.metrics.core.Meter;
 import de.synyx.metrics.core.Metriculate;
 import de.synyx.metrics.core.annotation.Histogram;
+
+import javax.measure.Measure;
+import javax.measure.quantity.Dimensionless;
+import javax.measure.unit.Unit;
 
 /**
  * Date: 16.07.2014
@@ -10,13 +16,14 @@ import de.synyx.metrics.core.annotation.Histogram;
  */
 public final class MetricAspectHistogram extends MetricAspectSupport {
 
-    private final com.codahale.metrics.Histogram histogram;
-    private final Histogram                      annotation;
+    private final Histogram annotation;
+
+    private final Supplier<Meter<Dimensionless>> meter;
 
     private final Metriculate metriculate;
 
-    public MetricAspectHistogram (com.codahale.metrics.Histogram histogram, Histogram annotation, Optional<Metriculate> metriculate) {
-        this.histogram   = histogram;
+    public MetricAspectHistogram (Histogram annotation, Supplier<Meter<Dimensionless>> meter, Optional<Metriculate> metriculate) {
+        this.meter       = meter;
         this.annotation  = annotation;
         this.metriculate = metriculate.or (new HistogramMetriculate ());
     }
@@ -31,7 +38,7 @@ public final class MetricAspectHistogram extends MetricAspectSupport {
     }
 
     private void call (Object response, Throwable throwable) {
-        histogram.update (metriculate.determine (response, throwable));
+        meter.get ().update (Measure.valueOf (metriculate.determine (response, throwable), Unit.ONE));
     }
 
     final class HistogramMetriculate implements Metriculate {

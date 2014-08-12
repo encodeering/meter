@@ -1,23 +1,50 @@
 package de.synyx.metrics.core.aspect;
 
-import com.codahale.metrics.Timer;
+import com.codahale.metrics.Clock;
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import de.synyx.metrics.core.Meter;
 import de.synyx.metrics.core.MetricAspect;
+import de.synyx.metrics.core.annotation.Timer;
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.concurrent.TimeUnit;
+import javax.measure.Measure;
+import javax.measure.quantity.Duration;
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
+import javax.measure.unit.Unit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith (MockitoJUnitRunner.class)
 public class MetricAspectTimerTest extends MetricAspectTest {
 
-    protected final Timer metric = mock (Timer.class);
+    @Mock
+    private de.synyx.metrics.core.Meter<Duration> meter;
+
+    @Mock
+    private Clock clock;
+
+    private Supplier<Meter<Duration>> supplier;
+
+    private final long                 start = System.nanoTime ();
+    private final long end   = (long) (start + 100000 * Math.random ());
+
+    @Before
+    public void before () {
+        supplier = Suppliers.ofInstance (meter);
+
+        when (clock.getTick ()).thenReturn (start, end);
+    }
 
     @Test
     public void testName () throws NoSuchMethodException {
@@ -25,43 +52,43 @@ public class MetricAspectTimerTest extends MetricAspectTest {
     }
 
     @Test
-    public void test () throws InterruptedException {
+    public void test () {
         de.synyx.metrics.core.annotation.Timer annotation = annotation (TimeUnit.NANOSECONDS);
 
         MetricAspect timer;
 
-        timer = new MetricAspectTimer (metric, annotation);
+        timer = new MetricAspectTimer (annotation, supplier, clock);
         timer.before ();
+        timer.after  (null, null);
 
-        Thread.sleep (Random.nextInt (1000));
-
-        timer.after (null, null);
-
-        ArgumentCaptor<Long> duration = ArgumentCaptor.forClass (Long.class);
-
-        verify (metric).update (duration.capture (), eq (TimeUnit.NANOSECONDS));
-
-        assertThat (duration.getValue (), greaterThanOrEqualTo (0L));
+        verify (meter).update (Measure.valueOf (end - start, SI.NANO (SI.SECOND)));
     }
 
     @Test
-    public void testTimeunit () throws InterruptedException {
+    public void testTimeunit () {
         de.synyx.metrics.core.annotation.Timer annotation = annotation (TimeUnit.MILLISECONDS);
 
         MetricAspect timer;
 
-        timer = new MetricAspectTimer (metric, annotation);
+        timer = new MetricAspectTimer (annotation, supplier, clock);
         timer.before ();
-
-        Thread.sleep (Random.nextInt (1000));
-
         timer.after (null, null);
 
-        ArgumentCaptor<Long> duration = ArgumentCaptor.forClass (Long.class);
+        verify (meter).update (Measure.valueOf (TimeUnit.NANOSECONDS.toMillis (end - start), SI.MILLI (SI.SECOND)));
+    }
 
-        verify (metric).update (duration.capture (), eq (TimeUnit.MILLISECONDS));
+    @Test
+    public void testTimeunitConversion () {
+        MetricAspectTimer timer;
 
-        assertThat (duration.getValue (), greaterThanOrEqualTo (0L));
+                    timer = new MetricAspectTimer (mock (Timer.class), supplier, clock);
+        assertThat (timer.convert (TimeUnit.NANOSECONDS),  equalTo (SI.NANO  (SI.SECOND)));
+        assertThat (timer.convert (TimeUnit.MICROSECONDS), equalTo (SI.MICRO (SI.SECOND)));
+        assertThat (timer.convert (TimeUnit.MILLISECONDS), equalTo (SI.MILLI (SI.SECOND)));
+        assertThat (timer.convert (TimeUnit.SECONDS),      equalTo ((Unit <Duration>) SI.SECOND));
+        assertThat (timer.convert (TimeUnit.MINUTES),      equalTo (NonSI.MINUTE));
+        assertThat (timer.convert (TimeUnit.HOURS),        equalTo (NonSI.HOUR));
+        assertThat (timer.convert (TimeUnit.DAYS),         equalTo (NonSI.DAY));
     }
 
     private de.synyx.metrics.core.annotation.Timer annotation (TimeUnit unit) {

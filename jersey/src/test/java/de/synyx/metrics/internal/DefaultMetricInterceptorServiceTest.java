@@ -1,7 +1,7 @@
 package de.synyx.metrics.internal;
 
-import com.codahale.metrics.MetricRegistry;
 import de.synyx.metrics.core.Injector;
+import de.synyx.metrics.core.MeterProvider;
 import de.synyx.metrics.core.Substitution;
 import de.synyx.metrics.core.annotation.Metric;
 import de.synyx.metrics.core.internal.DefaultMetricAdvisor;
@@ -28,7 +28,7 @@ public class DefaultMetricInterceptorServiceTest {
     private Injector injector;
 
     @Mock
-    private MetricRegistry registry;
+    private MeterProvider provider;
 
     @Mock
     private Substitution substitution;
@@ -43,7 +43,7 @@ public class DefaultMetricInterceptorServiceTest {
     public void testFilterAll () throws Exception {
         InterceptionService service;
 
-                    service = new DefaultMetricInterceptorService (injector, registry);
+                    service = new DefaultMetricInterceptorService (injector, provider);
         assertThat (service.getDescriptorFilter (), equalTo (BuilderHelper.allFilter ()));
     }
 
@@ -51,7 +51,7 @@ public class DefaultMetricInterceptorServiceTest {
     public void testMethodAOP () throws Exception {
         InterceptionService service;
 
-                    service = new DefaultMetricInterceptorService (injector, registry);
+                    service = new DefaultMetricInterceptorService (injector, provider);
         assertThat (service.getMethodInterceptors (null), nullValue ());
         assertThat (service.getMethodInterceptors (TestClass.class.getMethod ("no")), nullValue ());
         assertThat (service.getMethodInterceptors (TestClass.class.getMethod ("yes")).get (0), instanceOf (DefaultMetricMethodInterceptor.class));
@@ -61,7 +61,7 @@ public class DefaultMetricInterceptorServiceTest {
     public void testConstructorAOPUnsupported () throws Exception {
         InterceptionService service;
 
-                    service = new DefaultMetricInterceptorService (injector, registry);
+                    service = new DefaultMetricInterceptorService (injector, provider);
         assertThat (service.getConstructorInterceptors (null),                              nullValue ());
         assertThat (service.getConstructorInterceptors (TestClass.class.getConstructor ()), nullValue ());
     }

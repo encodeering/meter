@@ -8,8 +8,6 @@ import de.synyx.metrics.core.MetricAspect;
 */
 public abstract class MetricAspectSupport implements MetricAspect {
 
-    public final static MetricAspect Noop = new MetricAspectSupport () {};
-
     @Override
     public void before () {}
 

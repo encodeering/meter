@@ -1,7 +1,7 @@
 package de.synyx.metrics.internal;
 
-import com.codahale.metrics.MetricRegistry;
 import de.synyx.metrics.core.Injector;
+import de.synyx.metrics.core.MeterProvider;
 import de.synyx.metrics.core.annotation.Metric;
 import de.synyx.metrics.core.internal.DefaultMetricAdvisor;
 import de.synyx.metrics.core.internal.DefaultMetricMethodInterceptor;
@@ -27,8 +27,8 @@ public final class DefaultMetricInterceptorService implements InterceptionServic
     private final List<MethodInterceptor> interceptors;
 
     @Inject
-    public DefaultMetricInterceptorService (Injector injector, MetricRegistry registry) {
-        interceptors = Collections.<MethodInterceptor>singletonList (new DefaultMetricMethodInterceptor (injector, registry, injector.create (DefaultMetricNaming.class),
+    public DefaultMetricInterceptorService (Injector injector, MeterProvider provider) {
+        interceptors = Collections.<MethodInterceptor>singletonList (new DefaultMetricMethodInterceptor (injector, provider, injector.create (DefaultMetricNaming.class),
                                                                                                                              injector.create (DefaultMetricAdvisor.class)
         ));
     }

@@ -1,8 +1,13 @@
 package de.synyx.metrics.core.aspect;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Supplier;
 import de.synyx.metrics.core.Metriculate;
 import de.synyx.metrics.core.annotation.Meter;
+
+import javax.measure.Measure;
+import javax.measure.quantity.Dimensionless;
+import javax.measure.unit.Unit;
 
 /**
  * Date: 16.07.2014
@@ -10,12 +15,13 @@ import de.synyx.metrics.core.annotation.Meter;
  */
 public final class MetricAspectMeter extends MetricAspectSupport {
 
-    private final com.codahale.metrics.Meter meter;
     private final Meter annotation;
+
+    private final Supplier<de.synyx.metrics.core.Meter<Dimensionless>> meter;
 
     private final Metriculate metriculate;
 
-    public MetricAspectMeter (com.codahale.metrics.Meter meter, Meter annotation, Optional<Metriculate> metriculate) {
+    public MetricAspectMeter (Meter annotation, Supplier<de.synyx.metrics.core.Meter<Dimensionless>> meter, Optional<Metriculate> metriculate) {
         this.meter       = meter;
         this.annotation  = annotation;
         this.metriculate = metriculate.or (new MeterMetriculate ());
@@ -31,7 +37,7 @@ public final class MetricAspectMeter extends MetricAspectSupport {
     }
 
     private void call (Object response, Throwable throwable) {
-        meter.mark (metriculate.determine (response, throwable));
+        meter.get ().update (Measure.valueOf (metriculate.determine (response, throwable), Unit.ONE));
     }
 
     final class MeterMetriculate implements Metriculate {
