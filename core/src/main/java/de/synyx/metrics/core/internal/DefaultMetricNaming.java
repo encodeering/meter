@@ -34,7 +34,7 @@ public final class DefaultMetricNaming implements MetricNaming {
 
     @Override
     public final String name (String proposal) {
-        return Joiner.on ("").join (Iterables.transform (split (proposal), new Function<Callable<String>, String> () {
+        return proposal == null ? null : Joiner.on ("").join (Iterables.transform (split (proposal), new Function<Callable<String>, String> () {
 
             @Override
             public final String apply (Callable<String> input) {
