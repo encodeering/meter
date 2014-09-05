@@ -34,7 +34,7 @@ public final class DefaultMetricMeterProvider implements MeterProvider {
 
     @Override
     public final Meter<Dimensionless> counter (final String name) {
-        logger.debug ("requesting the counter {}", name);
+        logger.trace ("requesting counter {}", name);
 
         return new Meter<Dimensionless> () {
 
@@ -51,7 +51,7 @@ public final class DefaultMetricMeterProvider implements MeterProvider {
 
     @Override
     public final Meter<Dimensionless> histogram (final String name) {
-        logger.debug ("requesting the histogram {}", name);
+        logger.trace ("requesting histogram {}", name);
 
         return new Meter<Dimensionless> () {
 
@@ -68,7 +68,7 @@ public final class DefaultMetricMeterProvider implements MeterProvider {
 
     @Override
     public final Meter<Dimensionless> meter (final String name) {
-        logger.debug ("requesting the meter {}", name);
+        logger.trace ("requesting meter {}", name);
 
         return new Meter<Dimensionless> () {
 
@@ -85,7 +85,7 @@ public final class DefaultMetricMeterProvider implements MeterProvider {
 
     @Override
     public final Meter<Duration> timer (final String name) {
-         logger.debug ("requesting the timer {}", name);
+        logger.trace ("requesting timer {}", name);
 
         return new Meter<Duration> () {
 
