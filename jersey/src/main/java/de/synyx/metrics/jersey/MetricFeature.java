@@ -56,19 +56,21 @@ public final class MetricFeature implements Feature {
         public DefaultMeterProviderFactory (@Context ServletContext servlet) {
             /* extension: create a compound web/meter provider using all providers or choose the correct one using environment facilities */
 
-            this.web     = Iterators.get (ServiceLoader.load (WebContext.class).iterator (), 0);
+            this.web     = Iterators.get (ServiceLoader.load (WebContext.class).iterator (), 0, null);
             this.servlet = servlet;
         }
 
         @Override
         public final MeterProvider provide () {
-            return web.initialize (servlet);
+            if (web != null) return web.initialize (servlet);
+            else
+                throw new IllegalStateException ("no web-context available to create a provider");
         }
 
         @Override
         public final void dispose (MeterProvider provider) {
             try {
-                web.close ();
+                if (web != null) web.close ();
             } catch (Exception e) {
                 LoggerFactory.getLogger (getClass ()).warn (e.getMessage ());
             }
