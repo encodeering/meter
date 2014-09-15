@@ -1,5 +1,7 @@
-package de.synyx.metrics.example.restlet;
+package de.synyx.metrics.example;
 
+import de.synyx.metrics.example.cdi.BambooBinder;
+import de.synyx.metrics.example.restlet.Bamboo;
 import de.synyx.metrics.jersey.MetricFeature;
 
 import java.util.HashSet;

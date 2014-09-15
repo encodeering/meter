@@ -1,4 +1,4 @@
-package de.synyx.metrics.example.restlet;
+package de.synyx.metrics.example.cdi;
 
 import de.synyx.metrics.example.service.BambooApplicationService;
 import de.synyx.metrics.example.service.BambooService;
@@ -12,7 +12,7 @@ import javax.ws.rs.ext.Provider;
  * @author  Michael Clausen - clausen@synyx.de
  */
 @Provider
-class BambooBinder extends AbstractBinder {
+public class BambooBinder extends AbstractBinder {
 
     @Override
     protected final void configure () {
