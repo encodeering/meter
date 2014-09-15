@@ -1,13 +1,13 @@
-package de.synyx.metrics;
+package de.synyx.metrics.jersey;
 
 import com.google.common.collect.Iterators;
 import de.synyx.metrics.core.Injector;
 import de.synyx.metrics.core.MeterProvider;
 import de.synyx.metrics.core.Substitution;
 import de.synyx.metrics.core.web.WebContext;
-import de.synyx.metrics.internal.DefaultJerseyInjector;
-import de.synyx.metrics.internal.DefaultJerseySubstitution;
-import de.synyx.metrics.internal.DefaultMetricInterceptorService;
+import de.synyx.metrics.jersey.internal.DefaultJerseyInjector;
+import de.synyx.metrics.jersey.internal.DefaultJerseySubstitution;
+import de.synyx.metrics.jersey.internal.DefaultMetricInterceptorService;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.InterceptionService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;

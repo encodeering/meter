@@ -1,6 +1,6 @@
 package de.synyx.metrics.example.restlet;
 
-import de.synyx.metrics.MetricFeature;
+import de.synyx.metrics.jersey.MetricFeature;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package de.synyx.metrics.internal;
+package de.synyx.metrics.jersey.internal;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;

@@ -1,4 +1,4 @@
-package de.synyx.metrics.internal;
+package de.synyx.metrics.jersey.internal;
 
 import de.synyx.metrics.core.Injector;
 import de.synyx.metrics.core.MeterProvider;
