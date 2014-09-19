@@ -4,9 +4,9 @@ import de.synyx.meter.core.Injector;
 import de.synyx.meter.core.MeterProvider;
 import de.synyx.meter.core.Substitution;
 import de.synyx.meter.core.annotation.Metric;
+import de.synyx.meter.core.internal.DefaultSubstitution;
 import de.synyx.meter.core.internal.aop.DefaultAdvisor;
 import de.synyx.meter.core.internal.aop.DefaultMeterInterceptor;
-import de.synyx.meter.core.internal.DefaultMeterNaming;
 import org.glassfish.hk2.api.InterceptionService;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.junit.Before;
@@ -35,7 +35,7 @@ public class DefaultMeterInterceptionTest {
 
     @Before
     public void before () {
-        when (injector.create (DefaultMeterNaming.class)).thenReturn (new DefaultMeterNaming (substitution));
+        when (injector.create (DefaultSubstitution.class)).thenReturn (new DefaultSubstitution (substitution));
         when (injector.create (DefaultAdvisor.class)).thenReturn (new DefaultAdvisor ());
     }
 

@@ -3,7 +3,6 @@ package de.synyx.meter.core.internal;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
-import de.synyx.meter.core.MeterNaming;
 import de.synyx.meter.core.Substitution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ import javax.inject.Inject;
  * Date: 30.07.2014
  * Time: 08:47
  */
-public final class DefaultMeterNaming implements MeterNaming {
+public final class DefaultSubstitution implements Substitution {
 
     final static Pattern Vars = Pattern.compile ("\\{([^}]+)\\}");
 
@@ -28,13 +27,13 @@ public final class DefaultMeterNaming implements MeterNaming {
     private final Substitution substitution;
 
     @Inject
-    public DefaultMeterNaming (Substitution substitution) {
+    public DefaultSubstitution (Substitution substitution) {
         this.substitution = substitution;
     }
 
     @Override
-    public final String name (String proposal) {
-        return proposal == null ? null : Joiner.on ("").join (Iterables.transform (split (proposal), new Function<Callable<String>, String> () {
+    public final String substitute (String value) {
+        return value == null ? null : Joiner.on ("").join (Iterables.transform (split (value), new Function<Callable<String>, String> () {
 
             @Override
             public final String apply (Callable<String> input) {

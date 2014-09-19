@@ -3,9 +3,9 @@ package de.synyx.meter.jersey.internal;
 import de.synyx.meter.core.Injector;
 import de.synyx.meter.core.MeterProvider;
 import de.synyx.meter.core.annotation.Metric;
+import de.synyx.meter.core.internal.DefaultSubstitution;
 import de.synyx.meter.core.internal.aop.DefaultAdvisor;
 import de.synyx.meter.core.internal.aop.DefaultMeterInterceptor;
-import de.synyx.meter.core.internal.DefaultMeterNaming;
 import org.aopalliance.intercept.ConstructorInterceptor;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.glassfish.hk2.api.Filter;
@@ -28,7 +28,7 @@ public final class DefaultMeterInterception implements InterceptionService {
 
     @Inject
     public DefaultMeterInterception (Injector injector, MeterProvider provider) {
-        interceptors = Collections.<MethodInterceptor>singletonList (new DefaultMeterInterceptor (injector, provider, injector.create (DefaultMeterNaming.class),
+        interceptors = Collections.<MethodInterceptor>singletonList (new DefaultMeterInterceptor (injector, provider, injector.create (DefaultSubstitution.class),
                                                                                                                       injector.create (DefaultAdvisor.class)
         ));
     }

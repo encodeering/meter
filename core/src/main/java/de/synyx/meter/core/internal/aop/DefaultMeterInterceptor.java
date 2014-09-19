@@ -6,8 +6,8 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import de.synyx.meter.core.Injector;
 import de.synyx.meter.core.Measure;
-import de.synyx.meter.core.MeterNaming;
 import de.synyx.meter.core.MeterProvider;
+import de.synyx.meter.core.Substitution;
 import de.synyx.meter.core.aop.Advisor;
 import de.synyx.meter.core.aop.Aspect;
 import de.synyx.meter.core.annotation.Counter;
@@ -46,14 +46,14 @@ public final class DefaultMeterInterceptor implements MethodInterceptor {
 
     private final MeterProvider provider;
 
-    private final MeterNaming naming;
-    private final Advisor     advisor;
+    private final Substitution substitution;
+    private final Advisor      advisor;
 
-    public DefaultMeterInterceptor (Injector injector, MeterProvider provider, MeterNaming naming, Advisor advisor) {
-        this.injector = injector;
-        this.provider = provider;
-        this.advisor  = advisor;
-        this.naming   = naming;
+    public DefaultMeterInterceptor (Injector injector, MeterProvider provider, Substitution substitution, Advisor advisor) {
+        this.injector     = injector;
+        this.provider     = provider;
+        this.advisor      = advisor;
+        this.substitution = substitution;
     }
 
     @Override
@@ -147,9 +147,9 @@ public final class DefaultMeterInterceptor implements MethodInterceptor {
             @Override
             public String get () {
                      if (value.equals     ("#")) return                         basename;
-                else if (value.startsWith ("#")) return String.format ("%s.%s", basename, naming.name (value.substring (1)));
+                else if (value.startsWith ("#")) return String.format ("%s.%s", basename, substitution.substitute (value.substring (1)));
                 else
-                    return naming.name (value);
+                    return substitution.substitute (value);
             }
 
         };

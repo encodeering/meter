@@ -1,8 +1,8 @@
 package de.synyx.meter.core.internal.aop;
 
 import de.synyx.meter.core.Injector;
-import de.synyx.meter.core.MeterNaming;
 import de.synyx.meter.core.MeterProvider;
+import de.synyx.meter.core.Substitution;
 import de.synyx.meter.core.annotation.Counter;
 import de.synyx.meter.core.annotation.Histogram;
 import de.synyx.meter.core.annotation.Kind;
@@ -42,18 +42,18 @@ public class DefaultMeterInterceptorTest {
 
     private final Injector injector = mock (Injector.class);
 
-    private final MeterNaming naming = mock (MeterNaming.class);
-
     private final MeterProvider provider = mock (MeterProvider.class);
+
+    private final Substitution substitution = mock (Substitution.class);
 
     private final Advisor invoker = mock (Advisor.class);
 
-    private final DefaultMeterInterceptor interceptor = new DefaultMeterInterceptor (injector, provider, naming, invoker);
+    private final DefaultMeterInterceptor interceptor = new DefaultMeterInterceptor (injector, provider, substitution, invoker);
 
     {
         when (injector.create (DefaultClock.class)).thenReturn (new DefaultClock ());
 
-        when (naming.name (anyString ())).thenAnswer (new Answer<Object> () {
+        when (substitution.substitute (anyString ())).thenAnswer (new Answer<Object> () {
 
             @Override
             public Object answer (InvocationOnMock invocation) throws Throwable {
