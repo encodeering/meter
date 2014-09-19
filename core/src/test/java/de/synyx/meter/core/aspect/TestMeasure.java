@@ -1,16 +1,16 @@
 package de.synyx.meter.core.aspect;
 
-import de.synyx.meter.core.Metriculate;
+import de.synyx.meter.core.Measure;
 
 /**
 * Date: 30.07.2014
 * Time: 13:46
 */
-public class TestMetriculate implements Metriculate {
+public class TestMeasure implements Measure {
 
     private final long value;
 
-    public TestMetriculate (long value) {
+    public TestMeasure (long value) {
         this.value = value;
     }
 

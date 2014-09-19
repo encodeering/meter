@@ -5,11 +5,11 @@ import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import de.synyx.meter.core.Injector;
+import de.synyx.meter.core.Measure;
 import de.synyx.meter.core.MeterNaming;
 import de.synyx.meter.core.MeterProvider;
 import de.synyx.meter.core.MeterAdvisor;
 import de.synyx.meter.core.MeterAspect;
-import de.synyx.meter.core.Metriculate;
 import de.synyx.meter.core.annotation.Counter;
 import de.synyx.meter.core.annotation.Histogram;
 import de.synyx.meter.core.annotation.Meter;
@@ -87,8 +87,8 @@ public final class DefaultMeterMethodInterceptor implements MethodInterceptor {
             @Override
             public final MeterAspect apply (final Counter annotation) {
                 return new MeterAspectCounter (annotation,
-                                               meter (counterOf (provider), dynname (basename, annotation.value ())),
-                                               metriculate (annotation.metriculate ())
+                                               meter   (counterOf (provider), dynname (basename, annotation.value ())),
+                                               measure (                                         annotation.measure ())
                 );
             }
 
@@ -101,8 +101,8 @@ public final class DefaultMeterMethodInterceptor implements MethodInterceptor {
             @Override
             public final MeterAspect apply (final Histogram annotation) {
                 return new MeterAspectHistogram (annotation,
-                                                  meter       (histogramOf (provider), dynname (basename, annotation.value ())),
-                                                  metriculate (                                           annotation.metriculate ())
+                                                 meter   (histogramOf (provider), dynname (basename, annotation.value ())),
+                                                 measure (                                           annotation.measure ())
                 );
             }
 
@@ -115,8 +115,8 @@ public final class DefaultMeterMethodInterceptor implements MethodInterceptor {
             @Override
             public final MeterAspect apply (final Meter annotation) {
                 return new MeterAspectMeter (annotation,
-                                              meter       (meterOf (provider), dynname (basename, annotation.value ())),
-                                              metriculate (                                       annotation.metriculate ())
+                                             meter   (meterOf (provider), dynname (basename, annotation.value ())),
+                                             measure (                                       annotation.measure ())
                 );
             }
         };
@@ -155,8 +155,8 @@ public final class DefaultMeterMethodInterceptor implements MethodInterceptor {
         };
     }
 
-    final Optional<Metriculate> metriculate (Class<? extends Metriculate> type) {
-        if (Metriculate.class.equals (type)) return Optional.absent ();
+    final Optional<Measure> measure (Class<? extends Measure> type) {
+        if (Measure.class.equals (type)) return Optional.absent ();
         else
             return Optional.fromNullable (injector.create (type));
     }

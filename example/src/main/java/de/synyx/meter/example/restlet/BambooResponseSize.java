@@ -1,12 +1,12 @@
 package de.synyx.meter.example.restlet;
 
-import de.synyx.meter.core.Metriculate;
+import de.synyx.meter.core.Measure;
 
 /**
  * Date: 16.07.2014
  * Time: 11:49
  */
-public final class BambooHistogramHook implements Metriculate {
+public final class BambooResponseSize implements Measure {
 
     @Override
     public final long determine (Object response, Throwable throwable) {

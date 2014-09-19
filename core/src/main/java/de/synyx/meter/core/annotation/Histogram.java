@@ -1,6 +1,6 @@
 package de.synyx.meter.core.annotation;
 
-import de.synyx.meter.core.Metriculate;
+import de.synyx.meter.core.Measure;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -19,7 +19,7 @@ public @interface Histogram {
 
     public abstract Kind kind () default Kind.Both;
 
-    public abstract Class<? extends Metriculate> metriculate () default Metriculate.class;
+    public abstract Class<? extends Measure> measure () default Measure.class;
 
     public abstract long number () default 1;
 

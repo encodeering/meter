@@ -3,10 +3,10 @@ package de.synyx.meter.core.aspect;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import de.synyx.meter.core.Measure;
 import de.synyx.meter.core.annotation.Counter;
 import de.synyx.meter.core.Meter;
 import de.synyx.meter.core.MeterAspect;
-import de.synyx.meter.core.Metriculate;
 import de.synyx.meter.core.annotation.Kind;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,6 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.measure.Measurable;
-import javax.measure.Measure;
 import javax.measure.quantity.Dimensionless;
 import javax.measure.unit.Unit;
 
@@ -54,13 +53,13 @@ public class MeterAspectCounterTest extends MeterAspectTest {
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
             aspect.after  (null, null);
 
             switch (operation) {
-                case Increment: verify (meter).update (Measure.valueOf (  number, Unit.ONE)); break;
-                case Decrement: verify (meter).update (Measure.valueOf (- number, Unit.ONE)); break;
+                case Increment: verify (meter).update (javax.measure.Measure.valueOf (number, Unit.ONE)); break;
+                case Decrement: verify (meter).update (javax.measure.Measure.valueOf (-number, Unit.ONE)); break;
             }
 
             Mockito.reset (meter);
@@ -75,13 +74,13 @@ public class MeterAspectCounterTest extends MeterAspectTest {
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
             aspect.after  (response, null);
 
             switch (operation) {
-                case Increment: verify (meter).update (Measure.valueOf (  number, Unit.ONE)); break;
-                case Decrement: verify (meter).update (Measure.valueOf (- number, Unit.ONE)); break;
+                case Increment: verify (meter).update (javax.measure.Measure.valueOf (number, Unit.ONE)); break;
+                case Decrement: verify (meter).update (javax.measure.Measure.valueOf (-number, Unit.ONE)); break;
             }
 
             Mockito.reset (meter);
@@ -96,13 +95,13 @@ public class MeterAspectCounterTest extends MeterAspectTest {
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
             aspect.after  (null, exception);
 
             switch (operation) {
-                case Increment: verify (meter).update (Measure.valueOf (  number, Unit.ONE)); break;
-                case Decrement: verify (meter).update (Measure.valueOf (- number, Unit.ONE)); break;
+                case Increment: verify (meter).update (javax.measure.Measure.valueOf (number, Unit.ONE)); break;
+                case Decrement: verify (meter).update (javax.measure.Measure.valueOf (-number, Unit.ONE)); break;
             }
 
             Mockito.reset (meter);
@@ -117,7 +116,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
             aspect.after  (null, null);
 
@@ -138,7 +137,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
             aspect.after  (response, null);
 
@@ -159,13 +158,13 @@ public class MeterAspectCounterTest extends MeterAspectTest {
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
             aspect.after  (null, exception);
 
             switch (operation) {
-                case Increment: verify (meter).update (Measure.valueOf (  number, Unit.ONE)); break;
-                case Decrement: verify (meter).update (Measure.valueOf (- number, Unit.ONE)); break;
+                case Increment: verify (meter).update (javax.measure.Measure.valueOf (number, Unit.ONE)); break;
+                case Decrement: verify (meter).update (javax.measure.Measure.valueOf (-number, Unit.ONE)); break;
             }
 
             Mockito.reset (meter);
@@ -180,13 +179,13 @@ public class MeterAspectCounterTest extends MeterAspectTest {
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
             aspect.after  (null, null);
 
             switch (operation) {
-                case Increment: verify (meter).update (Measure.valueOf (  number, Unit.ONE)); break;
-                case Decrement: verify (meter).update (Measure.valueOf (- number, Unit.ONE)); break;
+                case Increment: verify (meter).update (javax.measure.Measure.valueOf (number, Unit.ONE)); break;
+                case Decrement: verify (meter).update (javax.measure.Measure.valueOf (-number, Unit.ONE)); break;
             }
 
             Mockito.reset (meter);
@@ -201,13 +200,13 @@ public class MeterAspectCounterTest extends MeterAspectTest {
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
             aspect.after  (response, null);
 
             switch (operation) {
-                case Increment: verify (meter).update (Measure.valueOf (  number, Unit.ONE)); break;
-                case Decrement: verify (meter).update (Measure.valueOf (- number, Unit.ONE)); break;
+                case Increment: verify (meter).update (javax.measure.Measure.valueOf (number, Unit.ONE)); break;
+                case Decrement: verify (meter).update (javax.measure.Measure.valueOf (-number, Unit.ONE)); break;
             }
 
             Mockito.reset (meter);
@@ -222,7 +221,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Metriculate>absent ());
+            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
             aspect.after  (null, exception);
 
@@ -238,20 +237,20 @@ public class MeterAspectCounterTest extends MeterAspectTest {
     @SuppressWarnings ("unchecked")
     @Test
     public void testMetriculateNN () {
-        TestMetriculate test = new TestMetriculate (metriculate);
+        TestMeasure test = new TestMeasure (measure);
 
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Both, operation, number);
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Metriculate>of (test));
+            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>of (test));
             aspect.before ();
             aspect.after  (null, null);
 
             switch (operation) {
-                case Increment: verify (meter).update (Measure.valueOf (  metriculate, Unit.ONE)); break;
-                case Decrement: verify (meter).update (Measure.valueOf (- metriculate, Unit.ONE)); break;
+                case Increment: verify (meter).update (javax.measure.Measure.valueOf ( measure, Unit.ONE)); break;
+                case Decrement: verify (meter).update (javax.measure.Measure.valueOf (-measure, Unit.ONE)); break;
             }
 
             Mockito.reset (meter);
@@ -261,20 +260,20 @@ public class MeterAspectCounterTest extends MeterAspectTest {
     @SuppressWarnings ("unchecked")
     @Test
     public void testMetriculateRN () {
-        TestMetriculate test = new TestMetriculate (metriculate);
+        TestMeasure test = new TestMeasure (measure);
 
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Both, operation, number);
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Metriculate>of (test));
+            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>of (test));
             aspect.before ();
             aspect.after  (response, null);
 
             switch (operation) {
-                case Increment: verify (meter).update (Measure.valueOf (  metriculate, Unit.ONE)); break;
-                case Decrement: verify (meter).update (Measure.valueOf (- metriculate, Unit.ONE)); break;
+                case Increment: verify (meter).update (javax.measure.Measure.valueOf ( measure, Unit.ONE)); break;
+                case Decrement: verify (meter).update (javax.measure.Measure.valueOf (-measure, Unit.ONE)); break;
             }
 
             Mockito.reset (meter);
@@ -284,20 +283,20 @@ public class MeterAspectCounterTest extends MeterAspectTest {
     @SuppressWarnings ("unchecked")
     @Test
     public void testMetriculateNT () {
-        TestMetriculate test = new TestMetriculate (metriculate);
+        TestMeasure test = new TestMeasure (measure);
 
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Both, operation, number);
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Metriculate>of (test));
+            aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>of (test));
             aspect.before ();
             aspect.after  (null, exception);
 
             switch (operation) {
-                case Increment: verify (meter).update (Measure.valueOf (  metriculate, Unit.ONE)); break;
-                case Decrement: verify (meter).update (Measure.valueOf (- metriculate, Unit.ONE)); break;
+                case Increment: verify (meter).update (javax.measure.Measure.valueOf ( measure, Unit.ONE)); break;
+                case Decrement: verify (meter).update (javax.measure.Measure.valueOf (-measure, Unit.ONE)); break;
             }
 
             Mockito.reset (meter);

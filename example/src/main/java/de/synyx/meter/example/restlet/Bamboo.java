@@ -24,7 +24,7 @@ public class Bamboo {
     @GET
     @Metric (
         timers     = @Timer,
-        histograms = @Histogram (value = "#size", metriculate = BambooHistogramHook.class)
+        histograms = @Histogram (value = "#size", measure = BambooResponseSize.class)
     )
     @Path ("{name}")
     public String echo (@PathParam ("name") String name, @QueryParam ("locale") String locale) {

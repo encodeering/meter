@@ -2,10 +2,9 @@ package de.synyx.meter.core.aspect;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
-import de.synyx.meter.core.Metriculate;
+import de.synyx.meter.core.Measure;
 import de.synyx.meter.core.annotation.Meter;
 
-import javax.measure.Measure;
 import javax.measure.quantity.Dimensionless;
 import javax.measure.unit.Unit;
 
@@ -19,12 +18,12 @@ public final class MeterAspectMeter extends MeterAspectSupport {
 
     private final Supplier<de.synyx.meter.core.Meter<Dimensionless>> meter;
 
-    private final Metriculate metriculate;
+    private final Measure measure;
 
-    public MeterAspectMeter (Meter annotation, Supplier<de.synyx.meter.core.Meter<Dimensionless>> meter, Optional<Metriculate> metriculate) {
-        this.meter       = meter;
-        this.annotation  = annotation;
-        this.metriculate = metriculate.or (new MeterMetriculate ());
+    public MeterAspectMeter (Meter annotation, Supplier<de.synyx.meter.core.Meter<Dimensionless>> meter, Optional<Measure> measure) {
+        this.meter      = meter;
+        this.annotation = annotation;
+        this.measure    = measure.or (new MeterMeasure ());
     }
 
     @Override
@@ -37,10 +36,10 @@ public final class MeterAspectMeter extends MeterAspectSupport {
     }
 
     private void call (Object response, Throwable throwable) {
-        meter.get ().update (Measure.valueOf (metriculate.determine (response, throwable), Unit.ONE));
+        meter.get ().update (javax.measure.Measure.valueOf (measure.determine (response, throwable), Unit.ONE));
     }
 
-    final class MeterMetriculate implements Metriculate {
+    final class MeterMeasure implements Measure {
 
         @Override
         public final long determine (Object response, Throwable throwable) {

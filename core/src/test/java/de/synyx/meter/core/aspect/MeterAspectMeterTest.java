@@ -3,9 +3,9 @@ package de.synyx.meter.core.aspect;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import de.synyx.meter.core.Measure;
 import de.synyx.meter.core.annotation.Meter;
 import de.synyx.meter.core.MeterAspect;
-import de.synyx.meter.core.Metriculate;
 import de.synyx.meter.core.annotation.Kind;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.measure.Measurable;
-import javax.measure.Measure;
 import javax.measure.quantity.Dimensionless;
 import javax.measure.unit.Unit;
 
@@ -50,11 +49,11 @@ public class MeterAspectMeterTest extends MeterAspectTest {
 
         MeterAspect aspect;
 
-        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Metriculate>absent ());
+        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
         aspect.after (null, null);
 
-        verify (meter).update (Measure.valueOf (number, Unit.ONE));
+        verify (meter).update (javax.measure.Measure.valueOf (number, Unit.ONE));
     }
 
     @Test
@@ -63,11 +62,11 @@ public class MeterAspectMeterTest extends MeterAspectTest {
 
         MeterAspect aspect;
 
-        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Metriculate>absent ());
+        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
         aspect.after (response, null);
 
-        verify (meter).update (Measure.valueOf (number, Unit.ONE));
+        verify (meter).update (javax.measure.Measure.valueOf (number, Unit.ONE));
     }
 
     @Test
@@ -76,11 +75,11 @@ public class MeterAspectMeterTest extends MeterAspectTest {
 
         MeterAspect aspect;
 
-        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Metriculate>absent ());
+        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
         aspect.after (null, exception);
 
-        verify (meter).update (Measure.valueOf (number, Unit.ONE));
+        verify (meter).update (javax.measure.Measure.valueOf (number, Unit.ONE));
     }
 
     @SuppressWarnings ("unchecked")
@@ -90,7 +89,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
 
         MeterAspect aspect;
 
-        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Metriculate>absent ());
+        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
         aspect.after (null, null);
 
@@ -104,7 +103,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
 
         MeterAspect aspect;
 
-        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Metriculate>absent ());
+        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
         aspect.after (response, null);
 
@@ -117,11 +116,11 @@ public class MeterAspectMeterTest extends MeterAspectTest {
 
         MeterAspect aspect;
 
-        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Metriculate>absent ());
+        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
         aspect.after (null, exception);
 
-        verify (meter).update (Measure.valueOf (number, Unit.ONE));
+        verify (meter).update (javax.measure.Measure.valueOf (number, Unit.ONE));
     }
 
     @Test
@@ -130,11 +129,11 @@ public class MeterAspectMeterTest extends MeterAspectTest {
 
         MeterAspect aspect;
 
-        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Metriculate>absent ());
+        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
         aspect.after (null, null);
 
-        verify (meter).update (Measure.valueOf (number, Unit.ONE));
+        verify (meter).update (javax.measure.Measure.valueOf (number, Unit.ONE));
     }
 
     @Test
@@ -143,11 +142,11 @@ public class MeterAspectMeterTest extends MeterAspectTest {
 
         MeterAspect aspect;
 
-        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Metriculate>absent ());
+        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
         aspect.after (response, null);
 
-        verify (meter).update (Measure.valueOf (number, Unit.ONE));
+        verify (meter).update (javax.measure.Measure.valueOf (number, Unit.ONE));
     }
 
     @SuppressWarnings ("unchecked")
@@ -157,7 +156,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
 
         MeterAspect aspect;
 
-        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Metriculate>absent ());
+        aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
         aspect.after (null, exception);
 
@@ -166,52 +165,52 @@ public class MeterAspectMeterTest extends MeterAspectTest {
 
     @Test
     public void testMetriculateNN () {
-        TestMetriculate test = new TestMetriculate (metriculate);
+        TestMeasure test = new TestMeasure (measure);
 
         {
             Meter annotation = annotation (Kind.Both, number);
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectMeter (annotation, supplier, Optional.<Metriculate>of (test));
+            aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>of (test));
             aspect.before ();
             aspect.after (null, null);
 
-            verify (meter).update (Measure.valueOf (metriculate, Unit.ONE));
+            verify (meter).update (javax.measure.Measure.valueOf (measure, Unit.ONE));
         }
     }
 
     @Test
     public void testMetriculateRN () {
-        TestMetriculate test = new TestMetriculate (metriculate);
+        TestMeasure test = new TestMeasure (measure);
 
         {
             Meter annotation = annotation (Kind.Both, number);
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectMeter (annotation, supplier, Optional.<Metriculate>of (test));
+            aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>of (test));
             aspect.before ();
             aspect.after (response, null);
 
-            verify (meter).update (Measure.valueOf (metriculate, Unit.ONE));
+            verify (meter).update (javax.measure.Measure.valueOf (measure, Unit.ONE));
         }
     }
 
     @Test
     public void testMetriculateNT () {
-        TestMetriculate test = new TestMetriculate (metriculate);
+        TestMeasure test = new TestMeasure (measure);
 
         {
             Meter annotation = annotation (Kind.Both, number);
 
             MeterAspect aspect;
 
-            aspect = new MeterAspectMeter (annotation, supplier, Optional.<Metriculate>of (test));
+            aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>of (test));
             aspect.before ();
             aspect.after (null, exception);
 
-            verify (meter).update (Measure.valueOf (metriculate, Unit.ONE));
+            verify (meter).update (javax.measure.Measure.valueOf (measure, Unit.ONE));
         }
     }
 

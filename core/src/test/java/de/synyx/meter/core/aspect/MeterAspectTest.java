@@ -16,6 +16,6 @@ public abstract class MeterAspectTest {
 
     protected final long number = Random.nextInt (100000);
 
-    protected final long metriculate = Random.nextInt (100000);
+    protected final long measure = Random.nextInt (100000);
 
 }
