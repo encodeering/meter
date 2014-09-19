@@ -4,31 +4,31 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>metrics.example</artifactId>
+    <artifactId>meter.example</artifactId>
     <packaging>war</packaging>
 
     <name>${project.groupId}.${project.artifactId} [${project.version}]</name>
 
     <parent>
         <groupId>de.synyx</groupId>
-        <artifactId>metrics</artifactId>
+        <artifactId>meter</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>de.synyx</groupId>
-            <artifactId>metrics.core</artifactId>
+            <artifactId>meter.core</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.synyx</groupId>
-            <artifactId>metrics.metrics</artifactId>
+            <artifactId>meter.metrics</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>de.synyx</groupId>
-            <artifactId>metrics.jersey</artifactId>
+            <artifactId>meter.jersey</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
