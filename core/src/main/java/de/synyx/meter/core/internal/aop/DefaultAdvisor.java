@@ -1,7 +1,7 @@
-package de.synyx.meter.core.internal;
+package de.synyx.meter.core.internal.aop;
 
-import de.synyx.meter.core.MeterAdvisor;
-import de.synyx.meter.core.MeterAspect;
+import de.synyx.meter.core.aop.Advisor;
+import de.synyx.meter.core.aop.Aspect;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,24 +13,24 @@ import java.util.List;
  * Date: 30.07.2014
  * Time: 08:48
  */
-public final class DefaultMeterAdvisor implements MeterAdvisor {
+public final class DefaultAdvisor implements Advisor {
 
     private final Logger logger = LoggerFactory.getLogger (getClass ());
 
     @Override
-    public final Object around (MethodInvocation invocation, List<MeterAspect> aspects) throws Throwable {
+    public final Object around (MethodInvocation invocation, List<Aspect> aspects) throws Throwable {
         logger.trace ("create metrics for invocable: {}", invocation.getMethod ());
 
         Object response = null;
         Throwable throwable = null;
 
-        List<MeterAspect> auxiliary = new ArrayList<> (aspects);
-        List<MeterAspect> called    = new ArrayList<> ();
+        List<Aspect> auxiliary = new ArrayList<> (aspects);
+        List<Aspect> called    = new ArrayList<> ();
 
         try {
-            for (MeterAspect aspect : auxiliary) {
+            for (Aspect aspect : auxiliary) {
                 try {
-                             aspect.before ();
+                        aspect.before ();
                 } catch (RuntimeException e) {
                     logger.warn ("around before {} {}", e.getMessage (), e.getClass ());
                 } finally {
@@ -43,9 +43,9 @@ public final class DefaultMeterAdvisor implements MeterAdvisor {
                   throwable = e;
             throw throwable;
         } finally {
-            for (MeterAspect aspect : called) {
+            for (Aspect aspect : called) {
                 try {
-                             aspect.after (response, throwable);
+                        aspect.after (response, throwable);
                 } catch (RuntimeException e) {
                     logger.warn ("around after {} {}", e.getMessage (), e.getClass ());
                 }

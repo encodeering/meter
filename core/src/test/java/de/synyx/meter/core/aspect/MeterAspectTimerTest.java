@@ -4,7 +4,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import de.synyx.meter.core.annotation.Timer;
 import de.synyx.meter.core.Meter;
-import de.synyx.meter.core.MeterAspect;
+import de.synyx.meter.core.aop.Aspect;
 import de.synyx.meter.core.util.Clock;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +55,7 @@ public class MeterAspectTimerTest extends MeterAspectTest {
     public void test () {
         Timer annotation = annotation (TimeUnit.NANOSECONDS);
 
-        MeterAspect timer;
+        Aspect timer;
 
         timer = new MeterAspectTimer (annotation, supplier, clock);
         timer.before ();
@@ -68,7 +68,7 @@ public class MeterAspectTimerTest extends MeterAspectTest {
     public void testTimeunit () {
         Timer annotation = annotation (TimeUnit.MILLISECONDS);
 
-        MeterAspect timer;
+        Aspect timer;
 
         timer = new MeterAspectTimer (annotation, supplier, clock);
         timer.before ();

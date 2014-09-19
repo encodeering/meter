@@ -1,12 +1,12 @@
 package de.synyx.meter.core.aspect;
 
-import de.synyx.meter.core.MeterAspect;
+import de.synyx.meter.core.aop.Aspect;
 
 /**
 * Date: 16.07.2014
 * Time: 11:03
 */
-public abstract class MeterAspectSupport implements MeterAspect {
+public abstract class MeterAspectSupport implements Aspect {
 
     @Override
     public void before () {}

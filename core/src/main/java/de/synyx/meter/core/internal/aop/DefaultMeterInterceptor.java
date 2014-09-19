@@ -1,4 +1,4 @@
-package de.synyx.meter.core.internal;
+package de.synyx.meter.core.internal.aop;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -8,8 +8,8 @@ import de.synyx.meter.core.Injector;
 import de.synyx.meter.core.Measure;
 import de.synyx.meter.core.MeterNaming;
 import de.synyx.meter.core.MeterProvider;
-import de.synyx.meter.core.MeterAdvisor;
-import de.synyx.meter.core.MeterAspect;
+import de.synyx.meter.core.aop.Advisor;
+import de.synyx.meter.core.aop.Aspect;
 import de.synyx.meter.core.annotation.Counter;
 import de.synyx.meter.core.annotation.Histogram;
 import de.synyx.meter.core.annotation.Meter;
@@ -40,16 +40,16 @@ import static java.util.Arrays.asList;
 * Date: 16.07.2014
 * Time: 11:05
 */
-public final class DefaultMeterMethodInterceptor implements MethodInterceptor {
+public final class DefaultMeterInterceptor implements MethodInterceptor {
 
     private final Injector injector;
 
     private final MeterProvider provider;
 
-    private final MeterNaming  naming;
-    private final MeterAdvisor advisor;
+    private final MeterNaming naming;
+    private final Advisor     advisor;
 
-    public DefaultMeterMethodInterceptor (Injector injector, MeterProvider provider, MeterNaming naming, MeterAdvisor advisor) {
+    public DefaultMeterInterceptor (Injector injector, MeterProvider provider, MeterNaming naming, Advisor advisor) {
         this.injector = injector;
         this.provider = provider;
         this.advisor  = advisor;
@@ -68,7 +68,7 @@ public final class DefaultMeterMethodInterceptor implements MethodInterceptor {
 
         String basename = basename (method);
 
-        List<MeterAspect> aspects;
+        List<Aspect> aspects;
 
                 aspects = new ArrayList<> ();
         addAll (aspects, collect (metric.counters (),   counters   (basename)));
@@ -81,11 +81,11 @@ public final class DefaultMeterMethodInterceptor implements MethodInterceptor {
 
     /* following hooks could be extracted to a product factory */
 
-    final Function<Counter, MeterAspect> counters (final String basename) {
-        return new Function<Counter, MeterAspect> () {
+    final Function<Counter, Aspect> counters (final String basename) {
+        return new Function<Counter, Aspect> () {
 
             @Override
-            public final MeterAspect apply (final Counter annotation) {
+            public final Aspect apply (final Counter annotation) {
                 return new MeterAspectCounter (annotation,
                                                meter   (counterOf (provider), dynname (basename, annotation.value ())),
                                                measure (                                         annotation.measure ())
@@ -95,11 +95,11 @@ public final class DefaultMeterMethodInterceptor implements MethodInterceptor {
         };
     }
 
-    final Function<Histogram, MeterAspect> histograms (final String basename) {
-        return new Function<Histogram, MeterAspect> () {
+    final Function<Histogram, Aspect> histograms (final String basename) {
+        return new Function<Histogram, Aspect> () {
 
             @Override
-            public final MeterAspect apply (final Histogram annotation) {
+            public final Aspect apply (final Histogram annotation) {
                 return new MeterAspectHistogram (annotation,
                                                  meter   (histogramOf (provider), dynname (basename, annotation.value ())),
                                                  measure (                                           annotation.measure ())
@@ -109,11 +109,11 @@ public final class DefaultMeterMethodInterceptor implements MethodInterceptor {
         };
     }
 
-    final Function<Meter, MeterAspect> meters (final String basename) {
-        return new Function<Meter, MeterAspect> () {
+    final Function<Meter, Aspect> meters (final String basename) {
+        return new Function<Meter, Aspect> () {
 
             @Override
-            public final MeterAspect apply (final Meter annotation) {
+            public final Aspect apply (final Meter annotation) {
                 return new MeterAspectMeter (annotation,
                                              meter   (meterOf (provider), dynname (basename, annotation.value ())),
                                              measure (                                       annotation.measure ())
@@ -122,11 +122,11 @@ public final class DefaultMeterMethodInterceptor implements MethodInterceptor {
         };
     }
 
-    final Function<Timer, MeterAspect> timers (final String basename) {
-        return new Function<Timer, MeterAspect> () {
+    final Function<Timer, Aspect> timers (final String basename) {
+        return new Function<Timer, Aspect> () {
 
             @Override
-            public final MeterAspect apply (final Timer annotation) {
+            public final Aspect apply (final Timer annotation) {
                 return new MeterAspectTimer (annotation,
                                               meter      (timerOf (provider), dynname (basename, annotation.value ())),
                                               clock      (                                       annotation.clock ())
@@ -161,7 +161,7 @@ public final class DefaultMeterMethodInterceptor implements MethodInterceptor {
             return Optional.fromNullable (injector.create (type));
     }
 
-    final <T extends Annotation> Iterable<MeterAspect> collect (final T[] annotation, Function<T, MeterAspect> fn) {
+    final <T extends Annotation> Iterable<Aspect> collect (final T[] annotation, Function<T, Aspect> fn) {
         return Iterables.transform (asList (annotation), fn);
     }
 

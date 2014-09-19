@@ -1,20 +1,21 @@
-package de.synyx.meter.core.internal;
+package de.synyx.meter.core.internal.aop;
 
 import de.synyx.meter.core.Injector;
 import de.synyx.meter.core.MeterNaming;
 import de.synyx.meter.core.MeterProvider;
-import de.synyx.meter.core.MeterAdvisor;
-import de.synyx.meter.core.MeterAspect;
 import de.synyx.meter.core.annotation.Counter;
 import de.synyx.meter.core.annotation.Histogram;
 import de.synyx.meter.core.annotation.Kind;
 import de.synyx.meter.core.annotation.Meter;
 import de.synyx.meter.core.annotation.Metric;
 import de.synyx.meter.core.annotation.Timer;
+import de.synyx.meter.core.aop.Advisor;
+import de.synyx.meter.core.aop.Aspect;
 import de.synyx.meter.core.aspect.MeterAspectCounter;
 import de.synyx.meter.core.aspect.MeterAspectHistogram;
 import de.synyx.meter.core.aspect.MeterAspectMeter;
 import de.synyx.meter.core.aspect.MeterAspectTimer;
+import de.synyx.meter.core.internal.DefaultClock;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -26,7 +27,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
 import javax.measure.Measurable;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class DefaultMeterMethodInterceptorTest {
+public class DefaultMeterInterceptorTest {
 
     private final Injector injector = mock (Injector.class);
 
@@ -46,9 +46,9 @@ public class DefaultMeterMethodInterceptorTest {
 
     private final MeterProvider provider = mock (MeterProvider.class);
 
-    private final MeterAdvisor invoker = mock (MeterAdvisor.class);
+    private final Advisor invoker = mock (Advisor.class);
 
-    private final DefaultMeterMethodInterceptor interceptor = new DefaultMeterMethodInterceptor (injector, provider, naming, invoker);
+    private final DefaultMeterInterceptor interceptor = new DefaultMeterInterceptor (injector, provider, naming, invoker);
 
     {
         when (injector.create (DefaultClock.class)).thenReturn (new DefaultClock ());
@@ -85,7 +85,7 @@ public class DefaultMeterMethodInterceptorTest {
     @SuppressWarnings ("unchecked")
     @Test
     public void testInvokeAll () throws Throwable {
-        List<MeterAspect> hooks = invoke (all ());
+        List<Aspect> hooks = invoke (all ());
 
         assertThat (hooks.size (), equalTo (4));
         assertThat (hooks.get (0), instanceOf (MeterAspectCounter.class));
@@ -96,7 +96,7 @@ public class DefaultMeterMethodInterceptorTest {
 
     @Test
     public void testInvokeOne () throws Throwable {
-        List<MeterAspect> hooks = invoke (one ());
+        List<Aspect> hooks = invoke (one ());
 
         assertThat (hooks.size (), equalTo (1));
         assertThat (hooks.get (0), instanceOf (MeterAspectCounter.class));
@@ -135,7 +135,7 @@ public class DefaultMeterMethodInterceptorTest {
     }
 
     @SuppressWarnings ("unchecked")
-    private List<MeterAspect> invoke (Method method) throws Throwable {
+    private List<Aspect> invoke (Method method) throws Throwable {
         MethodInvocation invocation;
 
               invocation = mock (MethodInvocation.class);
@@ -143,7 +143,7 @@ public class DefaultMeterMethodInterceptorTest {
 
         interceptor.invoke (invocation);
 
-        ArgumentCaptor<List<MeterAspect>> captor = ArgumentCaptor.forClass ((Class) List.class);
+        ArgumentCaptor<List<Aspect>> captor = ArgumentCaptor.forClass ((Class) List.class);
 
         verify (invoker).around (Mockito.any (MethodInvocation.class), captor.capture ());
 
@@ -164,7 +164,7 @@ public class DefaultMeterMethodInterceptorTest {
         when (annotation.kind ()).thenReturn (Kind.Both);
         when (annotation.operation ()).thenReturn (Counter.Operation.Increment);
 
-        MeterAspect aspect = interceptor.counters ("").apply (annotation);
+        Aspect aspect = interceptor.counters ("").apply (annotation);
                      aspect.before ();
                      aspect.after  (null, null);
 
@@ -187,7 +187,7 @@ public class DefaultMeterMethodInterceptorTest {
         when (annotation.value ()).thenReturn (name);
         when (annotation.kind  ()).thenReturn (Kind.Both);
 
-        MeterAspect aspect = interceptor.histograms ("").apply (annotation);
+        Aspect aspect = interceptor.histograms ("").apply (annotation);
                      aspect.before ();
                      aspect.after  (null, null);
 
@@ -210,7 +210,7 @@ public class DefaultMeterMethodInterceptorTest {
         when (annotation.value ()).thenReturn (name);
         when (annotation.kind ()).thenReturn (Kind.Both);
 
-        MeterAspect aspect = interceptor.meters ("").apply (annotation);
+        Aspect aspect = interceptor.meters ("").apply (annotation);
                      aspect.before ();
                      aspect.after  (null, null);
 
@@ -234,7 +234,7 @@ public class DefaultMeterMethodInterceptorTest {
         when (annotation.unit ()).thenReturn (TimeUnit.NANOSECONDS);
         when (annotation.clock ()).thenReturn ((Class) DefaultClock.class);
 
-        MeterAspect aspect = interceptor.timers ("").apply (annotation);
+        Aspect aspect = interceptor.timers ("").apply (annotation);
                      aspect.before ();
                      aspect.after (null, null);
 

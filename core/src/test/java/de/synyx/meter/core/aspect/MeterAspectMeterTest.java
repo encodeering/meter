@@ -5,7 +5,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import de.synyx.meter.core.Measure;
 import de.synyx.meter.core.annotation.Meter;
-import de.synyx.meter.core.MeterAspect;
+import de.synyx.meter.core.aop.Aspect;
 import de.synyx.meter.core.annotation.Kind;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
     public void testBoth () {
         Meter annotation = annotation (Kind.Both, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -60,7 +60,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
     public void testBothRN () {
         Meter annotation = annotation (Kind.Both, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -73,7 +73,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
     public void testBothNT () {
         Meter annotation = annotation (Kind.Both, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -87,7 +87,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
     public void testErrorNN () {
         Meter annotation = annotation (Kind.Error, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -101,7 +101,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
     public void testErrorRN () {
         Meter annotation = annotation (Kind.Error, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -114,7 +114,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
     public void testErrorNT () {
         Meter annotation = annotation (Kind.Error, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -127,7 +127,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
     public void testSuccessNN () {
         Meter annotation = annotation (Kind.Success, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -140,7 +140,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
     public void testSuccessRN () {
         Meter annotation = annotation (Kind.Success, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -154,7 +154,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
     public void testSuccessNT () {
         Meter annotation = annotation (Kind.Success, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -170,7 +170,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
         {
             Meter annotation = annotation (Kind.Both, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>of (test));
             aspect.before ();
@@ -187,7 +187,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
         {
             Meter annotation = annotation (Kind.Both, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>of (test));
             aspect.before ();
@@ -204,7 +204,7 @@ public class MeterAspectMeterTest extends MeterAspectTest {
         {
             Meter annotation = annotation (Kind.Both, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectMeter (annotation, supplier, Optional.<Measure>of (test));
             aspect.before ();

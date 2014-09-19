@@ -6,7 +6,7 @@ import com.google.common.base.Suppliers;
 import de.synyx.meter.core.Measure;
 import de.synyx.meter.core.annotation.Counter;
 import de.synyx.meter.core.Meter;
-import de.synyx.meter.core.MeterAspect;
+import de.synyx.meter.core.aop.Aspect;
 import de.synyx.meter.core.annotation.Kind;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +51,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Both, operation, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
@@ -72,7 +72,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Both, operation, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
@@ -93,7 +93,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Both, operation, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
@@ -114,7 +114,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Error, operation, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
@@ -135,7 +135,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Error, operation, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
@@ -156,7 +156,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Error, operation, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
@@ -177,7 +177,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Success, operation, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
@@ -198,7 +198,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Success, operation, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
@@ -219,7 +219,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Success, operation, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>absent ());
             aspect.before ();
@@ -242,7 +242,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Both, operation, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>of (test));
             aspect.before ();
@@ -265,7 +265,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Both, operation, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>of (test));
             aspect.before ();
@@ -288,7 +288,7 @@ public class MeterAspectCounterTest extends MeterAspectTest {
         for (Counter.Operation operation : Counter.Operation.values ()) {
             Counter annotation = annotation (Kind.Both, operation, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectCounter (annotation, supplier, Optional.<Measure>of (test));
             aspect.before ();

@@ -4,8 +4,8 @@ import de.synyx.meter.core.Injector;
 import de.synyx.meter.core.MeterProvider;
 import de.synyx.meter.core.Substitution;
 import de.synyx.meter.core.annotation.Metric;
-import de.synyx.meter.core.internal.DefaultMeterAdvisor;
-import de.synyx.meter.core.internal.DefaultMeterMethodInterceptor;
+import de.synyx.meter.core.internal.aop.DefaultAdvisor;
+import de.synyx.meter.core.internal.aop.DefaultMeterInterceptor;
 import de.synyx.meter.core.internal.DefaultMeterNaming;
 import org.glassfish.hk2.api.InterceptionService;
 import org.glassfish.hk2.utilities.BuilderHelper;
@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
 
 @RunWith (MockitoJUnitRunner.class)
-public class DefaultMeterInterceptorServiceTest {
+public class DefaultMeterInterceptionTest {
 
     @Mock
     private Injector injector;
@@ -36,14 +36,14 @@ public class DefaultMeterInterceptorServiceTest {
     @Before
     public void before () {
         when (injector.create (DefaultMeterNaming.class)).thenReturn (new DefaultMeterNaming (substitution));
-        when (injector.create (DefaultMeterAdvisor.class)).thenReturn (new DefaultMeterAdvisor ());
+        when (injector.create (DefaultAdvisor.class)).thenReturn (new DefaultAdvisor ());
     }
 
     @Test
     public void testFilterAll () throws Exception {
         InterceptionService service;
 
-                    service = new DefaultMeterInterceptorService (injector, provider);
+                    service = new DefaultMeterInterception (injector, provider);
         assertThat (service.getDescriptorFilter (), equalTo (BuilderHelper.allFilter ()));
     }
 
@@ -51,17 +51,17 @@ public class DefaultMeterInterceptorServiceTest {
     public void testMethodAOP () throws Exception {
         InterceptionService service;
 
-                    service = new DefaultMeterInterceptorService (injector, provider);
+                    service = new DefaultMeterInterception (injector, provider);
         assertThat (service.getMethodInterceptors (null), nullValue ());
         assertThat (service.getMethodInterceptors (TestClass.class.getMethod ("no")), nullValue ());
-        assertThat (service.getMethodInterceptors (TestClass.class.getMethod ("yes")).get (0), instanceOf (DefaultMeterMethodInterceptor.class));
+        assertThat (service.getMethodInterceptors (TestClass.class.getMethod ("yes")).get (0), instanceOf (DefaultMeterInterceptor.class));
     }
 
     @Test
     public void testConstructorAOPUnsupported () throws Exception {
         InterceptionService service;
 
-                    service = new DefaultMeterInterceptorService (injector, provider);
+                    service = new DefaultMeterInterception (injector, provider);
         assertThat (service.getConstructorInterceptors (null),                              nullValue ());
         assertThat (service.getConstructorInterceptors (TestClass.class.getConstructor ()), nullValue ());
     }

@@ -1,6 +1,6 @@
-package de.synyx.meter.core.internal;
+package de.synyx.meter.core.internal.aop;
 
-import de.synyx.meter.core.MeterAspect;
+import de.synyx.meter.core.aop.Aspect;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
 
@@ -16,22 +16,22 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class DefaultMeterAdvisorTest {
+public class DefaultAdvisorTest {
 
     @Test
     public void testInvoke () throws Throwable {
         Object response = new Object ();
 
-        MeterAspect advice = mock (MeterAspect.class);
+        Aspect advice = mock (Aspect.class);
 
-        List<MeterAspect> advices = Arrays.asList (advice);
+        List<Aspect> advices = Arrays.asList (advice);
 
         MethodInvocation invocable;
 
               invocable = mock (MethodInvocation.class);
         when (invocable.proceed ()).thenReturn (response);
 
-        assertThat (new DefaultMeterAdvisor ().around (invocable, advices), equalTo (response));
+        assertThat (new DefaultAdvisor ().around (invocable, advices), equalTo (response));
 
         verify (advice).before ();
         verify (advice).after (eq (response), eq ((Throwable) null));
@@ -39,12 +39,12 @@ public class DefaultMeterAdvisorTest {
 
     @Test
     public void testInvokeNoHooks () throws Throwable {
-        List<MeterAspect> hooks = new ArrayList<> ();
+        List<Aspect> hooks = new ArrayList<> ();
 
         MethodInvocation invocable;
 
                                             invocable = mock (MethodInvocation.class);
-        new DefaultMeterAdvisor ().around (invocable, hooks);
+        new DefaultAdvisor ().around (invocable, hooks);
 
         verify (invocable).proceed ();
     }
@@ -53,10 +53,10 @@ public class DefaultMeterAdvisorTest {
     public void testInvokeFail () throws Throwable {
         Throwable response = new RuntimeException ("fail");
 
-        MeterAspect adviceA = mock (MeterAspect.class);
-        MeterAspect adviceB = mock (MeterAspect.class);
+        Aspect adviceA = mock (Aspect.class);
+        Aspect adviceB = mock (Aspect.class);
 
-        List<MeterAspect> hooks = Arrays.asList (adviceA, adviceB);
+        List<Aspect> hooks = Arrays.asList (adviceA, adviceB);
 
         MethodInvocation invocable;
 
@@ -64,7 +64,7 @@ public class DefaultMeterAdvisorTest {
         when (invocable.proceed ()).thenThrow (response);
 
         try {
-            new DefaultMeterAdvisor ().around (invocable, hooks);
+            new DefaultAdvisor ().around (invocable, hooks);
         } finally {
             verify (adviceA).before ();
             verify (adviceB).before ();
@@ -78,19 +78,19 @@ public class DefaultMeterAdvisorTest {
     public void testInvokeHookFailBefore () throws Throwable {
         Object response = new Object ();
 
-        MeterAspect adviceA = mock (MeterAspect.class);
-        MeterAspect adviceB = mock (MeterAspect.class);
+        Aspect adviceA = mock (Aspect.class);
+        Aspect adviceB = mock (Aspect.class);
 
         doThrow (new RuntimeException ("fail")).when (adviceA).before ();
 
-        List<MeterAspect> advices = Arrays.asList (adviceA, adviceB);
+        List<Aspect> advices = Arrays.asList (adviceA, adviceB);
 
         MethodInvocation invocable;
 
               invocable = mock (MethodInvocation.class);
         when (invocable.proceed ()).thenReturn (response);
 
-        assertThat (new DefaultMeterAdvisor ().around (invocable, advices), equalTo (response));
+        assertThat (new DefaultAdvisor ().around (invocable, advices), equalTo (response));
 
         verify (adviceA).before ();
         verify (adviceB).before ();
@@ -103,19 +103,19 @@ public class DefaultMeterAdvisorTest {
     public void testInvokeHookFailAfter () throws Throwable {
         Object response = new Object ();
 
-        MeterAspect adviceA = mock (MeterAspect.class);
-        MeterAspect adviceB = mock (MeterAspect.class);
+        Aspect adviceA = mock (Aspect.class);
+        Aspect adviceB = mock (Aspect.class);
 
         doThrow (new RuntimeException ("fail")).when (adviceA).after (eq (response), eq ((Throwable) null));
 
-        List<MeterAspect> advices = Arrays.asList (adviceA, adviceB);
+        List<Aspect> advices = Arrays.asList (adviceA, adviceB);
 
         MethodInvocation invocable;
 
               invocable = mock (MethodInvocation.class);
         when (invocable.proceed ()).thenReturn (response);
 
-        assertThat (new DefaultMeterAdvisor ().around (invocable, advices), equalTo (response));
+        assertThat (new DefaultAdvisor ().around (invocable, advices), equalTo (response));
 
         verify (adviceA).before ();
         verify (adviceB).before ();

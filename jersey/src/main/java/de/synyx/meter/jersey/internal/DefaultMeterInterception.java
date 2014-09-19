@@ -3,8 +3,8 @@ package de.synyx.meter.jersey.internal;
 import de.synyx.meter.core.Injector;
 import de.synyx.meter.core.MeterProvider;
 import de.synyx.meter.core.annotation.Metric;
-import de.synyx.meter.core.internal.DefaultMeterAdvisor;
-import de.synyx.meter.core.internal.DefaultMeterMethodInterceptor;
+import de.synyx.meter.core.internal.aop.DefaultAdvisor;
+import de.synyx.meter.core.internal.aop.DefaultMeterInterceptor;
 import de.synyx.meter.core.internal.DefaultMeterNaming;
 import org.aopalliance.intercept.ConstructorInterceptor;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -22,14 +22,14 @@ import javax.inject.Inject;
  * Date: 15.07.2014
  * Time: 15:46
  */
-public final class DefaultMeterInterceptorService implements InterceptionService {
+public final class DefaultMeterInterception implements InterceptionService {
 
     private final List<MethodInterceptor> interceptors;
 
     @Inject
-    public DefaultMeterInterceptorService (Injector injector, MeterProvider provider) {
-        interceptors = Collections.<MethodInterceptor>singletonList (new DefaultMeterMethodInterceptor (injector, provider, injector.create (DefaultMeterNaming.class),
-                                                                                                                            injector.create (DefaultMeterAdvisor.class)
+    public DefaultMeterInterception (Injector injector, MeterProvider provider) {
+        interceptors = Collections.<MethodInterceptor>singletonList (new DefaultMeterInterceptor (injector, provider, injector.create (DefaultMeterNaming.class),
+                                                                                                                      injector.create (DefaultAdvisor.class)
         ));
     }
 

@@ -6,7 +6,7 @@ import com.google.common.base.Suppliers;
 import de.synyx.meter.core.Measure;
 import de.synyx.meter.core.annotation.Histogram;
 import de.synyx.meter.core.Meter;
-import de.synyx.meter.core.MeterAspect;
+import de.synyx.meter.core.aop.Aspect;
 import de.synyx.meter.core.annotation.Kind;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +48,7 @@ public class MeterAspectHistogramTest extends MeterAspectTest {
     public void testBothNN () {
         Histogram annotation = annotation (Kind.Both, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectHistogram (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -61,7 +61,7 @@ public class MeterAspectHistogramTest extends MeterAspectTest {
     public void testBothRN () {
         Histogram annotation = annotation (Kind.Both, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectHistogram (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -74,7 +74,7 @@ public class MeterAspectHistogramTest extends MeterAspectTest {
     public void testBothNT () {
         Histogram annotation = annotation (Kind.Both, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectHistogram (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -88,7 +88,7 @@ public class MeterAspectHistogramTest extends MeterAspectTest {
     public void testErrorNN () {
         Histogram annotation = annotation (Kind.Error, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectHistogram (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -102,7 +102,7 @@ public class MeterAspectHistogramTest extends MeterAspectTest {
     public void testErrorRN () {
         Histogram annotation = annotation (Kind.Error, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectHistogram (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -116,7 +116,7 @@ public class MeterAspectHistogramTest extends MeterAspectTest {
     public void testErrorNT () {
         Histogram annotation = annotation (Kind.Error, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectHistogram (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -129,7 +129,7 @@ public class MeterAspectHistogramTest extends MeterAspectTest {
     public void testSuccessNN () {
         Histogram annotation = annotation (Kind.Success, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectHistogram (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -142,7 +142,7 @@ public class MeterAspectHistogramTest extends MeterAspectTest {
     public void testSuccessRN () {
         Histogram annotation = annotation (Kind.Success, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectHistogram (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -156,7 +156,7 @@ public class MeterAspectHistogramTest extends MeterAspectTest {
     public void testSuccessNT () {
         Histogram annotation = annotation (Kind.Success, number);
 
-        MeterAspect aspect;
+        Aspect aspect;
 
         aspect = new MeterAspectHistogram (annotation, supplier, Optional.<Measure>absent ());
         aspect.before ();
@@ -172,7 +172,7 @@ public class MeterAspectHistogramTest extends MeterAspectTest {
         {
             Histogram annotation = annotation (Kind.Both, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectHistogram (annotation, supplier, Optional.<Measure>of (test));
             aspect.before ();
@@ -189,7 +189,7 @@ public class MeterAspectHistogramTest extends MeterAspectTest {
         {
             Histogram annotation = annotation (Kind.Both, number);
 
-            MeterAspect aspect;
+            Aspect aspect;
 
             aspect = new MeterAspectHistogram (annotation, supplier, Optional.<Measure>of (test));
             aspect.before ();
@@ -207,7 +207,7 @@ public class MeterAspectHistogramTest extends MeterAspectTest {
         {
             Histogram annotation = annotation (Kind.Both, number);
 
-            MeterAspect histogram;
+            Aspect histogram;
 
             histogram = new MeterAspectHistogram (annotation, supplier, Optional.<Measure>of (test));
             histogram.before ();
