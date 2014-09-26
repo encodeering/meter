@@ -15,9 +15,14 @@ import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 
 /**
-* Date: 16.07.2014
-* Time: 11:03
-*/
+ * <p>Aspect to measure the execution time of occurring events.</p>
+ *
+ * Date: 16.07.2014
+ * Time: 11:03
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
+ */
 public final class MeterAspectTimer extends MeterAspectSupport {
 
     private final static ThreadLocal<ConcurrentMap<Timer, Long>> Durations = new ThreadLocal<ConcurrentMap<Timer, Long>> () {
@@ -35,17 +40,29 @@ public final class MeterAspectTimer extends MeterAspectSupport {
 
     private final Clock clock;
 
+    /**
+     * <p>Constructor.</p>
+     * <p>
+     *    A supplier will be used to obtain the associated meter instance, which will be resolved dynamically on each invocation.
+     * </p>
+     *
+     * @param annotation specifies a {@link de.synyx.meter.core.annotation.Meter} configuration.
+     * @param meter specifies the dynamically resolved meter {@link de.synyx.meter.core.Meter} instance.
+     * @param clock specifies the time emitter.
+     */
     public MeterAspectTimer (Timer annotation, Supplier<Meter<Duration>> meter, Clock clock) {
         this.meter      = meter;
         this.annotation = annotation;
         this.clock      = clock;
     }
 
+    /** {@inheritDoc} */
     @Override
     public final void before () {
         Durations.get ().put (annotation, tick ());
     }
 
+    /** {@inheritDoc} */
     @Override
     public final void after (Object response, Throwable throwable) {
         long duration = tick () - Durations.get ().get (annotation);

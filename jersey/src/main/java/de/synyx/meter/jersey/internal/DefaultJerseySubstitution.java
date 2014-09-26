@@ -31,6 +31,9 @@ import static java.util.Collections.singleton;
 /**
  * Date: 30.07.2014
  * Time: 11:09
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
  */
 public final class DefaultJerseySubstitution implements Substitution {
 
@@ -42,6 +45,13 @@ public final class DefaultJerseySubstitution implements Substitution {
 
     private final MultivaluedParameterExtractorProvider extractors;
 
+    /**
+     * <p>Constructor for DefaultJerseySubstitution.</p>
+     *
+     * @param headers a {@link javax.ws.rs.core.HttpHeaders} object.
+     * @param uri a {@link org.glassfish.jersey.server.ExtendedUriInfo} object.
+     * @param extractors a {@link org.glassfish.jersey.server.internal.inject.MultivaluedParameterExtractorProvider} object.
+     */
     @Inject
     public DefaultJerseySubstitution (HttpHeaders headers, ExtendedUriInfo uri, MultivaluedParameterExtractorProvider extractors) {
         this.headers    = headers;
@@ -49,6 +59,7 @@ public final class DefaultJerseySubstitution implements Substitution {
         this.extractors = extractors;
     }
 
+    /** {@inheritDoc} */
     @Override
     public final String substitute (String value) {
         for (Parameter                 parameter : parameters ()) {

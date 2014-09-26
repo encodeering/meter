@@ -16,14 +16,19 @@ import java.util.Map;
 /**
  * Date: 06.08.2014
  * Time: 11:39
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
  */
 public final class MetricReportHandlerLog extends MetricReportHandler {
 
+    /** {@inheritDoc} */
     @Override
     protected final String scheme () {
         return "log";
     }
 
+    /** {@inheritDoc} */
     @Override
     protected final ScheduledReporter reporter (MetricReportMediator mediator, MeterProvider provider, URI location) {
         Map<String, String> parameters = parameters (location);

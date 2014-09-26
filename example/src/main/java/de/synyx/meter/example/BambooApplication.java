@@ -8,8 +8,15 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.ws.rs.core.Application;
 
+/**
+ * <p>BambooApplication class.</p>
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
+ */
 public class BambooApplication extends Application {
 
+    /** {@inheritDoc} */
     @Override
     public Set<Object> getSingletons () {
         Set<Object> singletons = new HashSet<> ();
@@ -18,6 +25,7 @@ public class BambooApplication extends Application {
         return singletons;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Set<Class<?>> getClasses () {
         Set<Class<?>> classes = new HashSet<> ();

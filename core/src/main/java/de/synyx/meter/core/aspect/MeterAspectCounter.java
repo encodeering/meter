@@ -10,9 +10,14 @@ import javax.measure.quantity.Dimensionless;
 import javax.measure.unit.Unit;
 
 /**
-* Date: 16.07.2014
-* Time: 11:03
-*/
+ * <p>Aspect to measure the number of occurring events.</p>
+ *
+ * Date: 16.07.2014
+ * Time: 11:03
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
+ */
 public final class MeterAspectCounter extends MeterAspectSupport {
 
     private final Counter annotation;
@@ -21,12 +26,23 @@ public final class MeterAspectCounter extends MeterAspectSupport {
 
     private final Measure measure;
 
+    /**
+     * <p>Constructor</p>
+     * <p>
+     *    A supplier will be used to obtain the associated meter instance, which will be resolved dynamically on each invocation.
+     * </p>
+     *
+     * @param annotation specifies a {@link de.synyx.meter.core.annotation.Counter} configuration.
+     * @param meter specifies the dynamically resolved meter {@link de.synyx.meter.core.Meter} instance.
+     * @param measure specifies the {@link com.google.common.base.Optional} measurement.
+     */
     public MeterAspectCounter (Counter annotation, Supplier<Meter<Dimensionless>> meter, Optional<Measure> measure) {
         this.meter      = meter;
         this.annotation = annotation;
         this.measure    = measure.or (new CounterMeasure ());
     }
 
+    /** {@inheritDoc} */
     @Override
     public final void after (Object response, Throwable throwable) {
         switch (annotation.kind ()) {

@@ -14,6 +14,9 @@ import javax.ws.rs.QueryParam;
 /**
  * Date: 15.07.2014
  * Time: 15:51
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
  */
 @Path ("bamboo")
 public class Bamboo {
@@ -21,6 +24,13 @@ public class Bamboo {
     @Inject
     private BambooService<String> service;
 
+    /**
+     * <p>echo.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param locale a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     @GET
     @Metric (
         timers     = @Timer,

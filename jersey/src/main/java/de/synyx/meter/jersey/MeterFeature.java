@@ -24,9 +24,13 @@ import javax.ws.rs.core.FeatureContext;
 /**
  * Date: 01.08.2014
  * Time: 11:40
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
  */
 public final class MeterFeature implements Feature {
 
+    /** {@inheritDoc} */
     @Override
     public final boolean configure (FeatureContext context) {
         context.register (new MeterFeatureBinder ());

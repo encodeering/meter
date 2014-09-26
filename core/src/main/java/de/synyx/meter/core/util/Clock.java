@@ -1,15 +1,21 @@
 package de.synyx.meter.core.util;
 
-import de.synyx.meter.core.internal.DefaultClock;
-
 /**
+ * <p>A clock can be used as a time emitter, whereas the delta between two ticks will be interpreted as the emitted time value.</p>
+ *
  * Date: 05.09.2014
  * Time: 12:53
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
  */
 public interface Clock {
 
-    public final static Class<? extends Clock> Default = DefaultClock.class;
-
+    /**
+     * <p>Determines a tick with an arbitrary precision. The precision has an impact on the measurement granularity.</p>
+     *
+     * @return a long.
+     */
     public abstract long tick ();
 
 }

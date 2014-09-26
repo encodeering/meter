@@ -24,12 +24,18 @@ import javax.servlet.ServletContext;
 /**
  * Date: 31.07.2014
  * Time: 09:15
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
  */
 public final class MetricWebContext implements WebContext {
 
+    /** Constant <code>AttrReporterWeb="com.codahale.metrics.reporter"</code> */
     public final static String AttrReporterWeb = "com.codahale.metrics.reporter";
+    /** Constant <code>AttrRegistryWeb="com.codahale.metrics.servlet.Instrument"{trunked}</code> */
     public final static String AttrRegistryWeb = "com.codahale.metrics.servlet.InstrumentedFilter.registry";
 
+    /** Constant <code>AttrRegistryJndi="java:comp/env/metrics/registry"</code> */
     public final static String AttrRegistryJndi = "java:comp/env/metrics/registry";
 
     private final Logger logger = LoggerFactory.getLogger (MetricWebContext.class);
@@ -38,6 +44,7 @@ public final class MetricWebContext implements WebContext {
 
     private ScheduledReporter reporter;
 
+    /** {@inheritDoc} */
     @Override
     public final MeterProvider initialize (ServletContext context) {
         Context jndi = null;
@@ -67,6 +74,7 @@ public final class MetricWebContext implements WebContext {
         return provider;
     }
 
+    /** {@inheritDoc} */
     @Override
     public final void close () {
         if (reporter != null)

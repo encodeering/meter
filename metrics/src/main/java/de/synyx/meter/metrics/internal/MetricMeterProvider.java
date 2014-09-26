@@ -20,6 +20,9 @@ import javax.measure.unit.Unit;
 /**
  * Date: 12.08.2014
  * Time: 14:47
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
  */
 public final class MetricMeterProvider implements MeterProvider {
 
@@ -27,11 +30,17 @@ public final class MetricMeterProvider implements MeterProvider {
 
     private final MetricRegistry registry;
 
+    /**
+     * <p>Constructor for MetricMeterProvider.</p>
+     *
+     * @param registry a {@link com.codahale.metrics.MetricRegistry} object.
+     */
     @Inject
     public MetricMeterProvider (MetricRegistry registry) {
         this.registry = registry;
     }
 
+    /** {@inheritDoc} */
     @Override
     public final Meter<Dimensionless> counter (final String name) {
         logger.trace ("requesting counter {}", name);
@@ -49,6 +58,7 @@ public final class MetricMeterProvider implements MeterProvider {
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     public final Meter<Dimensionless> histogram (final String name) {
         logger.trace ("requesting histogram {}", name);
@@ -66,6 +76,7 @@ public final class MetricMeterProvider implements MeterProvider {
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     public final Meter<Dimensionless> meter (final String name) {
         logger.trace ("requesting meter {}", name);
@@ -83,6 +94,7 @@ public final class MetricMeterProvider implements MeterProvider {
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     public final Meter<Duration> timer (final String name) {
         logger.trace ("requesting timer {}", name);
@@ -100,6 +112,7 @@ public final class MetricMeterProvider implements MeterProvider {
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     public final <T> T unwrap (Class<? extends T> type) {
         return type.isInstance (registry) ? type.cast (registry) : null;

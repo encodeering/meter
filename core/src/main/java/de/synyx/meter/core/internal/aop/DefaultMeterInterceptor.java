@@ -37,9 +37,12 @@ import static de.synyx.meter.core.MeterProviders.timerOf;
 import static java.util.Arrays.asList;
 
 /**
-* Date: 16.07.2014
-* Time: 11:05
-*/
+ * Date: 16.07.2014
+ * Time: 11:05
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
+ */
 public final class DefaultMeterInterceptor implements MethodInterceptor {
 
     private final Injector injector;
@@ -49,6 +52,14 @@ public final class DefaultMeterInterceptor implements MethodInterceptor {
     private final Substitution substitution;
     private final Advisor      advisor;
 
+    /**
+     * <p>Constructor for DefaultMeterInterceptor.</p>
+     *
+     * @param injector a {@link de.synyx.meter.core.Injector} object.
+     * @param provider a {@link de.synyx.meter.core.MeterProvider} object.
+     * @param substitution a {@link de.synyx.meter.core.Substitution} object.
+     * @param advisor a {@link de.synyx.meter.core.aop.Advisor} object.
+     */
     public DefaultMeterInterceptor (Injector injector, MeterProvider provider, Substitution substitution, Advisor advisor) {
         this.injector     = injector;
         this.provider     = provider;
@@ -56,6 +67,7 @@ public final class DefaultMeterInterceptor implements MethodInterceptor {
         this.substitution = substitution;
     }
 
+    /** {@inheritDoc} */
     @Override
     public final Object invoke (final MethodInvocation invocation) throws Throwable {
         Metric metric;

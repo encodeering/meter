@@ -17,6 +17,9 @@ import javax.inject.Inject;
 /**
  * Date: 30.07.2014
  * Time: 08:47
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
  */
 public final class DefaultSubstitution implements Substitution {
 
@@ -26,11 +29,17 @@ public final class DefaultSubstitution implements Substitution {
 
     private final Substitution substitution;
 
+    /**
+     * <p>Constructor for DefaultSubstitution.</p>
+     *
+     * @param substitution a {@link de.synyx.meter.core.Substitution} object.
+     */
     @Inject
     public DefaultSubstitution (Substitution substitution) {
         this.substitution = substitution;
     }
 
+    /** {@inheritDoc} */
     @Override
     public final String substitute (String value) {
         return value == null ? null : Joiner.on ("").join (Iterables.transform (split (value), new Function<Callable<String>, String> () {

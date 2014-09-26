@@ -12,11 +12,15 @@ import java.util.List;
 /**
  * Date: 30.07.2014
  * Time: 08:48
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
  */
 public final class DefaultAdvisor implements Advisor {
 
     private final Logger logger = LoggerFactory.getLogger (getClass ());
 
+    /** {@inheritDoc} */
     @Override
     public final Object around (MethodInvocation invocation, List<Aspect> aspects) throws Throwable {
         logger.trace ("create metrics for invocable: {}", invocation.getMethod ());

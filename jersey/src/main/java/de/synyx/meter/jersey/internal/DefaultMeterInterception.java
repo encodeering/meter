@@ -21,11 +21,20 @@ import javax.inject.Inject;
 /**
  * Date: 15.07.2014
  * Time: 15:46
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
  */
 public final class DefaultMeterInterception implements InterceptionService {
 
     private final List<MethodInterceptor> interceptors;
 
+    /**
+     * <p>Constructor for DefaultMeterInterception.</p>
+     *
+     * @param injector a {@link de.synyx.meter.core.Injector} object.
+     * @param provider a {@link de.synyx.meter.core.MeterProvider} object.
+     */
     @Inject
     public DefaultMeterInterception (Injector injector, MeterProvider provider) {
         interceptors = Collections.<MethodInterceptor>singletonList (new DefaultMeterInterceptor (injector, provider, injector.create (DefaultSubstitution.class),
@@ -33,17 +42,20 @@ public final class DefaultMeterInterception implements InterceptionService {
         ));
     }
 
+    /** {@inheritDoc} */
     @Override
     public final Filter getDescriptorFilter () {
         return BuilderHelper.allFilter ();
     }
 
+    /** {@inheritDoc} */
     @Override
     public final List<MethodInterceptor> getMethodInterceptors (Method method) {
         return method != null &&
                method.isAnnotationPresent (Metric.class) ? interceptors : null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public final List<ConstructorInterceptor> getConstructorInterceptors (Constructor<?> constructor) {
         return null;

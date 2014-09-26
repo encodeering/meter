@@ -14,13 +14,22 @@ import java.util.Map;
 /**
  * Date: 31.07.2014
  * Time: 14:40
+ *
+ * @author Michael Clausen - clausen@synyx.de
+ * @version $Id: $Id
  */
 public final class MetricReportHandlerGraphite extends MetricReportHandler {
 
+    /**
+     * <p>scheme.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     protected final String scheme () {
         return "graphite";
     }
 
+    /** {@inheritDoc} */
     @Override
     protected final ScheduledReporter reporter (MetricReportMediator mediator, MeterProvider provider, URI uri) {
         Map<String, String> parameters = parameters (uri);
