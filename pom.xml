@@ -23,6 +23,18 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
+    <organization>
+        <name>synyx</name>
+        <url>http://synyx.de/</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name></name>
+            <url></url>
+        </license>
+    </licenses>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -131,6 +143,12 @@
     </dependencyManagement>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.goldin</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -141,8 +159,74 @@
                         <target>1.7</target>
                     </configuration>
                 </plugin>
+
+                <plugin>
+                    <groupId>com.github.goldin</groupId>
+                    <artifactId>properties-maven-plugin</artifactId>
+                    <version>0.2.5</version>
+                    <inherited>false</inherited>
+                    <configuration>
+                        <verbose>true</verbose>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>set-properties</id>
+                            <phase>initialize</phase>
+                            <goals>
+                                <goal>set-properties</goal>
+                            </goals>
+                            <configuration>
+                                <properties>
+                                    <property>
+                                        <name>project.root</name>
+                                        <value>${project.basedir}</value>
+                                    </property>
+                                </properties>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>license</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>license-maven-plugin</artifactId>
+                            <version>1.7</version>
+                            <configuration>
+                                <licenseFile>${project.root}/LICENSE.txt</licenseFile>
+                                <!--<licenseName></licenseName>-->
+                                <inceptionYear>2014</inceptionYear>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>license</id>
+                                    <goals>
+                                        <goal>download-licenses</goal>
+                                        <goal>add-third-party</goal>
+                                        <!--<goal>update-project-license</goal>-->
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
