@@ -49,7 +49,7 @@ public class MetricReportHandlerLogTest extends MetricReportTestSupport {
     }
 
     @Test
-    public void testReporterNoAuthority () throws NoSuchFieldException, IllegalAccessException, URISyntaxException {
+    public void testReporterNoAuthority () throws NoSuchFieldException, IllegalAccessException, URISyntaxException, ClassNotFoundException {
         Optional<ScheduledReporter> reporter;
 
                         reporter = new MetricReportHandlerLog ().select (mediator (), provider, URI.create ("log://?rate=m&duration=h"));
@@ -61,8 +61,14 @@ public class MetricReportHandlerLogTest extends MetricReportTestSupport {
         assertOption (slf4j, "com.codahale.metrics.application.logger", null);
     }
 
-    private void assertOption (Slf4jReporter slf4j, String logname, String markername) throws NoSuchFieldException, IllegalAccessException {
-        assertThat (field (Slf4jReporter.class, "logger", Logger.class, slf4j).getName (), equalTo (logname));
+    private void assertOption (Slf4jReporter slf4j, String logname, String markername) throws NoSuchFieldException, IllegalAccessException, ClassNotFoundException {
+        Class<?> proxytype = Class.forName ("com.codahale.metrics.Slf4jReporter$LoggerProxy");
+
+        Logger logger = field (proxytype, "logger", Logger.class,
+                        field (Slf4jReporter.class, "loggerProxy", proxytype, slf4j)
+        );
+
+        assertThat (logger.getName (), equalTo (logname));
 
         Marker marker;
 

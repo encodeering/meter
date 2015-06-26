@@ -87,7 +87,7 @@ public class MetricReportHandlerGangliaTest extends MetricReportTestSupport {
     }
 
     private void assertProtocol (GangliaReporter ganglia, Class<? extends Protocol> protocol) throws NoSuchFieldException, IllegalAccessException {
-        GMetric g = field (GangliaReporter.class, "ganglia", GMetric.class, ganglia);
+        GMetric g = field (GangliaReporter.class, "gmetric", GMetric.class, ganglia);
 
         assertThat (field (GMetric.class, "protocol", Protocol.class, g), Matchers.instanceOf (protocol));
     }
