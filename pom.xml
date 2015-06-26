@@ -30,10 +30,12 @@
 
     <licenses>
         <license>
-            <name></name>
-            <url></url>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+
+    <inceptionYear>2014</inceptionYear>
 
     <dependencyManagement>
         <dependencies>
@@ -224,9 +226,7 @@
                             <artifactId>license-maven-plugin</artifactId>
                             <version>1.7</version>
                             <configuration>
-                                <licenseFile>${project.root}/LICENSE.txt</licenseFile>
-                                <!--<licenseName></licenseName>-->
-                                <inceptionYear>2014</inceptionYear>
+                                <licenseName>apache_v2</licenseName>
                             </configuration>
                             <executions>
                                 <execution>
@@ -234,7 +234,7 @@
                                     <goals>
                                         <goal>download-licenses</goal>
                                         <goal>add-third-party</goal>
-                                        <!--<goal>update-project-license</goal>-->
+                                        <goal>update-project-license</goal>
                                     </goals>
                                 </execution>
                             </executions>
