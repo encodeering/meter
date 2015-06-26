@@ -1,5 +1,6 @@
 package de.synyx.meter.core.internal.aop;
 
+import de.synyx.meter.core.aop.Advice;
 import de.synyx.meter.core.aop.Advisor;
 import de.synyx.meter.core.aop.Aspect;
 import org.aopalliance.intercept.MethodInvocation;
@@ -22,39 +23,53 @@ public final class DefaultAdvisor implements Advisor {
 
     /** {@inheritDoc} */
     @Override
-    public final Object around (MethodInvocation invocation, List<Aspect> aspects) throws Throwable {
-        logger.trace ("create metrics for invocable: {}", invocation.getMethod ());
+    public final Advice around (List<Aspect> aspects) {
+        return new DefaultAroundAdvice      (aspects);
+    }
 
-        Object response = null;
-        Throwable throwable = null;
+    private final class DefaultAroundAdvice implements Advice {
 
-        List<Aspect> auxiliary = new ArrayList<> (aspects);
-        List<Aspect> called    = new ArrayList<> ();
+        private final List<Aspect> aspects;
 
-        try {
-            for (Aspect aspect : auxiliary) {
-                try {
-                        aspect.before ();
-                } catch (RuntimeException e) {
-                    logger.warn ("around before {} {}", e.getMessage (), e.getClass ());
-                } finally {
-                    called.add (aspect);
+        private DefaultAroundAdvice (List<Aspect> aspects) {
+            this.aspects = new ArrayList<>       (aspects);
+        }
+
+        @Override
+        public final Object perform (MethodInvocation invocation) throws Throwable {
+            logger.trace ("create metrics for invocable: {}", invocation.getMethod ());
+
+            List<Aspect> called = new ArrayList<> ();
+
+            Object response = null;
+            Throwable throwable = null;
+
+            try {
+                for (Aspect aspect : aspects) {
+                    try {
+                            aspect.before ();
+                    } catch (RuntimeException e) {
+                        logger.warn ("around before {} {}", e.getMessage (), e.getClass ());
+                    } finally {
+                        called.add (aspect);
+                    }
                 }
-            }
 
-            return response = invocation.proceed ();
-        } catch (Throwable e) {
-                  throwable = e;
-            throw throwable;
-        } finally {
-            for (Aspect aspect : called) {
-                try {
-                        aspect.after (response, throwable);
-                } catch (RuntimeException e) {
-                    logger.warn ("around after {} {}", e.getMessage (), e.getClass ());
+                return response = invocation.proceed ();
+            } catch (Throwable e) {
+                throwable = e;
+                throw throwable;
+            } finally {
+                for (Aspect aspect : called) {
+                    try {
+                            aspect.after (response, throwable);
+                    } catch (RuntimeException e) {
+                        logger.warn ("around before {} {}", e.getMessage (), e.getClass ());
+                    }
                 }
             }
         }
+
     }
 
 }

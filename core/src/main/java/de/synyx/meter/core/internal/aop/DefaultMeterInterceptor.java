@@ -88,7 +88,7 @@ public final class DefaultMeterInterceptor implements MethodInterceptor {
         addAll (aspects, collect (metric.meters (),     meters     (basename)));
         addAll (aspects, collect (metric.timers (),     timers     (basename)));
 
-        return advisor.around (invocation, aspects);
+        return advisor.around (aspects).perform (invocation);
     }
 
     /* following hooks could be extracted to a product factory */

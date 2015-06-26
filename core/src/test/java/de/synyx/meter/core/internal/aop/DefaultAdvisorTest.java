@@ -31,7 +31,7 @@ public class DefaultAdvisorTest {
               invocable = mock (MethodInvocation.class);
         when (invocable.proceed ()).thenReturn (response);
 
-        assertThat (new DefaultAdvisor ().around (invocable, advices), equalTo (response));
+        assertThat (new DefaultAdvisor ().around (advices).perform (invocable), equalTo (response));
 
         verify (advice).before ();
         verify (advice).after (eq (response), eq ((Throwable) null));
@@ -43,8 +43,8 @@ public class DefaultAdvisorTest {
 
         MethodInvocation invocable;
 
-                                            invocable = mock (MethodInvocation.class);
-        new DefaultAdvisor ().around (invocable, hooks);
+                                                      invocable = mock (MethodInvocation.class);
+        new DefaultAdvisor ().around (hooks).perform (invocable);
 
         verify (invocable).proceed ();
     }
@@ -64,7 +64,7 @@ public class DefaultAdvisorTest {
         when (invocable.proceed ()).thenThrow (response);
 
         try {
-            new DefaultAdvisor ().around (invocable, hooks);
+            new DefaultAdvisor ().around (hooks).perform (invocable);
         } finally {
             verify (adviceA).before ();
             verify (adviceB).before ();
@@ -90,7 +90,7 @@ public class DefaultAdvisorTest {
               invocable = mock (MethodInvocation.class);
         when (invocable.proceed ()).thenReturn (response);
 
-        assertThat (new DefaultAdvisor ().around (invocable, advices), equalTo (response));
+        assertThat (new DefaultAdvisor ().around (advices).perform (invocable), equalTo (response));
 
         verify (adviceA).before ();
         verify (adviceB).before ();
@@ -115,7 +115,7 @@ public class DefaultAdvisorTest {
               invocable = mock (MethodInvocation.class);
         when (invocable.proceed ()).thenReturn (response);
 
-        assertThat (new DefaultAdvisor ().around (invocable, advices), equalTo (response));
+        assertThat (new DefaultAdvisor ().around (advices).perform (invocable), equalTo (response));
 
         verify (adviceA).before ();
         verify (adviceB).before ();

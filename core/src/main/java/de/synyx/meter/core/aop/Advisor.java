@@ -1,7 +1,5 @@
 package de.synyx.meter.core.aop;
 
-import org.aopalliance.intercept.MethodInvocation;
-
 import java.util.List;
 
 /**
@@ -37,12 +35,9 @@ public abstract interface Advisor {
      *     An aspect is allowed to throw <b>runtime-exceptions</b> only.
      * </p>
      *
-     * @param invocation specifies the target {@link org.aopalliance.intercept.MethodInvocation} object.
      * @param aspects specifies the {@link java.util.List} of aspects executed around the real invocation.
-     *
      * @return an {@link java.lang.Object object} returned from the real invocation.
-     * @throws java.lang.Throwable if the invocation failed or if an aspect is challenged by a checked exception.
      */
-    public abstract Object around (MethodInvocation invocation, List<Aspect> aspects) throws Throwable;
+    public abstract Advice around (List<Aspect> aspects);
 
 }

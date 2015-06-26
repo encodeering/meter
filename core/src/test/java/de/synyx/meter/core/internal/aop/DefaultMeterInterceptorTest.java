@@ -9,6 +9,7 @@ import de.synyx.meter.core.annotation.Kind;
 import de.synyx.meter.core.annotation.Meter;
 import de.synyx.meter.core.annotation.Metric;
 import de.synyx.meter.core.annotation.Timer;
+import de.synyx.meter.core.aop.Advice;
 import de.synyx.meter.core.aop.Advisor;
 import de.synyx.meter.core.aop.Aspect;
 import de.synyx.meter.core.aspect.MeterAspectCounter;
@@ -19,7 +20,6 @@ import de.synyx.meter.core.internal.DefaultClock;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -48,6 +48,8 @@ public class DefaultMeterInterceptorTest {
 
     private final Advisor invoker = mock (Advisor.class);
 
+    private final Advice advice = mock (Advice.class);
+
     private final DefaultMeterInterceptor interceptor = new DefaultMeterInterceptor (injector, provider, substitution, invoker);
 
     {
@@ -64,7 +66,8 @@ public class DefaultMeterInterceptorTest {
 
         try {
             //noinspection unchecked
-            when (invoker.around (any (MethodInvocation.class), any (List.class))).thenAnswer (new Answer<Object> () {
+            when (invoker.around (any (List.class))).thenReturn (advice);
+            when (advice.perform (any (MethodInvocation.class))).thenAnswer (new Answer<Object> () {
 
                 @SuppressWarnings ("unchecked")
                 @Override
@@ -145,7 +148,7 @@ public class DefaultMeterInterceptorTest {
 
         ArgumentCaptor<List<Aspect>> captor = ArgumentCaptor.forClass ((Class) List.class);
 
-        verify (invoker).around (Mockito.any (MethodInvocation.class), captor.capture ());
+        verify (invoker).around (captor.capture ());
 
         return captor.getValue ();
     }
