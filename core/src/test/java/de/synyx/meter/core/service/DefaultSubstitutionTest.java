@@ -1,4 +1,4 @@
-package de.synyx.meter.core.internal;
+package de.synyx.meter.core.service;
 
 import de.synyx.meter.core.Substitution;
 import org.junit.Test;

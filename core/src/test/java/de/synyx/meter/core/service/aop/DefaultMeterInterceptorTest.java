@@ -1,4 +1,4 @@
-package de.synyx.meter.core.internal.aop;
+package de.synyx.meter.core.service.aop;
 
 import de.synyx.meter.core.Injector;
 import de.synyx.meter.core.MeterProvider;
@@ -16,7 +16,7 @@ import de.synyx.meter.core.aspect.MeterAspectCounter;
 import de.synyx.meter.core.aspect.MeterAspectHistogram;
 import de.synyx.meter.core.aspect.MeterAspectMeter;
 import de.synyx.meter.core.aspect.MeterAspectTimer;
-import de.synyx.meter.core.internal.DefaultClock;
+import de.synyx.meter.core.service.DefaultClock;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;

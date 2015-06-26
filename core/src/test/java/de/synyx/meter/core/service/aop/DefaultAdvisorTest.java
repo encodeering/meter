@@ -1,4 +1,4 @@
-package de.synyx.meter.core.internal.aop;
+package de.synyx.meter.core.service.aop;
 
 import de.synyx.meter.core.aop.Aspect;
 import org.aopalliance.intercept.MethodInvocation;

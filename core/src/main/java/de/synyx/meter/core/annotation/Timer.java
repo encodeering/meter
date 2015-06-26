@@ -1,6 +1,6 @@
 package de.synyx.meter.core.annotation;
 
-import de.synyx.meter.core.internal.DefaultClock;
+import de.synyx.meter.core.service.DefaultClock;
 import de.synyx.meter.core.util.Clock;
 
 import java.lang.annotation.ElementType;

@@ -1,4 +1,4 @@
-package de.synyx.meter.core.internal.aop;
+package de.synyx.meter.core.service.aop;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;

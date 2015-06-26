@@ -1,4 +1,4 @@
-package de.synyx.meter.core.internal;
+package de.synyx.meter.core.service;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
