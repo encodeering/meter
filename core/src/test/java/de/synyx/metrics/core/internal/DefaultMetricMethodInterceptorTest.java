@@ -28,7 +28,6 @@ import java.util.UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -39,7 +38,7 @@ public class DefaultMetricMethodInterceptorTest {
 
     private final MetricNaming naming = mock (MetricNaming.class);
 
-    private final MetricRegistry registry = new MetricRegistry ();
+    private final MetricRegistry registry = mock (MetricRegistry.class);
 
     private final MetricAdvisor invoker = mock (MetricAdvisor.class);
 
@@ -71,6 +70,9 @@ public class DefaultMetricMethodInterceptorTest {
             throw new RuntimeException (throwable.getCause ());
         }
     }
+
+    private final String name = UUID.randomUUID ().toString ();
+
 
     @SuppressWarnings ("unchecked")
     @Test
@@ -142,8 +144,6 @@ public class DefaultMetricMethodInterceptorTest {
 
     @Test
     public void testCounter () throws Exception {
-        String name = UUID.randomUUID ().toString ();
-
         Counter counter;
 
               counter = mock (Counter.class);
@@ -151,13 +151,11 @@ public class DefaultMetricMethodInterceptorTest {
 
         assertThat (interceptor.counter (nothing ()).apply (counter), instanceOf (MetricAspectCounter.class));
 
-        assertThat (registry.counter (name), notNullValue ());
+        verify (registry).counter (name);
     }
 
     @Test
     public void testHistogram () throws Exception {
-        String name = UUID.randomUUID ().toString ();
-
         Histogram histogram;
 
               histogram = mock (Histogram.class);
@@ -165,13 +163,11 @@ public class DefaultMetricMethodInterceptorTest {
 
         assertThat (interceptor.histogram (nothing ()).apply (histogram), instanceOf (MetricAspectHistogram.class));
 
-        assertThat (registry.histogram (name), notNullValue ());
+        verify (registry).histogram (name);
     }
 
     @Test
     public void testMeter () throws Exception {
-        String name = UUID.randomUUID ().toString ();
-
         Meter meter;
 
               meter = mock (Meter.class);
@@ -179,13 +175,11 @@ public class DefaultMetricMethodInterceptorTest {
 
         assertThat (interceptor.meter (nothing ()).apply (meter), instanceOf (MetricAspectMeter.class));
 
-        assertThat (registry.meter (name), notNullValue ());
+        verify (registry).meter (name);
     }
 
     @Test
     public void testTimer () throws Exception {
-        String name = UUID.randomUUID ().toString ();
-
         Timer timer;
 
               timer = mock (Timer.class);
@@ -193,7 +187,7 @@ public class DefaultMetricMethodInterceptorTest {
 
         assertThat (interceptor.timer (nothing ()).apply (timer), instanceOf (MetricAspectTimer.class));
 
-        assertThat (registry.timer (name), notNullValue ());
+        verify (registry).timer (name);
     }
 
     @Test
