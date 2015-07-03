@@ -1,6 +1,5 @@
 package de.synyx.metrics.core.internal;
 
-import com.codahale.metrics.Clock;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Supplier;
@@ -20,6 +19,7 @@ import de.synyx.metrics.core.aspect.MetricAspectCounter;
 import de.synyx.metrics.core.aspect.MetricAspectHistogram;
 import de.synyx.metrics.core.aspect.MetricAspectMeter;
 import de.synyx.metrics.core.aspect.MetricAspectTimer;
+import de.synyx.metrics.core.util.Clock;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
@@ -41,8 +41,6 @@ import static java.util.Arrays.asList;
 * Time: 11:05
 */
 public final class DefaultMetricMethodInterceptor implements MethodInterceptor {
-
-    private final Clock clock = Clock.defaultClock ();
 
     private final Injector injector;
 
@@ -131,12 +129,16 @@ public final class DefaultMetricMethodInterceptor implements MethodInterceptor {
             public final MetricAspect apply (final Timer annotation) {
                 return new MetricAspectTimer (annotation,
                                               meter      (timerOf (provider), dynname (basename, annotation.value ())),
-                                              clock
+                                              clock      (                                       annotation.clock ())
 
                 );
             }
 
         };
+    }
+
+    final Clock clock (Class<? extends Clock> clock) {
+        return injector.create (clock);
     }
 
     final Supplier<String> dynname (final String basename, final String value) {

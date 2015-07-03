@@ -1,9 +1,9 @@
 package de.synyx.metrics.core.aspect;
 
-import com.codahale.metrics.Clock;
 import com.google.common.base.Supplier;
 import de.synyx.metrics.core.Meter;
 import de.synyx.metrics.core.annotation.Timer;
+import de.synyx.metrics.core.util.Clock;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -75,7 +75,7 @@ public final class MetricAspectTimer extends MetricAspectSupport {
     }
 
     private long tick () {
-        return clock.getTick ();
+        return clock.tick ();
     }
 
 }

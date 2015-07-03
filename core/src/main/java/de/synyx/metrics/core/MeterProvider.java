@@ -17,4 +17,5 @@ public interface MeterProvider {
 
     public abstract Meter<Duration> timer (String name);
 
+    public abstract <T> T unwrap (Class<? extends T> type);
 }

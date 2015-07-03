@@ -1,5 +1,8 @@
 package de.synyx.metrics.core.annotation;
 
+import de.synyx.metrics.core.internal.DefaultClock;
+import de.synyx.metrics.core.util.Clock;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,5 +20,7 @@ public @interface Timer {
     public abstract String value ()  default "#";
 
     public abstract TimeUnit unit () default TimeUnit.NANOSECONDS;
+
+    public abstract Class<? extends Clock> clock () default DefaultClock.class;
 
 }

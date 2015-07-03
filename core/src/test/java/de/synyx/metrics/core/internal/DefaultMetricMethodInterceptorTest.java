@@ -40,15 +40,19 @@ import static org.mockito.Mockito.when;
 
 public class DefaultMetricMethodInterceptorTest {
 
+    private final Injector injector = mock (Injector.class);
+
     private final MetricNaming naming = mock (MetricNaming.class);
 
     private final MeterProvider provider = mock (MeterProvider.class);
 
     private final MetricAdvisor invoker = mock (MetricAdvisor.class);
 
-    private final DefaultMetricMethodInterceptor interceptor = new DefaultMetricMethodInterceptor (mock (Injector.class), provider, naming, invoker);
+    private final DefaultMetricMethodInterceptor interceptor = new DefaultMetricMethodInterceptor (injector, provider, naming, invoker);
 
     {
+        when (injector.create (DefaultClock.class)).thenReturn (new DefaultClock ());
+
         when (naming.name (anyString ())).thenAnswer (new Answer<Object> () {
 
             @Override
@@ -228,6 +232,7 @@ public class DefaultMetricMethodInterceptorTest {
               annotation = mock (Timer.class);
         when (annotation.value ()).thenReturn (name);
         when (annotation.unit ()).thenReturn (TimeUnit.NANOSECONDS);
+        when (annotation.clock ()).thenReturn ((Class) DefaultClock.class);
 
         MetricAspect aspect = interceptor.timers ("").apply (annotation);
                      aspect.before ();

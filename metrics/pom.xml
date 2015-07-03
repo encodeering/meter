@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>metrics.core</artifactId>
+    <artifactId>metrics.metrics</artifactId>
     <packaging>jar</packaging>
 
     <name>${project.groupId}.${project.artifactId} [${project.version}]</name>
@@ -17,6 +17,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>de.synyx</groupId>
+            <artifactId>metrics.core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
@@ -26,26 +32,21 @@
         </dependency>
 
         <dependency>
-            <groupId>org.jscience</groupId>
-            <artifactId>jscience</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-        </dependency>
 
         <dependency>
-            <groupId>aopalliance</groupId>
-            <artifactId>aopalliance</artifactId>
+            <groupId>com.codahale.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
+            <groupId>com.codahale.metrics</groupId>
+            <artifactId>metrics-graphite</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.codahale.metrics</groupId>
+            <artifactId>metrics-ganglia</artifactId>
         </dependency>
 
         <dependency>

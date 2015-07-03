@@ -23,6 +23,11 @@
         </dependency>
         <dependency>
             <groupId>de.synyx</groupId>
+            <artifactId>metrics.metrics</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.synyx</groupId>
             <artifactId>metrics.jersey</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

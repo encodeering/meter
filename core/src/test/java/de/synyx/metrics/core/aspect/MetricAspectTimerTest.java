@@ -1,11 +1,11 @@
 package de.synyx.metrics.core.aspect;
 
-import com.codahale.metrics.Clock;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import de.synyx.metrics.core.Meter;
 import de.synyx.metrics.core.MetricAspect;
 import de.synyx.metrics.core.annotation.Timer;
+import de.synyx.metrics.core.util.Clock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,14 +36,14 @@ public class MetricAspectTimerTest extends MetricAspectTest {
 
     private Supplier<Meter<Duration>> supplier;
 
-    private final long                 start = System.nanoTime ();
+    private final long start = System.nanoTime ();
     private final long end   = (long) (start + 100000 * Math.random ());
 
     @Before
     public void before () {
         supplier = Suppliers.ofInstance (meter);
 
-        when (clock.getTick ()).thenReturn (start, end);
+        when (clock.tick ()).thenReturn (start, end);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class MetricAspectTimerTest extends MetricAspectTest {
 
         timer = new MetricAspectTimer (annotation, supplier, clock);
         timer.before ();
-        timer.after  (null, null);
+        timer.after (null, null);
 
         verify (meter).update (Measure.valueOf (end - start, SI.NANO (SI.SECOND)));
     }
