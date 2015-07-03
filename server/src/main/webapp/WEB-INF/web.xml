@@ -16,4 +16,13 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <listener>
+        <listener-class>de.synyx.metrics.servlet.listener.MetricListener</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>metrics-reporter</param-name>
+        <param-value>graphite://localhost:2003?duration=s&amp;rates=ms</param-value>
+    </context-param>
+
 </web-app>
