@@ -41,6 +41,14 @@ public class MetricReportTestSupport {
         return type.cast (field.get (reporter));
     }
 
+    final MetricReportMediator mediator () {
+        return new MetricReportMediator (registry);
+    }
+
+    final MetricReportMediator mediator (MetricReportHandler handler) {
+        return new MetricReportMediator (registry, handler);
+    }
+
     final MetricReportHandler handler (final String scheme, final ScheduledReporter reporter) {
         class TestReportHandler extends MetricReportHandler {
 

@@ -72,8 +72,4 @@ public class MetricReportHandlerLogTest extends MetricReportTestSupport {
         System.out.println (URI.create ("log:?bam").getScheme ());
     }
 
-    private MetricReportMediator mediator () {
-        return new MetricReportMediator (registry);
-    }
-
 }
