@@ -25,7 +25,7 @@ import javax.inject.Inject;
  * @author Michael Clausen - clausen@synyx.de
  * @version $Id: $Id
  */
-public final class DefaultMeterInterception implements InterceptionService {
+public final class DefaultMeterInterceptionService implements InterceptionService {
 
     private final List<MethodInterceptor> interceptors;
 
@@ -36,7 +36,7 @@ public final class DefaultMeterInterception implements InterceptionService {
      * @param provider a {@link de.synyx.meter.core.MeterProvider} object.
      */
     @Inject
-    public DefaultMeterInterception (Injector injector, MeterProvider provider) {
+    public DefaultMeterInterceptionService (Injector injector, MeterProvider provider) {
         interceptors = Collections.<MethodInterceptor>singletonList (new DefaultMeterInterceptor (injector, provider, injector.create (DefaultSubstitution.class),
                                                                                                                       injector.create (DefaultAdvisor.class)
         ));

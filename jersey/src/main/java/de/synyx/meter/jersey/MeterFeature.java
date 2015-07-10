@@ -7,7 +7,7 @@ import de.synyx.meter.core.Substitution;
 import de.synyx.meter.core.web.WebContext;
 import de.synyx.meter.jersey.internal.DefaultJerseyInjector;
 import de.synyx.meter.jersey.internal.DefaultJerseySubstitution;
-import de.synyx.meter.jersey.internal.DefaultMeterInterception;
+import de.synyx.meter.jersey.internal.DefaultMeterInterceptionService;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.InterceptionService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -45,7 +45,7 @@ public final class MeterFeature implements Feature {
             bindFactory (DefaultMeterProviderFactory.class).to (MeterProvider.class).in (Singleton.class);
             bind (DefaultJerseyInjector.class).to (Injector.class).in (Singleton.class);
             bind (DefaultJerseySubstitution.class).to (Substitution.class).in (Singleton.class);
-            bind (DefaultMeterInterception.class).to (InterceptionService.class).in (Singleton.class);
+            bind (DefaultMeterInterceptionService.class).to (InterceptionService.class).in (Singleton.class);
         }
 
     }

@@ -6,7 +6,7 @@ import de.synyx.meter.core.MeterProvider;
 import de.synyx.meter.core.Substitution;
 import de.synyx.meter.jersey.internal.DefaultJerseyInjector;
 import de.synyx.meter.jersey.internal.DefaultJerseySubstitution;
-import de.synyx.meter.jersey.internal.DefaultMeterInterception;
+import de.synyx.meter.jersey.internal.DefaultMeterInterceptionService;
 import org.glassfish.hk2.api.InterceptionService;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
@@ -62,7 +62,7 @@ public class MeterFeatureTest extends JerseyTest {
             assertThat (provider,     is (MeterFeatureTestWebContext.Provider));
             assertThat (injector,     instanceOf (DefaultJerseyInjector.class));
             assertThat (substitution, instanceOf (DefaultJerseySubstitution.class));
-            assertThat (interception, instanceOf (DefaultMeterInterception.class));
+            assertThat (interception, instanceOf (DefaultMeterInterceptionService.class));
 
             return true;
         }

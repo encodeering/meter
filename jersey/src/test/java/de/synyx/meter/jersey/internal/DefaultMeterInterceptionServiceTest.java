@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
 
 @RunWith (MockitoJUnitRunner.class)
-public class DefaultMeterInterceptionTest {
+public class DefaultMeterInterceptionServiceTest {
 
     @Mock
     private Injector injector;
@@ -43,7 +43,7 @@ public class DefaultMeterInterceptionTest {
     public void testFilterAll () throws Exception {
         InterceptionService service;
 
-                    service = new DefaultMeterInterception (injector, provider);
+                    service = new DefaultMeterInterceptionService (injector, provider);
         assertThat (service.getDescriptorFilter (), equalTo (BuilderHelper.allFilter ()));
     }
 
@@ -51,7 +51,7 @@ public class DefaultMeterInterceptionTest {
     public void testMethodAOP () throws Exception {
         InterceptionService service;
 
-                    service = new DefaultMeterInterception (injector, provider);
+                    service = new DefaultMeterInterceptionService (injector, provider);
         assertThat (service.getMethodInterceptors (null), nullValue ());
         assertThat (service.getMethodInterceptors (TestClass.class.getMethod ("no")), nullValue ());
         assertThat (service.getMethodInterceptors (TestClass.class.getMethod ("yes")).get (0), instanceOf (DefaultMeterInterceptor.class));
@@ -61,7 +61,7 @@ public class DefaultMeterInterceptionTest {
     public void testConstructorAOPUnsupported () throws Exception {
         InterceptionService service;
 
-                    service = new DefaultMeterInterception (injector, provider);
+                    service = new DefaultMeterInterceptionService (injector, provider);
         assertThat (service.getConstructorInterceptors (null),                              nullValue ());
         assertThat (service.getConstructorInterceptors (TestClass.class.getConstructor ()), nullValue ());
     }
