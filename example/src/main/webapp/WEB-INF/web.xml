@@ -18,7 +18,7 @@
 
     <context-param>
         <param-name>com.codahale.metrics.reporter</param-name>
-        <param-value>log://de.synyx.metrics.example.monitoring</param-value>
+        <param-value>java:comp/env/meter/reporter</param-value>
     </context-param>
 
 </web-app>

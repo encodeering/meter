@@ -73,6 +73,7 @@
                     <version>9.2.2.v20140723</version>
                     <configuration>
                         <useProvidedScope>true</useProvidedScope>
+                        <jettyXml>src/main/etc/jetty.xml</jettyXml>
                     </configuration>
                 </plugin>
             </plugins>
